@@ -1,0 +1,266 @@
+\documentclass[journal]{IEEEtran}
+\makeatletter
+\def\markboth#1#2{\def\leftmark{\@IEEEcompsoconly{\sffamily}\MakeUppercase{\protect#1}}%
+\def\rightmark{\@IEEEcompsoconly{\sffamily}\MakeUppercase{\protect#2}}}
+\makeatother
+\usepackage[utf8x]{inputenc}
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage{ucs}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[section]{placeins}
+\usepackage{multirow}
+\usepackage[bookmarks]{hyperref}
+\usepackage[numbered]{bookmark}
+\usepackage{epstopdf}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{stfloats}
+\DeclareGraphicsExtensions{.pdf,.png,.jpg}
+\graphicspath{{figs/}}
+
+\begin{document}
+\title{Large-Signal Theory for the Analysis of Chirp-Induced Distortions in DML-based OFDM Transmission Systems}
+\author{José~P.~K.~Perin,~\IEEEmembership{}
+        Moisés~R.~N.~Ribeiro,~\IEEEmembership{}
+        and~Adolfo~V.~T.~Cartaxo~\IEEEmembership{}% <-this % stops a space
+\thanks{J.P.K. Perin and M.R.N. Ribeiro are with the Department
+of Electrical Engineering, Federal University of Espírito Santo (UFES), Brazil e-mail: josepaulokp@gmail.com and moises@ele.ufes.br.}% <-this % stops a space
+\thanks{A.V.T. Cartaxo is with the Group of Research on Optical Fibre Telecommunications, Instituto de Telecomunicações. Departamento de Engenharia Eletrotécnica e de Computadores, Instituto Superior Técnico (IST), Universidade Técnica de Lisboa, Portugal. e-mail: adolfo.cartaxo@lx.it.pt}% <-this % stops a space
+}
+
+\markboth{JOURNAL OF LIGHTWAVE TECHNOLOGY, VOL. ~XX, NO. ~X, JANUARY ~XXXX}{}%
+\maketitle
+\begin{abstract}
+In this work we propose a large-signal model for the analysis of the chirp-induced distortions of OFDM signals in IMDD systems employing directly modulated lasers (DML). By assuming simplifications on a existing large-signal theory of the effect of dispersive propagation of DML-based systems, we can extend the applicability of that theory to the case of OFDM signals with hundreds of subcarriers. As confirmed by numerical simulations, these simplifications do not significantly reduce the accuracy of the large-signal theory. In fact, the proposed model is more accurate than small-signal models available in the literature.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Optical fiber communication, OFDM, chirp, optical fiber dispersion, semiconductor lasers.
+\end{IEEEkeywords}
+
+\section{Introduction}
+The ever-increasing traffic demands driven by new multimedia application services have been attracting considerably research efforts on the development of short-range ($<~\sim 100$ km) optical communication systems. Such systems must provide high transmission capacity in order to meet the end-users' demands for traffic, and also be cost-efficient. Differently from long-haul communication systems, short-range systems such as metro and access networks require low cost hardware and low operational expenses. To address this challenging task of providing high transmission capacity at low costs, several solutions have been envisioned both in terms of modulation formats and transmitter/receiver architecture. 
+
+From the modulation formats point of view, optical orthogonal-frequency-division-multiplexing (OOFDM) stands out as one of the most promising solutions \cite{OFDM:promising,OFDM-PON,OFDM-128QAM,OFDM-IMDD,OFDM-UWB}. One of the main reasons for this is OOFDM inherent resistance to chromatic dispersion, which is one of the major impairments in short-range optical communications systems \cite{OFDM-IMDD}. Additionally, OOFDM allows the use of high order modulation formats such as quadrature-amplitude modulation (QAM); as a consequence, it is possible to achieve high transmission capacity and spectral efficiency, while softening bandwidth requirements of optical and electrical components. 
+
+Regarding the transmitter and receiver technology, intensity-modulation and direct detection (IMDD) systems using directly modulated lasers (DMLs) is the preferred solution due to its cost-effectiveness and compatibility with existing short-range optical systems, such as passive optical networks (PONs). Moreover, DML have also other potential advantages when compared to external modulators such as Mach-Zehnder modulator (MZM) and electro-absorption modulator (EAM), namely: higher output power, compact size, and lower power consumption \cite{OFDM-DML10Gbs, kaminow}.  
+
+Due to all these advantages, transmission of OFDM signals in IMDD systems employing DML has been seen as a promising solution to provide higher transmission capacity, while meeting the cost constraints of short-range systems \cite{OFDM:promising,OFDM-PON,OFDM-128QAM,OFDM-IMDD,OFDM-UWB}. However, these advantages are also accompanied by some drawbacks: DML exhibit chirp; the intensity modulation (IM) in the optical power is accompanied by a frequency modulation (FM) in the optical carrier. During propagation, the chromatic dispersion of the optical fiber causes part of the frequency modulation to be converted into intensity modulation, giving rise to harmonic distortions in the direct-detected signal. These chirp-induced distortions are the major limiting factor of transmission capacity and fiber length in DML-based transmission systems \cite{laserparam}.
+
+Therefore, it is of great practical interested to develop mathematical models for accurately calculated the chirp-induced distortions in OOFDM signals on DML-based transmission systems. The effects of dispersive propagation on DML-based systems have already been modeling by small-signal models \cite{smallsignal1, smallsignal2}, and also by a large-signal model \cite{eva,comments}. However, none of these theories was designed to be specifically used on OOFDM signals. In \cite{equalization}, a small-signal model is proposed for the analysis of the effects of both transient and adiabatic chirp in DML-based OFDM transmission systems. However, the small-signal approximations made by the author require OOFDM signals with subcarriers with very low modulation indexes, which restrains the applicability of the referred model. Moreover, OOFDM signals are characterized by high peak-to-average power ratios (PAPR), giving rise to high inaccuracies in small-signal models. Thus, for more accurate results a large-signal theory is necessary. The theory presented in \cite{eva} and further discussed in \cite{comments} was designed for single-tone and $N$-tone signal propagation. An OOFDM signal with $N$ subcarriers can be interpreted as a $N$-tone signal, which allows us to use their theory on OOFDM signals. However, the proposed large-signal theory is too complicated to be applied to OOFDM signals with large number subcarriers. In fact, it is computationally unfeasible. 
+
+In this paper we presented two simplifications that can be made in the large-signal theory presented in \cite{eva} in order to allow its use on the calculation of the chirp-induced distortions in OOFDM signals in DML-based transmission optical systems. The first proposed simplification is based on the range of laser, OOFDM, and fiber parameters commonly use in short-range optical systems. The second simplification is perform by rewriting the equations presented in \cite{eva} in a form that allows us to neglecte terms that do not contribute significantly to the final outcome. As it will be shown in Section~\ref{sec:results}, these simplifications do not considerably diminish the model accuracy, and the simplified theory can be successfully applied to calculate chirp-induced distortions in OFDM signals with hundreds of subcarriers.
+
+The remainder of this paper is organized as follows. In Section~\ref{sec:theory} the large-signal theory for the effect of dispersive propagation in DML-based transmission systems proposed in \cite{eva} and discussed in \cite{comments} is introduced. In Section~\ref{sec:simpl} the proposed simplifications to the large-signal theory are presented and discussed. In Section~\ref{sec:results} the simplified theory is applied to a OFDM signal in order to show that the proposed theory does not diminish the accuracy of the original large-signal theory. Finally, in Section~\ref{sec:conclusion} the main conclusions are drawn.
+
+\section{Large-Signal Theory of the Effect of Dispersive Propagation on the Intensity Modulation Response of Semiconductor Lasers} \label{sec:theory}
+In \cite{eva} a large-signal theory of the effect of dispersive propagation of DML-based optical systems is proposed. The theory is first presented for 1-tone large-signal modulation. The authors then extend their theory to the case of $N$-tone large-signal modulation. For this case, the optical power is in the form:
+\begin{equation} \label{Pt}
+P(t) = P_0\Bigg[1 + \sum_{k=1}^N m_{IM_k}\cos(\Omega_k t + \varphi_{IM_k})\Bigg],
+\end{equation}
+where $P_0$ is the average output power, and $m_{IM_k}$, $\Omega_k/2\pi$, and $\varphi_{IM_k}$ denote, respectively, the intensity modulation index, frequency, and phase of the $k$th tone/subcarrier. This signal can also be seen as an OFDM symbol for baseband transmission, where $m_{IM_k}$ and $\varphi_{IM_k}$ are determined by the symbol mapped on the $k$th subcarrier. For instance, if the OFDM symbol is mapped accordingly to the quadrature phase shift keying (QPSK) format, then $m_{IM_k}$ would be constant and $\varphi_{IM_k}$ could assume four distinct values with equal probability (i.e., $\varphi_{IM_k} \in \{\pi/4, 3\pi/4, 5\pi/4, 7\pi/4\}$). Thus, we can apply the theory developed in \cite{eva} for the analysis of the propagation of OOFDM signals in DML-based systems. 
+
+The theory proposed in \cite{eva} consideres the phase variation due to laser chirp $\Delta\phi(t)$ to be given by
+\begin{equation} \label{Dphi}
+\Delta\phi(t) \approx \sum_{k =1}^N m_{FM_k}\sin(\Omega_kt + \varphi_{FM_k}).
+\end{equation}
+This equation follows directly from the laser's frequency chrip equation \cite{corvini}, and it models both adiabatic and transient chirp when the optical power is given by \eqref{Pt}. However, the transient chirp is considered to be linear with the optical power. This approximation allows us to write the phase change due to laser chirp as a summation of $N$ sine waves with amplitude $m_{FM_k}$ and phase $\varphi_{FM_k}$.
+
+The relation between intensity modulation ($m_{IM_k}, \varphi_{IM_k}$), and frequency modulation ($m_{FM_k}, \varphi_{FM_k}$) defined as phase-to-intensity ratio (PIR) \cite{eva} for each subcarrier can be obtained directly from \eqref{Dphi}, yielding:
+\begin{equation} \label{PIRk}
+PIR_k \equiv \frac{m_{FM_k}}{jm_{IM_k}}e^{j\Delta\varphi_k} = -\frac{\alpha}{2}\bigg(1 + \frac{\kappa P_0}{j\Omega_k}\bigg),
+\end{equation}
+where $\alpha$ is the laser's linewidth enhancement factor, and $\kappa$ is the adiabatic chirp parameter, which depends on several construtive parameters of the laser \cite{corvini}. The first term on the right-side accounts for the transient chirp, whereas the second term on the right-side accounts for the adiabatic chirp. Hence, the FM index carriers contributions from both the transient and adiabatic chirp. Futhermore, while the transient chirp contribution depends only on the value of $\alpha m_{IM_k}$, the adiabatic chirp also depends on the values of $\kappa, P_0$, and $\Omega_k$. Since the latter two parameters are defined by the operational condition (average power and frequency range), the chirp characterisc can be adjusted by changing those parameters. In other words, increasing $\kappa P_0$ or reducing $\Omega_k$ makes the adiabatic chirp more significative, whereas the reducing $\kappa P_0$ or increasing $\Omega_k$ makes the transient chirp plays a more significative role. For reasons that will be discussed shortly, these plays an important role in the accuracy of the large-signal theory.
+
+As previously shown in \cite{eva}, for $N$-Tone large-signal modulation, the detected current after linear propagation (considering only group velocity dispersion) through an optical fiber is given by
+\begin{align} \label{tomN:If} \nonumber
+\tilde{I}_{det}(t,z) \approx \frac{1}{L(z)}\cdot&\sum_{n_1, \ldots, n_N = -\infty}^{\infty}I_{det}(\Omega_{IMP},z) \\
+& \cdot\exp\Bigg(j\sum_{k = 1}^N n_k(\Omega_kt + \varphi_{IM_k})\Bigg), 
+\end{align}
+where $\Omega_{IMP} \equiv \sum_{k = 1}^N n_k\Omega_k$, $L(z)$ is the fiber power attenuation in linear units, and $I_{det}(\Omega_{IMP},z)$ is given by
+\begin{align} \nonumber \label{tomN:Idetf}
+I_{det}&(\Omega_{IMP}, z) \\ \nonumber
+& \approx R(\Omega_{IMP})P_0j^{\sum_{k = 1}^Nn_k}e^{j\sum_{k = 1}^N n_k\Delta\varphi_k}\\ \nonumber
+& \cdot\prod_{k = 1}^N(J_{n_k}(u_k))\Bigg[1 - \sum_{k = 1}^N j \frac{m_{IM_k}}{2}cos\theta_k \\
+& \cdot(J_{n_k-1}(u_k)e^{-j\Delta\varphi_k} - J_{n_k+1}(u_k)e^{j\Delta\varphi_k})/J_{n_k}(u_k)\Bigg],
+\end{align}
+where $j=\sqrt{-1}$; $R(\Omega_{IMP})$ is the photodetector responsivity at the frequency $\Omega_{IMP}/2\pi$; $J_n$ denotes the Bessel function of first kind and $n$th order; $\Omega_k/2\pi$ is the frequency of the $k$th subcarrier from the OOFDM signal; $m_{IM_k}$ and $m_{FM_k}$ are, respectively, the intensity modulation (IM) and frequency modulation (FM) indexes for the $k$th subcarrier of the OOFDM signal; $\varphi_{IM}$ and $\varphi_{FM}$ are the corresponding phases; $\Delta\varphi_k = \varphi_{IM_k} - \varphi_{FM_k}$; $u_k = 2m_{FM_k}\sin(\theta_k)$; and finally, $\theta_k = (-1/2)\beta_2\Omega_k\Omega_{IMP}$, where $\beta_2$ is the fiber dispersion parameter and \emph{z} is the fiber length. 
+
+Equation \eqref{tomN:If} bears two underlining approximations: the phase modulation due to the transient chirp is considered linear in respect to the optical power \eqref{PIRk}; and the linearization of the square root in the equation of electric field envelope (i.e., $\sqrt{1 + x} \approx 1 + x/2$), consequently the IM becomes, in fact, an amplitude modulation (AM). It is important to investigate in which conditions those two approximations start to degrade the model's accuracy. 
+
+In the first approximation only the contribution from the transient chirp is approximatated (i.e., the contribution from the adiabatic chirp is calculated exactly). Therefore, it is expected that the model's accuracy becomes smaller as the transient chirp becomes more significative. From \eqref{PIRk} we saw that only the parameters $\kappa, P_0$, and $\Omega_k$ may change the adiabatic chirp without affecting the transient chirp. Thus, for situations where $\kappa P_0$ is high or $\Omega_k$ is small the adiabatic chrip becomes more significative. Conversely, when $\kappa P_0$ is reduced or when $\Omega_k$ is increased the transient chirp starts to play a more significative role. Therefore, it is expected that the model's accuracy be reduced for low values of the product $\kappa P_0$ or for high values of $\Omega_k$. 
+
+Under the second approximation, the electric field amplitude representation is simplified, so that it can be expressed just with two spectral components. As demonstrated in \cite{comments}, the inaccuracies introduced by the linearization of the square root are partially corrected by discarding some of the terms of the calculated current, that is why here \eqref{tomN:Idetf} is presented with an approximation sign rather than with equality sign. Discarding those terms ensures good accuracy of the large-signal theory as suggested by the experimental results presented in \cite{eva}. 
+
+From \eqref{tomN:If} we can calculate the signal components of the detected current as well as the intermodulation products (IMPs) that arise from the beating between two or more different tones. For instance, to calculate the signal component at the first frequency of the OFDM signal we can set $n_1 = \pm 1$ and all other indexes to zero (i.e., $n_2=~\ldots~=n_N = 0$). If $n_1 \neq \pm1$ the generated tone will fall at the angular frequency $n_1\Omega_1$, which is also considered a harmonic distortion. The intermodulation products are calculated when two or more indexes are different from zero. The number of nonzero indexes will define the order of the modulation product. For instance, a second-order modulation product is calculated by having only two nonzero indexes, say $n_1$ and $n_2$. They will interact to form harmonic distortions that fall at the angular frequencies $\Omega_{IMP} = \pm n_1\Omega_1 \pm n_2\Omega_2$. The total intermodulation distortion at a given frequency is equal to the sum of all the IMP’s in \eqref{tomN:If} that fall onto that frequency.
+
+Unfortunately, equation \eqref{tomN:If} is too complicated to be used in an OOFDM signal with hundreds of subcarriers. In fact, suppose that we wish to apply the large-signal theory to an OOFDM signal with 100 subcarriers, $N = 100$. Suppose further that we can truncate the infinite summations of \eqref{tomN:Idetf} from $-1$ to $+1$ (i.e., $n_k = \{-1,0,1\}$) and still attain good accuracy. This simple case would require equation \eqref{tomN:Idetf} to be evaluated $3^{100}$ times, which is clearly unfeasible.
+\section{Proposed Simplifications} \label{sec:simpl}
+Thus, in order to apply the presented large-signal theory to the case of OOFDM signals with hundreds of subcarriers, we must first simplify \eqref{tomN:If}. In this paper we propose two simplifications. The first simplification is achieved by limiting the range of the parameters present in \eqref{tomN:Idetf}. The second simplification consists in rewrite \eqref{tomN:Idetf} in order to allow the IMPs to be calculated separetely, depending on their order. Since the IMPs contribution on the total distortion decreases as the IMP order increases, we can simplely discard high orders IMPs. In fact, as it will be shown on Section~\ref{sec:results} it is often enough to calculate IMPs up to the third order.
+
+\subsection{Simplification for the Bessel function of the first kind}
+By limiting the range of parameters used on \eqref{tomN:If} and \eqref{tomN:Idetf} we can simplify the Bessel functions on these equations. More importantly, this simplification allows us to restrain the indexes of the Fourier series ($n_1,\ldots, n_N$) without considerably impair the model's accuracy.
+
+The important parameters are limited into a range o typical values commonly used, or even into a range of technology limits. Table~\ref{tab:param} shows the range of values considered for the simplifications. The important parameters were divided into three cathegories: OOFDM, optical fiber, and laser. The cathegory OOFDM shows the important parameters in respect to the OOFDM signal. The last subcarrier frequency, for example, was limited to 10 GHz, which is the bandwidth of commercially matured DML \cite{equalization}. Additionally, the intensity modulation index $m_{IM_k}$ for each subcarrier is limited to $2\%$. This value is adequate to commonly OOFDM signals available in the literature. For example, as it was experimentally demostrated in \cite{OFDM-GbE-UWB}, for a OOFDM signal for carrying gigabit ethernet signals the ideal IM index per subcarrier was $1.4\%$ ($10.3\%$ overall), whereas for a ultra-wide band wireless signal for radio over fiber applications the ideal IM index per subcarrier was $1.6\%$ ($13.0\%$ overall); both OOFDM signals had 128 subcarriers. However, as the number of subcarriers increase, the IM index per subcarrier must be reduced, otherwise the overall IM index will be too high, given rise to more distortions due to clipping. Small-signal theories usually work well only for IM index per subcarrier below $0.1\%$, which considerably limit their application range.
+
+In the optical fiber cathegory we have the dispersion coefficient and fiber length. This values were limited accoding to the applicability of short-range applications such as passive-optical networks (PON) and long-reach PON. Such applications usually use standard single-mode fiber (SSMF), whose dispersion is $\sim 17$ ps/nm$\cdot$km.
+
+In the laser parameters cathegory, the $\alpha$ and $\kappa$ of commercially available DMLs are on the range show in Table~\ref{tab:param}\cite{equalization}. The lower bound of the average optical power was limited in 1mW because for smaller power levels are usually used for very short-distance applications, in which the chirp-induced distortions are very low. The upper bound of the average optical power was limited in 5mW because for higher values the nonlinear phenomena start to play an important role, but the large-signal model only considers linear propagation, and thus it cannot garantee accuracy for such applications.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{l|l}
+\hline
+\multicolumn{2}{c}{OOFDM} \\
+\cline{1-2}
+\hline
+Last subcarrier frequency ($\Omega_N/2\pi$)      & $ 1 < \Omega_N/2\pi \leq 10$ GHz		     \\
+Intensity modulation index ($m_{IM}$)   		   & $m_{IM} \leq 2,0\%$     \\
+\hline
+\multicolumn{2}{c}{Optical Fiber} \\
+\cline{1-2}
+\hline
+Dispersion ($D$)  																	 & $D \leq 17$ ps/nm$\cdot$km    \\
+Length ($z$)        									  			 & $ z \leq 100$ km		     \\
+\hline
+\multicolumn{2}{c}{Laser} \\
+\cline{1-2}
+\hline
+Linewidth enhacement factor ($\alpha$)&  $-5 \leq \alpha \leq -2$   \\
+Adiabatic \emph{chirp} coefficient ($\kappa$)  & 	$10 \leq \kappa \leq 15$ GHz/mW     \\
+Average Optical Power ($P_0$)														 &  $1 \leq P_0 \leq 5$ mW \\
+\hline
+\end{tabular}
+\caption{Typical range for parameters of the OOFDM signal, optical fiber, and laser. The proposed simplifications assume values within the specified range.}
+\label{tab:param}
+\end{table}
+
+By inspectioning \eqref{tomN:Idetf} we can see that the argument of the Bessel function is always $u_k \equiv 2m_{FM_k}\cos{\theta_k}$. Calculating $m_{FM_k}$ as in \eqref{PIRk} and using the range of values shown in Table~\ref{tab:param}, it is easy to show that $|u_k| \leq 0,6$. For this range of $u_k$ the Bessel functions can be simplified:
+\begin{equation} \label{simpl-besselj}
+J_n(u) \approx
+\begin{cases} 
+1 - \frac{u^2}{4}, n = 0 \\
+\frac{nu}{2}, n = \pm 1 \\
+0, \text{otherwise}
+\end{cases},
+\end{equation}
+these approximations were obtained through the Taylor series expansion of the Bessel functions of the first kind \cite{bessel}, and truncated in order to attain a good approximation in the desirable range of $u_k$. In fact, with these approximations the percentual error in the worst case is $4\%$.
+
+\begin{table*}[bp]
+\hline
+\begin{align} \label{tomN:Is2} \nonumber
+\tilde{I}_{det}(t,z) & \approx \sum_{k_1=1}^N\Bigg(\overbrace{\sum_{n_{k_1} \in A_1} I_{det}(n_{k_1}\Omega_{k_1},z)e^{j(n_{k_1}\Omega_{k_1}t + n_{k_1}\varphi_{k_1})}}^{Signal~component} \\ \nonumber
+&+ \sum_{k_2=k_1+1}^{N-1}\Bigg(\overbrace{\sum_{(n_{k_1}, n_{k_2}) \in A_2} I_{det}(n_{k_1}\Omega_{k_1}+n_{k_2}\Omega_{k_2},z)e^{j((n_{k_1}\Omega_{k_1}+n_{k_2}\Omega_{k_2})t + n_{k_1}\varphi_{k_1}+n_{k_2}\varphi_{k_2})}}^{2nd~order~IMP} \\ \nonumber
+& ~~~~~~~~~~~~~~~~~~~~~~~~\vdots~~~~~~~~~~~~~~~~~~~~~~~~\vdots~~~~~~~~~~~~~~~~~~~~~~~~\vdots~~~~~~~~~~~~~~~~~~~~~~~~\vdots \\
+&+ \sum_{k_N=k_{N-1}+1}^{1}\Bigg(\overbrace{\sum_{(n_{k_1}, \ldots, n_{k_N}) \in A_N} I_{det}(\textstyle\sum_{l=1}^N n_{k_l}\Omega_{k_l},z)e^{j(\sum_{l=1}^N (n_{k_l}\Omega_{k_l}t + n_{k_l}\varphi_{k_l}))}}^{N~order~IMP}\Bigg)\cdots\Bigg)\Bigg).
+\end{align}
+\end{table*}
+
+More importantly, these approximations show us that the Bessel function assume only nonzero values for the indexes $n = \{-1,0,1\}$. In addition, if the produtory of Bessel functions in \eqref{tomN:Idetf} is zero the value $I_{det}(\Omega_{IMP})$ is also zero. Therefore, we can truncate the indexes of the Fourier series to $n_k \in \{-1,0,1\}$, because otherwise the produtory of Bessel functions goes to zero.
+
+\subsection{Order-based Equation for the Detected Current}
+The simplifications proposed on the previous section are not enough to make the large-signal theory applicable to the case of OOFDM signals with hundreds of subcarriers. In fact, this simplification brings us back to the example of the ending of the last section, where we assumed that the infinite summations from \eqref{tomN:If} could be truncated from $-1$ up to $+1$. For the case of N = 100, this would require $3^{100}$ evaluations of \eqref{tomN:Idetf}.
+
+To overcome this problem we must reduce the number of iterations necessary to calculate \eqref{tomN:Idetf}. To accomplish that goal we can rewrite \eqref{tomN:Idetf} as shown in \eqref{tomN:Is2}. Where $A_1, A_2,\ldots, A_N$ are the values that the Fourier series indexes $n_k$ can take on. Due the simplification made in the Bessel functions, we can restrain the indexes to $n_k\in\{-1,0,1\}$, but by separating the IMPs into orders we have already assigned which indexes are equal to zero; hence, $n_k\in\{-1,1\}$. In addition, the detected current $\tilde{I}_{det}(t,z)$ is a real signal and therefore $I_{det}(-\Omega,z) = I_{det}^*(\Omega,z)$; hence, it suffice to calculate $I_{det}(\Omega,z)$ for $\Omega > 0$, since $I_{det}(\Omega,z)$ for $\Omega < 0$ can be calculated afterwards. For instance, $A_1 = 1$. If $A_1 = -1$ we will have a negative frequency value. Similarly, $A_2 = \{(-1, 1), (1, 1)\}$, since $\Omega_{k_2} \geq \Omega_{k_1}$, every value of ($n_{k_1}, n_{k_2} \in A_2$) will yield $n_{k_1}\Omega_{k_1}+n_{k_2}\Omega_{k_2} > 0$. Without this constraint the number of elements of $A_2$ would double: $A_2 = \{(-1, -1), (-1, 1), (1, -1), (1, 1)\}$. The higher-order sets can be calculated in a similar manner.
+
+Another important point from \eqref{tomN:Is2} is that we can compute separetely the signal components and the IMP componentes. This is accomplished by limiting the number of nonzero indexes in one summation. For instance, the signal component in \eqref{tomN:Is2} is calculated by allowing only one nonzero index of the Fourier series. Similarly, for calculating the sencond-order IMPs, we must allow only two nonzero indexes of the Fourier series. 
+
+As the order of the IMPs increase their amplitude becomes smaller. This can be notice through \eqref{tomN:Idetf}. Note that for high-order IMPs we will have more nonzero Fourier indexes $n_k$. Therefore, the produtory of Bessel functions becomes smaller since $|J_{\pm 1}(u_k \leq 0.6)| < 0.3$. This allow us to calculate the IMPs up to a certain order, and negleted the remaining orders without reducing the model's accuracy. In fact, as it will be shown in Section~\ref{sec:results}, it is usually enough to compute the IMPs up to the third order. Moreover, by limiting the order of the IMPs, we significantly reduce the number of required evaluations of \eqref{tomN:Idetf} to calculate the detected current. Returning to the example of 100 subcarriers, and limiting the IMPs to the third order, the number of required evaluations of \eqref{tomN:Idetf} reduces to 770282, which makes it possible to calculate the detected current.
+
+\section{Numerical Simulations} \label{sec:results}
+In order to confirm the accuracy of the large-signal theory and the proposed simplifications to calculate the chirp-induced distortions in OFDM signal in DML-based optical transmission systems, we have applied the theory developed in the last section to a generic OOFDM signal with high bandwidth. The simulation parameters for this OOFDM signal are shown in Table~\ref{tab:ofdmgen}.
+
+\begin{table}[hbt]
+\centering
+\begin{tabular}{l|l}
+\hline
+\multicolumn{2}{c}{Simulation Parameters} \\
+\cline{1-2}
+\hline
+\multicolumn{2}{c}{OOFDM} \\
+\cline{1-2}
+\hline
+Number of subcarriers ($N$)  									   & $128$    \\
+Central frequency ($f_c$)												 & $3.5$ GHz \\
+IM index per subcarrier ($m_{IM}$)   		   & $2.0\%$     \\
+Bandwidth ($BW$)														 & 6.4 GHz \\
+Mapping															 & QPSK \\
+\hline
+\multicolumn{2}{c}{Optical Fiber} \\
+\cline{1-2}
+\hline
+Dispersion ($D$)  																	 & $17$ ps/nm$\cdot$km    \\
+Fiber length ($z$)        									  			 & 20 and 100 km		   \\
+Attenuation ($L(z)$)																 & 0.2 dB/km \\
+\hline
+\multicolumn{2}{c}{Laser} \\
+\cline{1-2}
+\hline
+Linewidth enhancement factor ($\alpha$)&  $-5$   \\
+Adiabatic chirp coefficient ($\kappa$)  & 	10 and 15 GHz/mW     \\
+Output average optical power ($P_0$)								 &  1, 4 e 5 mW \\
+\hline
+\multicolumn{2}{c}{Photodetector} \\
+\cline{1-2}
+\hline
+Responsivity ($R$)															 & $0.9$ A/W \\
+\hline
+\end{tabular}
+\caption{Values adopted for the simulation}
+\label{tab:ofdmgen}
+\end{table}
+
+\begin{figure*}[bp]
+        \centering
+        \begin{subfigure}[b]{0.5\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{OFDM_Gen_20km.eps}
+                \caption{20 km}
+                \label{fig:OFDM_Gen20km}
+        \end{subfigure}%
+        ~ %add desired spacing between images, e. g. ~, \quad, \qquad etc.
+          %(or a blank line to force the subfigure onto a new line)
+        \begin{subfigure}[b]{0.5\textwidth}
+                \centering
+                \includegraphics[width=\textwidth]{OFDM_Gen_100km.eps}
+                \caption{100 km}
+                \label{fig:OFDM_Gen100km}
+        \end{subfigure}
+        \caption{SIR for OOFDM signal described in Table~\ref{tab:ofdmgen} for two different transmission distances: (a) 20 km and (b) 100km. Three chirp conditions were evaluated: $\kappa P_0 = 10, 40, 75$ GHz. For all the curves circles indicate simulation without any approximation, solid line indicates proposed theory for IMPs calculated up to third order, and dashed line indicates proposed theory for IMPs calculated up to fourth order. In (a) the curve for $\kappa P_0 = 10$ GHz is ommitted since for this condition the SIR is high, indicating that almost there are not distortion. Moreover, the curves of the proposed theory up to third order and up to fourth order overlap. In (b) the proposed theory curves for $\kappa P_0 = 10, 40$ GHz up to third order already agree well with simulations and therefore the dashed curves are not presented.} \label{fig:SIR}
+\end{figure*}
+
+We have chosen some of the parameters in order to test the model's accuracy over extreme situations. For instance, the IM index was set to $2.0\%$, which is the maximum value adopted for the simplifications. Moreover, the OOFDM signal bandwith of 6.4 GHz will shows us the model's accuracy over a large range of frequencies. 
+
+The model's accuracy is investigated by calculating the signal-to-interference ratio (SIR) from the proposed model and comparing it to numerical simulations. These numerical simulations do not take any of the approximations assumed for the large-signal theory nor the approximations proposed herein. 
+
+The SIR for the proposed model can be obtained directly from \eqref{tomN:Is2}. Since both the signal components and the IMP components have random relative phases, their powers add, rather than their fields. Therefore, the signal power is calculated by adding up in power each of the signal contributions from \eqref{tomN:Is2}. Similarly, the interference power is calculated by adding up in power each of the IMPs contribution from \eqref{tomN:Is2}. 
+
+Figure~\ref{fig:SIR} shows the comparasion between the SIR calculted by the proposed theory and the SIR calculated through numerical simulations that do not take into account any of the approximations aforementioned. The simulations were performed for two fiber lengths: 20 km, corresponding for the range of PONs systems; and 100 km, corresponding to the range of LR-PONs systems. Furthermore, we have performed the simulations for different cases of $\kappa$ and $P_0$. This is intended to alternate the dominance between adiabatic and transient chirp. For a given frequency the value $\kappa P_0$ is directly proportional to the adiabatic chirp intensity. Hence, by increasing $\kappa P_0$, we increase the dominance of the adiabatic chirp. On the other hand, by reducing $\kappa P_0$ the adiabatic chirp contribution becomes smaller, and hence the transient chirp starts to play a more significant role. For the two cases, we have performed the simulation for $\kappa P_0 = 10, 40, 75$ GHz. These values cover the entire range admitted by the proposed simplifications, as shown in Table~\ref{tab:param} (i.e., $10 \leq \kappa P_0 \leq 75$ GHz). Since the large signal theory proposed in \cite{eva} consideres an approximation for the transient chirp parameter, it is expetected that the model's accuracy reduces as $\kappa P_0$ decreases. Furthermore, as the adiabatic chirp is inversely proportional to the frequency, it is also expected that the model's accuracy reduces as the frequency increases.
+
+\section{Conclusions} \label{sec:conclusion}
+
+\section*{Acknowledgements}
+This work was partially supported by the following Brazilian agencies: CNPq/FAPES (PRONEX) under Grant 48508560/2009 and FAPES/FINEP (CPID) under Grant 40381662/2008. And, in Portugal/European Community, by Fundação para a Ciência e a Tecnologia by the project TURBO-PTDC/EEA-TEL/104358/2008, and by the European FIVER-FP7-ICT-2009-4-249142 Project. 
+
+\bibliographystyle{IEEEtran}
+\bibliography{Referencias}
+\begin{IEEEbiographynophoto}{José Paulo Krause Perin}
+is currently a senior student of the Bachelor of Electrical Engineering program at the Universidade Federal do Espirito Santo, Brazil. His research interests include fiber-optic communication systems and networks.
+\end{IEEEbiographynophoto}
+\begin{IEEEbiographynophoto}{Moisés Renato Nunes Ribeiro}
+was born in Vitoria/ES, Brazil in 1969. He received the B.Sc. degree in electrical engineering from the Instituto Nacional de Telecomunicationes (INATEL), the M.Sc. degree in telecommunications from the Universidade Estadual de Campinas (UNICAMP), Brazil, and the Ph.D. degree in the same area from the University
+of Essex, Essex, U.K., in 1992, 1996, and 2002, respectively.
+He joined the Department of Electrical Engineering, Universidade Federal do Espirito Santo, Brazil, in 1995. He was a Visiting Professor to the Electrical Engineering Department at Stanford University (October 2010 to September 2011) under a grant from the Brazilian government (CAPES). His research interests include fiber-optic and computer communication devices, systems, and networks.
+\end{IEEEbiographynophoto}
+\begin{IEEEbiographynophoto}{Adolfo Cartaxo}
+(S’89–A’89–M’98–SM’02) was born in Montemor-o-Novo, Portugal,in 1962. He received the “Licenciatura” degree in electrical engineering, the M.Sc. degree in telecommunications and computers, and the Ph.D. degree in electrical engineering from the Instituto Superior Técnico (IST), Lisbon Technical University, Lisbon, Portugal, in 1985, 1989, and 1992, respectively. In 1985, he joined the Department of Electrical and Computer Engineering of IST. In 1992, he became an Assistant Professor and he was promoted to Associate Professor in January 2002. Over those years, he has lectured several courses on Telecommunications. He joined the Optical Communications Group of Lisbon Pole of Instituto de Telecomunicações (IT) as a researcher in 1993. He is now a senior researcher conducting research on optical communication systems and networks. Since January 2002, he is member of the National Coordination Commission on Optical Communications of IT. He has been leader of the IST participation or of the Lisbon site of IT in six projects of the European Union programs on R$\&$D in the optical communications area. He has been leader of several national projects in the optical communications area. He is the leader of IST-IT participation in the cooperation project with Brazil in the area of optical networks. He has acted as a technical auditor and evaluator for projects included in “Advanced Communications Technologies and Services: European RTD” (ACTS) and “Information Society Technologies” (IST) European Union R$\&$D Programs. He has served as a reviewer for the leading international publications in the area of optical communications and networks. He has authored or co-authored more than 60 journal publications (15 as first author) as well as more than 80 international conference papers. He is co-author of two international patents.
+Dr. Cartaxo is a Senior member of the IEEE Laser and Electro-Optics Society. 
+
+\end{IEEEbiographynophoto}
+
+
+
+\end{document}

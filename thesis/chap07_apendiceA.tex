@@ -1,0 +1,125 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% apendices
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chapter{Aproximação Linear do Logaritmo com Forma Exata para o Módulo do Campo Elétrico} \label{chap08_apendiceA}
+
+Neste Apêndice a teoria desenvolvida para 1 tom é estendida para o cálculo da corrente detecta sem aproximação linear da raiz quadrada da equação do envelope complexo do campo elétrico na saída do laser.
+
+\section{Expansão em série de Fourier do módulo do Envelope Complexo do Campo elétrico para 1 Tom na saída do Laser}
+
+O módulo do Envelope Complexo do Campo elétrico para 1 Tom na saída do Laser é dado por:
+\begin{equation} \label{modulo}
+|\tilde{E}(t,z=0)| = P_0^{1/2}\Big[1 + m_{IM}cos(\Omega t + \varphi_{IM})\Big]^{1/2}.
+\end{equation}
+
+A série de Taylor para raiz quadrada é dada por:
+\begin{equation} \label{taylor_raiz_quadrada}
+\sqrt{1 + x} = \bigg.	\sum_{n = 0}^{\infty}\frac{(-1)^n(2n)!}{(1 - 2n)(n!)^2(4^n)}x^n\bigg.
+\end{equation}
+Fazendo $x = m_{IM}cos(\Omega t + \varphi_{IM})$. temos:
+\begin{equation} \label{modulo_exp}
+|\tilde{E}(t,z=0)| = P_0^{\frac{1}{2}}\sqrt{1 + m_{IM}cos(\Omega t + \varphi_{IM})} = \sqrt{P_0}\bigg.\sum_{n = 0}^{\infty}\frac{(-1)^n(2n)!}{(1 - 2n)(n!)^2(4^n)}m_{IM}^ncos^n(\Omega t + \varphi_{IM})\bigg.
+\end{equation}
+
+O somatório de potências de cossenos da equação \eqref{modulo_exp} pode ser simplificado ao aplicar as equações da Tabela~\ref{tab:power_cosine}, e ao se escrever o cosseno como uma exponencial complexa. Ao realizar esses procedimentos obtemos:
+\begin{equation} \label{module_fourier_aux}
+|\tilde{E}(t,z=0)| =\sqrt{P_0}\bigg.\sum_{n = -\infty}^{\infty}C_ne^{jn(\Omega t + \varphi_{IM})}
+\end{equation}
+Onde:
+\begin{equation} \label{ap:Cn}
+C_n = \bigg.\sum_{k = -\infty}^{\infty}\frac{(-1)^m}{(1 - 2m)}\binom{2m}{m}\binom{m}{k}\bigg(\frac{m_{IM}}{8}\bigg)^m, m = 2k + |n|
+\end{equation}
+
+A equação \eqref{module_fourier_aux} corresponde a série de Fourier do módulo do envelope complexo do campo elétrico na saída do laser, cujos coeficientes são dados por $C_n$.
+
+\begin{table}
+\caption {Expansão de potências de cosenos}
+\label {tab:power_cosine}\centering
+\begin{tabular}{| p{2.5cm} | p{8cm}|} 
+\hline
+\multirow{5}{*}{n ímpar} & \[ cos^n\theta = \frac{2}{2^n}\sum_{k = 0}^{\frac{n-1}{2}}\binom{n}{k}cos((n - 2k)\theta)\] \\ \hline
+\multirow{5}{*}{n par} & \[ cos^n\theta = \frac{1}{2^n}\binom{n}{\frac{n}{2}} + \frac{2}{2^n}\sum_{k = 0}^{\frac{n}{2}-1}\binom{n}{k}cos((n - 2k)\theta)\] \\ \hline
+\end{tabular}
+\end{table}
+
+\section{Cálculo da Corrente Detectada}
+Voltando à equação do envelope complexo do campo na saída do laser para 1 tom:
+\begin{equation} 
+E(t,z = 0) = \sqrt{P_0}\Big(1 + \frac{m_{IM}}{2}cos(\Omega t + \varphi_{IM})\Big)^{1/2}e^{jm_{FM}sen(\Omega t + \varphi_{FM})}
+\end{equation}
+
+Usando a expansão em série de Fourier de cada termo:
+\begin{equation}
+E(t, z = 0) = \sqrt{P_0}\bigg.\sum_{n_1 = -\infty}^{\infty}C_{n_1}e^{jn_1(\Omega t + \varphi_{IM})}\sum_{{k_1} = -\infty}^{\infty}J_{k_1}(m_{FM})e^{jk_1\Delta\varphi}e^{jk_1(\Omega t + \varphi_{IM})}
+\end{equation} 
+
+Onde $C_{n_1}$ é calculado como mostrado em \eqref{module_fourier_aux} e $\Delta\varphi = \varphi_{FM} - \varphi_{IM}$. Escrevendo de forma mais simplificada 
+\begin{equation}
+E(t, z = 0) = \sqrt{P_0}\bigg.\sum_{n_1 = -\infty}^{\infty}\sum_{{k_1} = -\infty}^{\infty}C_{n_1}J_{k_1}(m_{FM})e^{jk_1\Delta\varphi}e^{j(n_1 + k_1)(\Omega t + \varphi_{IM})}
+\end{equation} 
+
+Aplicando o operador dispersão, podemos obter a equação do campo no final da fibra:
+\begin{equation}
+E(t, z) = \sqrt{P_0}\bigg.\sum_{n_1 = -\infty}^{\infty}\sum_{{k_1} = -\infty}^{\infty}C_{n_1}J_{k_1}(m_{FM})e^{ j\theta(n_1+k_1)^2}e^{jk_1\Delta\varphi}e^{j(n_1 + k_1)(\Omega t + \varphi_{IM})}
+\end{equation} 
+Analogamente:
+\begin{align} \nonumber
+& E(t, z)^* = \sqrt{P_0}\bigg.\sum_{n_2 = -\infty}^{\infty}\sum_{{k_2} = -\infty}^{\infty}C_{n_2}J_{k_2}(m_{FM})e^{-j\theta(n_2+k_2)^2}e^{-jk_2\Delta\varphi}e^{-j(n_2 + k_2)(\Omega t + \varphi_{IM})} \\
+& \text{Fazendo: } n_2 = -n_2 \text{ e } k_2 = -k_2 \text{ , e sabendo que } C_m = C_{-m} \\
+& = \sqrt{P_0}\bigg.\sum_{n_2 = -\infty}^{\infty}\sum_{{k_2} = -\infty}^{\infty}C_{n_2}J_{-k_2}(m_{FM})e^{-j\theta(n_2+k_2)^2}e^{jk_2\Delta\varphi}e^{j(n_2 + k_2)(\Omega t + \varphi_{IM})}
+\end{align}
+
+Calculando a corrente detectada, temos:
+\begin{align} \nonumber \label{ap:It}
+& I(t) = RE(t,z)E(t,z)^* \\ \nonumber
+& I(t) = RP_0\sum_{n_1}\sum_{n_2}\sum_{k_1}\sum_{k_2}C_{n_1}C_{n_2}J_{k_1}(m_{FM})J_{-k_2}(m_{FM})e^{ j\theta[(n_1+k_1)^2 - (n_2+k_2)^2]} \\ 
+& e^{j(k_1+k_2)\Delta\varphi}e^{j(n_1 + k_1 + n_2 + k_2)(\Omega t + \varphi_{IM})} \\ \nonumber
+&= RP_0\sum_{n_1}\sum_{n_2}C_{n_1}C_{n_2}\sum_{k_1}\sum_{k_2}J_{k_1}(m_{FM})J_{-k_2}(m_{FM})e^{ j\theta[(n_1+k_1)^2 - (n_2+k_2)^2]} \\ 
+& e^{j(k_1+k_2)\Delta\varphi}e^{j(n_1 + k_1 + n_2 + k_2)(\Omega t + \varphi_{IM})}
+\end{align}
+
+Podemos reescrever os somatórios de \eqref{ap:It} como um produto de produto de Cauchy: 
+\begin{equation}
+\sum_a\sum_bx_ay_b = \sum_c\sum_dx_dy_{d-c}
+\end{equation}
+
+Aplicando o resultado acima nos dois somatórios mais exteriores:
+\begin{align} \nonumber
+& I(t) = RP_0\sum_{n_1}\sum_{n_2}C_{n_1}C_{n_2}\sum_{m_1}\sum_{m_2}J_{m_2}(m_{FM})J_{-(m_1-m_2)}(m_{FM})e^{ j\theta[(n_1+m_2)^2 - (n_2+(m_1-m_2))^2]} \\ \nonumber
+& e^{j(m_2+m_1-m_2)\Delta\varphi}e^{j(n_1 + m_2 + n_2 + m_1 - m_2)(\Omega t + \varphi_{IM})} \\ \nonumber
+& = RP_0\sum_{n_1}\sum_{n_2}C_{n_1}C_{n_2}\sum_{m_1}\bigg[\sum_{m_2}J_{m_2}(m_{FM})J_{m_2-m_1}(m_{FM}) \\ \nonumber 
+& e^{ j\theta[(n_1^2+2n_1m_2 + m_2^2) - (n_2^2+2n_2(m_1-m_2)+m_1^2-2m_1m_2+m_2^2)]}\bigg]e^{jm_1\Delta\varphi}e^{j(n_1 + n_2 + m_1)(\Omega t + \varphi_{IM})} \\ \nonumber
+& = RP_0\sum_{n_1}\sum_{n_2}C_{n_1}C_{n_2}\sum_{m_1}\bigg[\sum_{m_2}J_{m_2}(m_{FM})J_{m_2-m_1}(m_{FM})e^{jm_2(2n_1+2n_2+2m_1)}\bigg] \\ \nonumber
+& e^{j\theta[(n_1^2 - n_2^2 - 2n_2m_1 - m_1^2)]}e^{jm_1\Delta\varphi}e^{j(n_1 + n_2 + m_1)(\Omega t + \varphi_{IM})} \\ \nonumber
+& \text{Fazendo a mudança de variável } \nu = -m_1 \\ \nonumber
+& = RP_0\sum_{n_1}\sum_{n_2}C_{n_1}C_{n_2}\sum_{\nu}\bigg[\sum_{m_2}J_{m_2}(m_{FM})J_{m_2+\nu}(m_{FM}) e^{jm_2(2n_1+2n_2-2\nu)}\bigg] \\ \nonumber 
+& e^{j\theta[(n_1^2 - n_2^2 + 2n_2\nu - \nu^2)]}e^{-j\nu\Delta\varphi}e^{j(n_1 + n_2 - \nu)(\Omega t + \varphi_{IM})}
+\end{align}
+
+É possível simplificar o somatório entre colchetes na equação acima usando o teorema de Graf \eqref{Graf}. Neste caso temos: $\alpha = 2(n_1 + n_2 - \nu)\theta$ e $Z = z = m_{FM}$. Portanto $u = 2m_{FM}sen((n_1 + n_2 - \nu)\theta)$ e $\beta = sen^{-1}\Big(\frac{m_{FM}sen(\alpha)}{2m_{FM}sen(\alpha/2)}\Big) = \frac{\pi}{2} - (n_1 + n_2 - \nu)\theta$. Logo:
+\begin{align} \nonumber
+&I(t) = RP_0\sum_{n_1}\sum_{n_2}C_{n_1}C_{n_2}\sum_{\nu}\bigg[J_{\nu}(u)e^{-j\nu[(n_1 + n_2 - \nu)\theta - \frac{pi}{2}]}\bigg] \\ \nonumber
+& e^{j\theta[(n_1^2 - n_2^2 + 2n_2\nu - \nu^2)]}e^{-j\nu\Delta\varphi}e^{j(n_1 + n_2 - \nu)(\Omega t + \varphi_{IM})} \\ \nonumber
+& = RP_0\sum_{n_1}\sum_{n_2}C_{n_1}C_{n_2}\sum_{\nu}J_{\nu}(u)e^{j\nu[pi/2 - (n_1 + n_2 - \nu)\theta]}e^{j\theta[(n_1^2 - n_2^2 + 2n_2\nu - \nu^2)]}e^{-j\nu\Delta\varphi}e^{j(n_1 + n_2 - \nu)(\Omega t + \varphi_{IM})} \\ \nonumber
+& = RP_0\sum_{n_1}\sum_{n_2}C_{n_1}C_{n_2}\sum_{\nu}j^{\nu}J_{\nu}(u)e^{j\theta(-n_1\nu - n_2\nu + \nu^2 + n_1^2 - n_2^2 + 2n_2\nu - \nu^2)}e^{-j\nu\Delta\varphi}e^{j(n_1 + n_2 - \nu)(\Omega t + \varphi_{IM})} \\
+& = RP_0\sum_{n_1}\sum_{n_2}C_{n_1}C_{n_2}\sum_{\nu}j^{\nu}J_{\nu}(u)e^{j\theta(-n_1\nu + n_2\nu + n_1^2 - n_2^2)}e^{-j\nu\Delta\varphi}e^{j(n_1 + n_2 - \nu)(\Omega t + \varphi_{IM})}
+\end{align}
+
+Vamos reagrupar os somatórios considerando as seguintes mudanças de variável: $n = n_1 + n_2 - \nu$, $l = -n_2$ e $l' = n_1$:
+\begin{align} \nonumber
+& I(t) = RP_0\sum_{n}\sum_{l}\sum_{l'}C_{l}C_{l'}j^{-(n+l-l')}J_{-(n+l-l')}(u)e^{j\theta n(l + l')}e^{j(n+l-l')\Delta\varphi}e^{jn(\Omega t + \varphi_{IM})} \\ \nonumber
+& \text{Como foi feito anteriormente: } j^{-m}J_{-m}(u) = (-1)^mj^m(-1)^mJ_m(u) = j^{m}J_{m}(u) \\
+& I(t) = RP_0\sum_{n}\sum_{l}\sum_{l'}C_{l}C_{l'}j^{n+l-l'}J_{n+l-l'}(u)e^{j\theta n(l + l')}e^{j(n+l-l')\Delta\varphi}e^{jn(\Omega t + \varphi_{IM})}
+\end{align}
+
+Ou mais simplificadamente:
+\begin{equation} \label{eq_17_final}
+I(t) = \bigg.\sum_{n = -\infty}^{\infty} I_{det}(n\Omega,z) e^{jn(\Omega t + \varphi_{IM})}
+\end{equation}
+Onde:
+\begin{align} \label{eq_17_final_Idet} \nonumber
+& I_{det}(t) = RP_0\sum_{l}\sum_{l'}C_{l}C_{l'}j^{n+l-l'}J_{n+l-l'}(u)e^{j\theta n(l + l')}e^{j(n+l-l')\Delta\varphi} \\ \nonumber
+& C_n = \bigg.\sum_{k = -\infty}^{\infty}\frac{(-1)^m}{(1 - 2m)}\binom{2m}{m}\binom{m}{k}\bigg(\frac{m_{IM}}{8}\bigg)^m, m = 2k + |n|
+\end{align}
+
+Esta equação é idêntica àquela obtida em [\cite{eva}, (eq. 17)]. Porém, aqui os termos $C_l$ e $C_l'$ são os índices da forma exata da expansão em série de Fourier do módulo do campo elétrico na saída do laser, calculados de acordo com \eqref{ap:Cn}. Em \cite{eva} os autores utilizam uma forma aproximada para se obter esses coeficientes. Este resultado também foi mostrado no artigo de ``Comments on'', publicado no \textit{Journal of Lightwave Technology} e reproduzido no Apêndice~\ref{chap:comments}.

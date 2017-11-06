@@ -1,0 +1,250 @@
+%% Comments on ""
+%% V1.3
+%% 30/07/2012
+%% by José Paulo
+
+\documentclass[journal]{IEEEtran}
+\makeatletter
+\def\markboth#1#2{\def\leftmark{\@IEEEcompsoconly{\sffamily}\MakeUppercase{\protect#1}}%
+\def\rightmark{\@IEEEcompsoconly{\sffamily}\MakeUppercase{\protect#2}}}
+\makeatother
+\usepackage[utf8x]{inputenc}
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage{ucs}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[section]{placeins}
+\usepackage{multirow}
+\DeclareGraphicsExtensions{.pdf,.png,.jpg}
+
+\hyphenation{op-tical net-works semi-conduc-tor}
+\begin{document}
+\title{Comments on ``Large-Signal Theory of the Effect of Dispersive Propagation on the Intensity Modulation Response of Semiconductor Lasers"}
+\author{José~Paulo~Krause~Perin,~\IEEEmembership{}
+        Moisés~R.~N.~Ribeiro,~\IEEEmembership{}
+        and~Adolfo~V.~T.~Cartaxo,~\IEEEmembership{Senior~Member,~IEEE}% <-this % stops a space
+\thanks{J.P.K. Perin and M.R.N. Ribeiro are with the Department
+of Electrical Engineering, Federal University of Espírito Santo (UFES), Brazil e-mail: josepaulokp@gmail.com and moises@ele.ufes.br.}% <-this % stops a space
+\thanks{A.V.T. Cartaxo is with the Group of Research on Optical Fibre Telecommunications, Instituto de Telecomunicações. Departamento de Engenharia Eletrotécnica e de Computadores, Instituto Superior Técnico (IST), Universidade Técnica de Lisboa, Portugal. e-mail: adolfo.cartaxo@lx.it.pt}% <-this % stops a space
+}
+
+\markboth{JOURNAL OF LIGHTWAVE TECHNOLOGY, VOL. ~XX, NO. ~X, JANUARY ~XXXX}%
+{Shell \MakeLowercase{\textit{et al.}}: Bare Demo of IEEEtran.cls for Journals}
+\maketitle
+\begin{abstract}
+In a previously published paper \cite{eva}, a large-signal theory of propagation in a dispersive fiber of an optical wave with sinusoidal amplitude and frequency modulation has been proposed. Following the assumptions made in \cite{eva}, we have verified that some of the presented equations are incomplete; paradoxically, however, the missing terms in such equations could not always improve the model accuracy. In this comment, we present both the correct equations and an explanation for the referred paradox. In addition, we have corrected inconsistencies in the equation for the Fourier coefficients used in the exact large-signal theory in the Appendix A of \cite{eva}.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Frequency modulation, intensity modulation, optical fiber communication, optical fiber dispersion, optical fiber
+measurement applications, semiconductor lasers.
+\end{IEEEkeywords}
+
+\IEEEpeerreviewmaketitle
+%\section{Introduction}
+\IEEEPARstart{I}{n} \cite{eva}, the authors derive a large-signal theory of propagation in a dispersive fiber of an optical wave with sinusoidal amplitude and frequency modulation, which allows the detected current to be analytically calculated. As a result, the intermodulation products due to the combined effect of laser chirp and chromatic dispersion can be computed. The authors first present their model for 1-Tone large-signal modulation [1, eq. (7, 8)] and then generalize it for \emph{N}-Tone [1, eq.  (12, 13)]. Moreover, in Appendix A the authors present an exact large-signal theory for 1-Tone.
+
+We have found out that there are missing terms in their equations (8) and (12); therefore, the mathematical equality in both equations does not hold. Contrary to our expectations, we have verified, after exhaustive numerical experiments, that those missing terms could not necessarily improve the accuracy of the results yielded by their model. In addition, we have noticed that the equation of the Fourier coefficients [1, eq. (15)] has also inconsistencies. The purpose of this comment is three-fold: (i) To provide the correct equations that result from rigorously following the assumptions made in \cite{eva}; (ii) To propose a solution to the paradox aforementioned, whereby the correct equations are not always able to provide more accurate outcomes; (iii) To propose a new equation to replace [1, eq. (15)].
+
+As previously shown in \cite{eva}, for 1-Tone large-signal modulation, the complex electric field envelope after linear propagation (considering only group velocity dispersion) through an optical fiber can be expressed as:
+%%%%%%%% Eq. 1 %%%%%%%%%%%%%
+\begin{equation} \label{Ez1}
+\tilde{E}(t, z) \cong P_0^{1/2}\bigg.\sum_{n = -\infty}^{\infty} c_n (z)e^{jn(\Omega t + \varphi_{IM})}/\sqrt{L(z)}
+\end{equation}
+%%%%%%%% Eq. 2 %%%%%%%%%%%%%
+\begin{align} \label{Ez1cn}  \nonumber
+&c_n(z) = e^{jn^2\theta(z)}e^{jn\Delta\varphi}\bigg[\overbrace{J_n(m_{FM})}^{A} + \\
+& \qquad{} \underbrace{\frac{m_{IM}}{4}\Big(J_{n+1}(m_{FM})e^{j\Delta\varphi} + J_{n-1}(m_{FM})e^{-j\Delta\varphi}\Big)}_{B}\bigg]
+\end{align}
+where $P_0$  is the average output power, $L(z)$ is the fiber power loss in linear units, $J_n$ denotes the Bessel function of first kind and \emph{n}th order, $\Omega/2\pi$  is the modulation frequency of the laser, $m_{IM}$ and $m_{FM}$  are the intensity modulation (IM) and frequency modulation (FM) indexes, respectively, $\varphi_{IM}$ and $\varphi_{FM}$ are the corresponding phases and finally $\theta(z) = -1/2\beta_2\Omega^2z$, with $\beta_2$ the fiber dispersion parameter and \emph{z} the fiber length. The Bessel function of first type arises in \eqref{Ez1cn} from the Jacobi-Anger expansion of the phase modulation parcel.
+
+Equation \eqref{Ez1cn} bears two underlining assumptions. The phase modulation due to laser chirp is considered linear with relation to the optical power [1, eq. (2)] and the square root of the intensity modulation (IM) is also linearized [1, eq. (3)] and shown here as \eqref{raiz_aprox}, consequently the IM becomes, in fact, an amplitude modulation (AM). Under the latter assumption, the electric field amplitude representation is simplified, so that it can be expressed just with two spectral components highlighted in \eqref{raiz_aprox}, namely, one at the origin, denoted by the letter \emph{A}, and another at the fundamental frequency $\Omega/2\pi$, denoted by the letter \emph{B}. We can even map the terms identified in \eqref{Ez1cn} back to their originating terms in \eqref{raiz_aprox}; the terms \emph{A} and \emph{B} in \eqref{Ez1cn} are originated, respectively, by terms \emph{A} and \emph{B} from \eqref{raiz_aprox}. This distinction will be used throughout this comment to explain the origin of the extra terms in our equations.
+%%%%%%%% Eq. 3 %%%%%%%%%%%%%
+\begin{equation} \label{raiz_aprox}
+\sqrt{1 + m_{IM}\cos(\Omega t + \varphi_{IM})} \approx \overbrace{1}^{A} + \overbrace{\frac{m_{IM}}{2}\cos(\Omega t + \varphi_{IM})}^{B}
+\end{equation}
+The detected current $\tilde{I}_{det}(t,z)$ is then calculated by multiplying equation \eqref{Ez1} by its complex conjugate. Furthermore, this product is actually a multiplication of two Fourier series. Therefore, the result is also a Fourier series whose coefficients are given by the discrete convolution of the coefficients of the multiplied series. Thus:
+%%%%%%%% Eq. 4 %%%%%%%%%%%%%
+\begin{equation} \label{I}
+\tilde{I}_{det}(t, z) = \sum_{n = -\infty}^{\infty}I_{det}(n\Omega,z)e^{jn(\Omega t + \varphi_{IM})}/L(z)
+\end{equation}
+with the detected current at the \emph{n}th harmonic given by:
+%%%%%%%% Eq. 5 %%%%%%%%%%%%%
+\begin{align} \label{Idet_prod} \nonumber	
+&I_{det}(n\Omega, z) = P_0R(n\Omega)\Big[c_n(z)*c_n^{*}(z)\Big] \\ \nonumber
+& = P_0R(n\Omega)\sum_{k = -\infty}^{\infty}e^{j2nk\theta}\bigg[\overbrace{J_k(m_{FM})}^{A} \\ \nonumber
+& + \overbrace{\frac{m_{IM}}{4}\bigg(J_{k-1}(m_{FM})e^{-j\Delta\varphi} + J_{k+1}(m_{FM})e^{j\Delta\varphi}\bigg)}^{B}\bigg] \\ \nonumber
+& \cdot\bigg[\overbrace{\frac{m_{IM}}{4}\bigg(J_{k-n-1}(m_{FM})e^{j\Delta\varphi} + J_{k-n+1}(m_{FM})e^{-j\Delta\varphi}\bigg)}^{B} \\ 
+& + \overbrace{J_{k-n}(m_{FM})}^{A}\bigg]e^{jn\Delta\varphi}e^{-jn^2\theta} 
+\end{align}
+where $R(n\Omega)$ is the photodiode responsivity at the \emph{n}th harmonic. The letters \emph{A} and \emph{B} in \eqref{Idet_prod} carry the same meaning as in \eqref{Ez1cn}. By distributing the terms in the square brackets and applying Graf's theorem for summation of Bessel functions \cite{bessel} at each product term, yields:
+%%%%%%%% Eq. 6 %%%%%%%%%%%%%
+\begin{align} \label{Idet} \nonumber
+&I_{det}(n\Omega, z) = R(n\Omega)P_0j^ne^{jn\Delta\varphi}[\overbrace{J_n(u)}^{A\cdot A}\\ \nonumber
+& - \overbrace{j\textstyle\frac{m_{IM}}{2} \cos{(n\theta)}(J_{n-1}(u)e^{-j\Delta\varphi} - J_{n+1}(u)e^{j\Delta\varphi})}^{A\cdot B + B\cdot A} \\
+& + \overbrace{\textstyle\frac{m_{IM}^2}{16}(2J_n(u)\cos{(2n\theta)} - J_{n-2}(u)e^{-2j\Delta\varphi} - J_{n+2}(u)e^{2j\Delta\varphi})}^{B\cdot B}]
+\end{align}
+where $u = 2m_{FM}\sin(n\theta)$. The letters above each term show their origin, for instance $B\cdot B$ indicates that this term results from the product between terms \emph{B} from \eqref{Idet_prod}.
+
+Therefore, \eqref{Idet} is the correct expression for the detected current under the two underlining assumptions aforementioned. However, \eqref{Idet} does not match its counterpart presented in [1, eq. (8)], and we can easily pinpoint the term that has been omitted by the authors.  Note that $B\cdot B$ is not shown in [1, eq. (8)]. 
+
+We conjecture that the authors have intentionally omitted term $B\cdot B$, but they have not made that clear in the text nor the reasons for such omission. Despite the merits of their paper, this lack of mathematical formalism can mislead readers trying to derivate their proposed theory, since the equations involved are not trivial to derivate. More importantly, the missing term could be linked to the good performance of the small-signal approximation \eqref{raiz_aprox} used for the square root in a large-signal theory, as it will be discussed afterwards. In order to support our conjecture, one can note that in Appendix A of \cite{eva}, the authors carried out a more accurate and exact large-signal theory [1, eq. (16)]. This equation has a typing error, the multiplicative coefficient $4m_1^2$ is in fact $m_1^2$. This aside, [1, eq. (16)] considers the same approximations made before, but the coefficients for square root linearization ($m_0$ and $m_1$) in the field amplitude are calculated by a Fourier series [1, eq. (15)]. Therefore, if we make these coefficients equal to those used previously ($m_0 = 1$ and $m_1 = m_{IM}/4$) we would expect to arrive at the same outcome of [1, eq. (8)]; however, this does not occur and we obtain the equation shown in \eqref{Idet} instead. 
+
+For the \emph{N}-tone large-signal theory there are also omitted terms. Following the analysis made above, we obtain:
+%%%%%%%% Eq. 7 %%%%%%%%%%%%%
+\begin{align} \label{Idet_N} \nonumber
+& \tilde{I}_{det}(t,z) = \frac{1}{L(z)}\sum_{n_1 \ldots n_N = -\infty}^{\infty} \bigg[I_{det}(\Omega_{IMP},z) \\
+& + I_{add}(\Omega_{IMP},z)\bigg]\exp\bigg(j\sum_{k = 1}^N n_k(\Omega_kt + \varphi_{IM_k}\bigg)
+\end{align}
+where $\Omega_{IMP}$ is the intermodulation product (IMP) $\Omega_{IMP} \equiv \sum_{k = 1}^N n_k\Omega_k$, $I_{det}(\Omega_{IMP},z)$ is [1, eq. (13)] and $I_{add}(\Omega_{IMP},z)$ is the additional term, which complements the development presented in \cite{eva}. The additional term photodetected intensity at $\Omega_{IMP}$ is given by
+%%%%%%%% Eq. 8 %%%%%%%%%%%%%
+\begin{align} \nonumber \label{Ires}
+& I_{add}(\Omega_{IMP},z) \\ \nonumber
+& = P_0R(\Omega_{IMP})\displaystyle\sum_{l_1 \ldots l_N}\bigg\lbrace\prod_{k = 1}^NJ_{l_k}(m_{FM_k})J_{l_k - n_k}(m_{FM_k}) \\ \nonumber
+& \cdot\bigg[\sum_{k = 1}^N\textstyle\frac{m_{IM_k}}{4}\frac{J_{l_k+1}(m_{FM_k})e^{j\Delta\varphi_k} + J_{l_k-1}(m_{FM_k})e^{-j\Delta\varphi_k}}{J_{l_k}(m_{FM_k})}\bigg] \\ \nonumber
+& \cdot\bigg[\sum_{k = 1}^N\textstyle\frac{m_{IM_k}}{4}\frac{J_{	l_k-n_k+1}(m_{FM_k})e^{-j\Delta\varphi_k} + J_{m_k-n_k-1}(m_{FM_k})e^{j\Delta\varphi_k}}{J_{l_k-n_k}(m_{FM_k})}\bigg] \\
+& \cdot\exp(j\textstyle\sum_{k = 1}^N (2l_k\theta_k - n_k\theta_k))\bigg\rbrace\exp(\textstyle\sum_{k=1}^Njn_k\Delta\varphi_k)
+\end{align}
+where $u_k = 2m_{FM_k}\sin{(\theta_k)}$ and $\theta_k = (-1/2)\beta_2\Omega_k\Omega_{IMP}z$. Similarly to 1-Tone large-signal theory, the additional term originates from a neglected product between two terms, both marked as $B$ in \eqref{Idet_prod}. Due to the independency of the \emph{N} arbitrary frequencies of \eqref{Ires}, it is not possible to apply Graf’s theorem in order to simplify \eqref{Ires}, which considerably increases its complexity. 
+
+In order to close our first objective, which was to derive the correct equations for 1-Tone and \emph{N}-Tone large-signal theory that result from the assumptions made in \cite{eva}, extensive numerical simulations were also carried out in order to validate both equations \eqref{Idet} and \eqref{Idet_N}. It is important to point out that these numerical experiments strictly followed the approximations aforementioned. 
+
+However, a paradox emerges when testing our equations \eqref{Idet} and \eqref{Idet_N} against their counterparts presented in \cite{eva} using as a benchmark the numerical results without considering the linearization of the square root. We verify that the original equations in \cite{eva}, for some cases, provide better results than the corrected equations shown here. This paradox can be solved if one notes that the omitted terms are in fact spurious contributions that arise from the combination of the square root linearization and the square law detection. In order to illustrate this, let us consider an exemplar case study, where the electric field amplitude is approximated as in \eqref{raiz_aprox} and then undergone square law detection in a back-to-back system, i.e. $z = 0 \rightarrow \theta(z = 0) = 0$.
+%%%%%%%% Eq. 9 %%%%%%%%%%%%%
+\begin{align} \label{Idetb2b} \nonumber
+\frac{\tilde{I}_{det}(t, z = 0)}{RP_0} = |\overbrace{1}^{A} + \overbrace{\frac{m_{IM}}{2}\cos(\Omega t + \varphi_{IM})}^{B}|^2 = \\
+\overbrace{1}^{A\cdot A} + \overbrace{m_{IM}\cos(\Omega t + \varphi_{IM})}^{A\cdot B + B\cdot A} + \overbrace{\Big(\frac{m_{IM}}{2}\Big)^2\cos^2(\Omega t + \varphi_{IM})}^{B\cdot B}
+\end{align}
+The terms $A\cdot A$ and $A\cdot B + B\cdot A$ in \eqref{Idetb2b} fully describe the expected result of the IM signal after square law detection. But the approximation in \eqref{raiz_aprox} implies that \eqref{Idetb2b} was calculated from an AM signal, and, as a result, there is also the term $B\cdot B$, which corresponds to the beating of two sinusoidal components. From a simple trigonometric property, we can show that the term $B\cdot B$ leads to spurious spectral contributions at the origin and at the second harmonic (i.e., $2\Omega/2\pi$). The terms marked as $B\cdot B$ in \eqref{Idet} arise likewise term $B\cdot B$ in \eqref{Idetb2b} when $\theta(z) \neq 0$. For \emph{N}-Tone modulation, this unwanted element is represented in \eqref{Ires}. There are beating terms among all the \emph{N} tones, which lead to spurious (frequency, amplitude or both) components along the whole spectrum, undermining the overall model accuracy.
+
+Therefore, the missing terms in [1, eq. (8)] and [1, eq. (12)] are key points to explain why the small-signal approximation made for the square root \eqref{raiz_aprox}, used in a large-signal model, still provides good results for large modulation indexes ($m_{IM}$), as suggested in the experimental validations carried in \cite{eva}. In paragraph one, column two of page 86 the authors state: ``At very large $m_{IM}$, our theory does not perfectly agree with the experiment due to the presence of IM harmonics (and consequently FM harmonics) at the laser output that were neglected in (1), and not to the approximation in (3).'' we argue that this statement only holds if the additional terms presented herein were disregarded, since these terms can be the dominant factors of the model's inaccuracies. 
+
+In order to verify our claim, one can calculate the error in relation to numerical solution without linear approximations for both IM and FM in a 1-Tone modulated signal. Even for moderate intensity modulation index, i.e., $m_{IM} = 0.5$, using the model given in \eqref{Idet}, the percent error exceeds $35\%$ at the second harmonic; whereas using [1, eq. (8)], in which the additional term $B\cdot B$ was omitted, the percent error is below $8\%$ for $z = 10$ km, $\Omega/2\pi = 1$ GHz, $\varphi_{IM} = 0°$, $P_0 = 4$ mW, $\alpha = -5$, $\kappa = 20$ GHz/mW, $D = 17$ ps/nm$\cdot$km and $\lambda = 1550$ nm. Therefore, the error added by the AM approximation \eqref{raiz_aprox} can dominate over the FM approximation [1, eq. (2)] in scenarios where the phase-to-intensity conversion induced by dispersive propagation is small.
+
+In summary, omitting terms $B \cdot B$ in \eqref{Idet}, for 1-Tone model, and the additional term represented by equation \eqref{Ires}, for \emph{N}-Tone model, is perhaps an ingenious, but unmentioned, artifice used by the authors to oppose the inaccuracies added by the square root linearization made in [1, eq. (3)], that are enhanced after square law detection. This closes our second objective by explaining the paradox, whereby the correct developments after performing the assumptions made in \cite{eva} are unable to always provide more accurate outcomes. 
+
+Our last objective regards the exact large signal theory presented in Appendix A of \cite{eva}. The proposed model is obtained by considering all the sidebands of the IM, i.e. left side of [1, eq. (3)]. This is accomplished by expanding the square root of the intensity modulation as a Fourier series whose coefficients are given by [1, eq. (15)]. However, this equation is not defined for both $l < 0$ and $l = 0$, because they will lead to negative arguments for the numerator's double factorial. The double factorial operator is not defined for negative numbers different from -1 (-1!! = 1) \cite{Arfken}.  In order to address this flaw, we have derived an alternative equation:
+%%%%%%%% Eq. 10 %%%%%%%%%%%%%
+\begin{equation} \label{ml}
+m_l = \bigg.\sum_{k = 0}^{\infty}\frac{(-1)^n}{(1 - 2n)}\binom{2n}{n}\binom{n}{k}\bigg(\frac{m_{IM}}{8}\bigg)^n, n = 2k + |l|
+\end{equation}
+Indeed, equation [1, eq. (15)] can be obtained from manipulating \eqref{ml} by means of the identity: $4^nn!n! = 2n!!2n!!$ with \emph{n} integer, after expanding the first binomial coefficient $\binom{2n}{n}$. Although \eqref{ml} is still defined for $l = 0$, it cannot be simplified into [1, eq. (15)]. In addition, here the inconsistency arising for $l < 0$ is corrected by using only absolute values of \emph{l}. Since the square root in \eqref{raiz_aprox} is a real valued function, the Hermitian symmetry holds and therefore $m_{-l} = m_l^* = m_l$. 
+
+In conclusion, we have argued that the equations presented in [1] for 1-Tone and \emph{N}-Tone large-signal theory are incorrect based on the authors' assumptions. Paradoxically, the correct equations does not necessarily improve the model's accuracy. By carefully pinpointing the discrepancies, we could identify them as unrealistic beating between sinusoidal components that arise from the square root linearization in \eqref{raiz_aprox} undergoing square law detection. Thus, providing in-depth understanding of the workings of simplifying assumptions on directly detected chirped IM signals through dispersive propagation. This comment also corrects inconsistencies in the exact large-signal theory presented in \cite{eva} benefiting readers trying to extend their proposed large-signal theory towards nonlinear laser chirp dependency on optical power. 
+
+
+% An example of a floating figure using the graphicx package.
+% Note that \label must occur AFTER (or within) \caption.
+% For figures, \caption should occur after the \includegraphics.
+% Note that IEEEtran v1.7 and later has special internal code that
+% is designed to preserve the operation of \label within \caption
+% even when the captionsoff option is in effect. However, because
+% of issues like this, it may be the safest practice to put all your
+% \label just after \caption rather than within \caption{}.
+%
+% Reminder: the "draftcls" or "draftclsnofoot", not "draft", class
+% option should be used if it is desired that the figures are to be
+% displayed while in draft mode.
+%
+%\begin{figure}[!t]
+%\centering
+%\includegraphics[width=2.5in]{myfigure}
+% where an .eps filename suffix will be assumed under latex, 
+% and a .pdf suffix will be assumed for pdflatex; or what has been declared
+% via \DeclareGraphicsExtensions.
+%\caption{Simulation Results}
+%\label{fig_sim}
+%\end{figure}
+
+% Note that IEEE typically puts floats only at the top, even when this
+% results in a large percentage of a column being occupied by floats.
+
+
+% An example of a double column floating figure using two subfigures.
+% (The subfig.sty package must be loaded for this to work.)
+% The subfigure \label commands are set within each subfloat command, the
+% \label for the overall figure must come after \caption.
+% \hfil must be used as a separator to get equal spacing.
+% The subfigure.sty package works much the same way, except \subfigure is
+% used instead of \subfloat.
+%
+%\begin{figure*}[!t]
+%\centerline{\subfloat[Case I]\includegraphics[width=2.5in]{subfigcase1}%
+%\label{fig_first_case}}
+%\hfil
+%\subfloat[Case II]{\includegraphics[width=2.5in]{subfigcase2}%
+%\label{fig_second_case}}}
+%\caption{Simulation results}
+%\label{fig_sim}
+%\end{figure*}
+%
+% Note that often IEEE papers with subfigures do not employ subfigure
+% captions (using the optional argument to \subfloat), but instead will
+% reference/describe all of them (a), (b), etc., within the main caption.
+
+
+% An example of a floating table. Note that, for IEEE style tables, the 
+% \caption command should come BEFORE the table. Table text will default to
+% \footnotesize as IEEE normally uses this smaller font for tables.
+% The \label must come after \caption as always.
+%
+%\begin{table}[!t]
+%% increase table row spacing, adjust to taste
+%\renewcommand{\arraystretch}{1.3}
+% if using array.sty, it might be a good idea to tweak the value of
+% \extrarowheight as needed to properly center the text within the cells
+%\caption{An Example of a Table}
+%\label{table_example}
+%\centering
+%% Some packages, such as MDW tools, offer better commands for making tables
+%% than the plain LaTeX2e tabular which is used here.
+%\begin{tabular}{|c||c|}
+%\hline
+%One & Two\\
+%\hline
+%Three & Four\\
+%\hline
+%\end{tabular}
+%\end{table}
+
+\section*{Acknowledgments}
+
+This work was supported in part by FAPES (CNPq/FAPES PRONEX) under Grant 48508560/2009. The authors greatly acknowledge the financial support provided by FINEP/FAPES.
+
+% Note that IEEE does not put floats in the very first column - or typically
+% anywhere on the first page for that matter. Also, in-text middle ("here")
+% positioning is not used. Most IEEE journals use top floats exclusively.
+% Note that, LaTeX2e, unlike IEEE journals, places footnotes above bottom
+% floats. This can be corrected via the \fnbelowfloat command of the
+% stfloats package.
+
+\begin{thebibliography}{1}
+\bibitem{eva}
+E. Peral and A. Yariv; ``Large-Signal Theory of the Effect of Dispersive Propagation on the Intensity Modulation Response of Semiconductor Lasers,'' J. Light. Technol., vol. 18, no. 1, pp. 84-89, Jan. 2000.
+\bibitem{bessel}
+G. N. Watson; ``A Treatise on the Theory of Bessel Functions,'' Cambridge: Cambridge University Press, 1st edition, pp. 359-361, 2008
+\bibitem{Arfken}
+G. Arfken; ``Mathematical Methods for Physicists,'' 3rd edition, pp. 544-545 and 547-548, Academic Press, Orlando, 1985.
+\end{thebibliography}
+
+
+\begin{IEEEbiographynophoto}{José Paulo Krause Perin}
+is currently a senior student of the Bachelor of Electrical Engineering program at the Universidade Federal do Espirito Santo, Brazil. His research interests include fiber-optic communication systems and networks.
+\end{IEEEbiographynophoto}
+\begin{IEEEbiographynophoto}{Moisés Renato Nunes Ribeiro}
+was born in Vitoria/ES, Brazil in 1969. He received the B.Sc. degree in electrical engineering from the Instituto Nacional de Telecomunicationes (INATEL), the M.Sc. degree in telecommunications from the Universidade Estadual de Campinas (UNICAMP), Brazil, and the Ph.D. degree in the same area from the University
+of Essex, Essex, U.K., in 1992, 1996, and 2002, respectively.
+He joined the Department of Electrical Engineering, Universidade Federal do Espirito Santo, Brazil, in 1995. He was a Visiting Professor to the Electrical Engineering Department at Stanford University (October 2010 to September 2011) under a grant from the Brazilian government (CAPES). His research interests include fiber-optic and computer communication devices, systems, and networks.
+\end{IEEEbiographynophoto}
+\begin{IEEEbiographynophoto}{Adolfo Cartaxo}
+Adolfo Cartaxo  (S’89–A’89–M’98–SM’02) was born in Montemor-o-Novo, Portugal,in 1962. He received the “Licenciatura” degree in electrical engineering, the M.Sc. degree in telecommunications and computers, and the Ph.D. degree in electrical engineering from the Instituto Superior Técnico (IST), Lisbon Technical University, Lisbon, Portugal, in 1985, 1989, and 1992, respectively. In 1985, he joined the Department of Electrical and Computer Engineering of IST. In 1992, he became an Assistant Professor and he was promoted to Associate Professor in January 2002. Over those years, he has lectured several courses on Telecommunications. He joined the Optical Communications Group of Lisbon Pole of Instituto de Telecomunicações (IT) as a researcher in 1993. He is now a senior researcher conducting research on optical communication systems and networks. Since January 2002, he is member of the National Coordination Commission on Optical Communications of IT. He has been leader of the IST participation or of the Lisbon site of IT in six projects of the European Union programs on R&D in the optical communications area. He has been leader of several national projects in the optical communications area. He is the leader of IST-IT participation in the cooperation project with Brazil in the area of optical networks. He has acted as a technical auditor and evaluator for projects included in “Advanced Communications Technologies and Services: European RTD” (ACTS) and “Information Society Technologies” (IST) European Union R&D Programs. He has served as a reviewer for the leading international publications in the area of optical communications and networks. He has authored or co-authored more than 60 journal publications (15 as first author) as well as more than 80 international conference papers. He is co-author of two international patents.
+Dr. Cartaxo is a Senior member of the IEEE Laser and Electro-Optics Society. 
+
+\end{IEEEbiographynophoto}
+
+
+\end{document}
+
+

@@ -1,0 +1,162 @@
+\chapter{Teoria de Grandes Sinais para o Propagação Dispersiva de Sinais Modulados Diretamente com Aproximação Quadrática para Logaritmo do Chirp Transiente}
+\label{chapGrandeSinais2}
+
+A teoria de grandes sinais apresentada no Capítulo~\ref{chapGrandeSinais1} faz uso de duas aproximações: aproximação linear do logaritmo natural do \emph{chirp} transiente \eqref{tomN:PIR}, e aproximação linear da raiz quadrada da intensidade do campo elétrico \eqref{tomN:IM2AM}. Como sinais OFDM possuem alto PAPR, essas aproximações podem apresentar erros significativos. As imprecisões inseridas pela aproximação linear da raiz quadrada são de certa forma compensadas pela omissão de alguns termos na teoria de 1 e \emph{N} tons, como feito em \cite{eva}, e discutido em \cite{comments}. Porém, os erros da aproximação linear do logaritmo não são compensados de nenhuma forma. Logo, a imprecisão do modelo está mais ligada à qualidade da aproximação do logaritmo do que a aproximação da raiz quadrada \cite{eva}. Portanto, para melhorarmos a precisão do modelo de grandes sinais devemos melhorar a aproximação do logaritmo natural. Esta afirmação é especialmente importante para situações em que o \emph{chirp} transiente é dominante. 
+
+Como estamos interessados em aplicar a teoria para sinais OFDM, neste capítulo vamos mostrar apenas o desenvolvimento para \emph{N} tons.
+
+\section{Teoria de Grandes Sinais para \emph{N}-Tons}
+\subsection{Cálculo do Envelope Complexo do Campo Elétrico na Saída do Laser}
+
+O próximo passo natural para melhorar a aproximação do modelo é aproximar o logaritmo por uma parábola. Para isso vamos escrever a equação do desvio de fase para \emph{N} tons:
+\begin{equation}
+\Delta\varphi(t) \approx \dfrac{\alpha}{2}\Bigg\lbrace\Bigg[\sum_{n = 1}^{2}\frac{1}{n}\bigg[\sum_{k = 1}^{N}-m_{IM_k}\cos(\Omega_k t + \varphi_{IM_k})\bigg]^{n}\Bigg] - \kappa P_0 \sum_{k = 1}^{N}\frac{m_{IM_k}}{\Omega_k}\sin(\Omega_k t + \varphi_{IM_k})\Bigg\rbrace.
+\end{equation}
+Ao truncar a série de Taylor do logaritmo natural em $n = 2$ estamos aproximando o logaritmo natural por uma parábola:
+\begin{align}\label{desvio_de_fase_NTomc2} \nonumber 
+\Delta\varphi(t) \approx &\Bigg\lbrace\Bigg[\overbrace{\dfrac{-\alpha}{2}\sum_{k = 1}^{N}m_{IM_k}\cos(\Omega_k t + \varphi_{IM_k})}^{A} + \overbrace{\frac{\alpha}{4}\bigg[\sum_{k = 1}^{N}m_{IM_k}\cos(\Omega_k t + \varphi_{IM_k})\bigg]^{2}}^{B} \Bigg] \\ 
+& - \overbrace{\dfrac{\alpha\kappa P_0 }{2}\sum_{k = 1}^{N}\frac{m_{IM_k}}{\Omega_k}\sin(\Omega_k t + \varphi_{IM_k})}^{C}\Bigg\rbrace
+\end{align}
+
+O termo \emph{B} é o único termo diferente do equacionamento feito na teoria de \emph{N} tons do capítulo anterior. Os termo \emph{A} e \emph{C} podem ser relacionados pelo PIR da equação \eqref{PIR}, dando origem ao somatório de senos com amplitude $m_{FM_k}$, fase $\varphi_{FM_k}$ e frequência angular $\Omega_k$. Portanto:
+\begin{align} \nonumber 
+\Delta\varphi(t) & \approx \Bigg\lbrace \sum_{k=1}^Nm_{FM_{k}}\sin{(\Omega_kt + \varphi_{FM_{k}})} + \frac{\alpha}{4}\bigg[\sum_{k = 1}^{N}m_{IM_k}cos(\Omega_k t + \varphi_{IM_k})\bigg]^{2} \Bigg\rbrace \\ \nonumber
+& = \Bigg\lbrace \sum_{k=1}^Nm_{FM_{k}}\sin{(\Omega_kt + \varphi_{FM_{k}})} \\
+& + \frac{\alpha}{4}\sum_{k_1 = 1}^{N}\sum_{k_2 = 1}^{N}m_{IM_{k_{1}}}m_{IM_{k_{2}}}\cos(\Omega_{k_{1}} t + \varphi_{IM_{k_1}})\cos(\Omega_{k_{2}} t + \varphi_{IM_{k_{2}}}) \Bigg\rbrace.
+\end{align}
+
+Podemos reescrever o produto de cossenos com uma soma de cossenos. Esta conversão de produto em soma é o que inviabiliza a utilização de aproximações de mais alta ordem  para representar o logaritmo.
+\begin{align} \nonumber 
+\Delta\varphi(t) \approx & \Bigg\lbrace \sum_{k=1}^Nm_{FM_{k}}\sin{(\Omega_kt + \varphi_{FM_{k}})} + \frac{\alpha}{4}\sum_{k_1 = 1}^{N}\sum_{k_2 = 1}^{N}\frac{m_{IM_{k_{1}}}m_{IM_{k_{2}}}}{2} \\ 
+& \cdot\Big(\cos((\Omega_{k_{2}}+\Omega_{k_{1}})t + \varphi_{IM_{k_2}} + \varphi_{IM_{k_1}}) + \cos((\Omega_{k_{2}}-\Omega_{k_{1}})t + \varphi_{IM_{k_2}} - \varphi_{IM_{k_1}})\Big) \Bigg\rbrace
+\end{align}
+Como o cosseno é uma função par, podemos ainda separar o duplo somatório em duas condições: uma em que $k_1 = k_2$ e outra em que $k_1 \neq k_2$:
+\begin{align} \nonumber 
+\Delta\varphi(t) \approx & \Bigg\lbrace \sum_{k=1}^Nm_{FM_{k}}\sin{(\Omega_kt + \varphi_{FM_{k}})} + \frac{\alpha}{4}\sum_{k = 1}^N\frac{m_{IM_k}^2}{2}\Big(\cos(2(\Omega_k t + \varphi_{IM})) + 1\Big) \\ \nonumber
+& + \frac{\alpha}{4}\sum_{k_1 = 1}^{N-1}\sum_{k_2 = k_1 + 1}^{N}\frac{2m_{IM_{k_{1}}}m_{IM_{k_{2}}}}{2}\Big(\cos((\Omega_{k_{2}}+\Omega_{k_{1}})t + \varphi_{IM_{k_2}} + \varphi_{IM_{k_1}}) \\ 
+& + \cos((\Omega_{k_{2}}-\Omega_{k_{1}})t + \varphi_{IM_{k_2}} - \varphi_{IM_{k_1}})\Big)\Bigg\rbrace
+\end{align}
+O termo constante que aparece quando $k_1 = k_2$ pode ser descartado, uma vez que corresponde a um desvio de fase constante. Além disso, podemos escrever todos os cossenos como senos:
+\begin{align} \nonumber \label{dphi2}
+\Delta\varphi(t) \approx & \Bigg\lbrace \sum_{k=1}^Nm_{FM_{k}}\sin{(\Omega_kt + \varphi_{FM_{k}})} + \sum_{k = 1}^N\frac{\alpha m_{IM_k}^2}{8}\sin(2(\Omega_k t + \varphi_{IM}) + \pi/2) \\ \nonumber
+& + \sum_{k_1 = 1}^{N-1}\sum_{k_2 = k_1 + 1}^{N}\frac{\alpha m_{IM_{k_{1}}}m_{IM_{k_{2}}}}{4}\Big(\sin((\Omega_{k_{2}}+\Omega_{k_{1}})t + \varphi_{IM_{k_2}} + \varphi_{IM_{k_1}} + \pi/2) \\ 
+& + \sin((\Omega_{k_{2}}-\Omega_{k_{1}})t + \varphi_{IM_{k_2}} - \varphi_{IM_{k_1}} + \pi/2)\Big)\Bigg\rbrace
+\end{align}
+A equação acima também é um somatório de senos, da mesma forma que o expoente de \eqref{tomN:Etz01}. Portanto, podemos reescrever \eqref{dphi2} de forma mais simplificada, onde cada seno corresponde a um tom de modulação FM:
+\begin{equation}
+\Delta\varphi(t) \approx m'_{FM_k}\sin({\Omega'}_k + {\varphi'}_{FM_k}).
+\end{equation}
+Onde:
+\begin{equation} \label{tons}
+{\Omega'}_k = \bigg[\overbrace{\Omega_2-\Omega_1,~\cdots~,\Omega_{N}-\Omega_{N-1}}^{\binom{N}{2}~termos},~\overbrace{\Omega_1,~\cdots~,\Omega_N}^{N~termos},~\overbrace{\Omega_2+\Omega_1,~\cdots~,\Omega_{N}+\Omega_{N-1}}^{\binom{N}{2}~termos},~\overbrace{2\Omega_1,~\cdots~,2\Omega_N}^{N~termos}\bigg]
+\end{equation}
+\begin{align} \label{mfm_tons} \nonumber
+m_{FM}' = &\bigg[\overbrace{\frac{\alpha m_{IM_1}m_{IM_2}}{4},~\cdots~,\frac{\alpha m_{IM_{N-1}}m_{IM_N}}{4}}^{\binom{N}{2}~termos},~\overbrace{m_{FM_1},~\cdots~,m_{FM_N}}^{N~termos}, \\
+& \overbrace{\frac{\alpha m_{IM_1}m_{IM_2}}{4},~\cdots~,\frac{\alpha m_{IM_{N-1}}m_{IM_N}}{4}}^{\binom{N}{2}~termos},~\overbrace{\frac{\alpha m_{IM_1}^2}{8},~\cdots~,\frac{m_{IM_N}^2}{8}}^{N~termos}\bigg]
+\end{align}
+\begin{align} \label{phifm_tons} \nonumber
+\varphi_{FM}' = &\bigg[\overbrace{\varphi_{IM_2}-\varphi_{IM_1}+\pi/2,~\cdots~,\varphi_{IM_{N}}-\varphi_{IM_{N-1}}+\pi/2}^{\binom{N}{2}~termos},~\overbrace{\varphi_{FM_1},~\cdots~,\varphi_{FM_N}}^{N~termos}, \\ 
+& \overbrace{\varphi_{IM_2}+\varphi_{IM_1}+\pi/2,~\cdots~,\varphi_{IM_{N}}+\varphi_{IM_{N-1}}+\pi/2}^{\binom{N}{2}~termos},~\overbrace{2\varphi_{IM_1}+\pi/2,~\cdots~,2\varphi_{IM_N}+\pi/2}^{N~termos}\bigg]
+\end{align}
+
+Desta forma, aproximar o logaritmo do \emph{chirp} transiente por uma parábola é equivalente a considerar que há na verdade $N' = 2N + 2\binom{N}{2}$ tons de modulação FM, cuja frequência angular, amplitude, e fase são calculadas por \eqref{tons}, \eqref{mfm_tons}, e \eqref{phifm_tons}, respectivamente. Do total de $N'$ tons, temos $N$ tons ``verdadeiros'', e os demais aparecem do termo quadrático da aproximação do logaritmo por uma parábola.
+
+A ideia por trás da representação da aproximação do logaritmo por uma parábola como uma soma de $N' = 2N + 2\binom{N}{2}$ tons de modulação FM é que assim nós poderemos usar as mesmas equações do Capítulo anterior, uma vez que elas foram desenvolvidas para qualquer valor de \emph{N} tons arbitrários. Porém, para isso, o número de tons de modulação IM deve ser igual ao número de tons da modulação FM, que para este caso é de $N'$. Para resolver este problema uma solução natural seria adotar $m_{IM} = 0$ para todos os tons que aparecem do termo quadrático da aproximação do logaritmo por uma parábola. No entanto, uma solução melhor seria também aproximar a raiz quadrada da modulação de intensidade por uma parábola. Desta forma obteríamos o mesmo número de tons para modulação de intensidade e para modulação de frequência. Desta forma:
+\begin{equation} \label{raiz_quad}
+\sqrt{1 + \sum_{k = 1}^Nm_{IM_k}\cos(\Omega_kt + \varphi_{IM_k})} \approx 1 + \sum_{k = 1}^N\frac{m_{IM_k}}{2}\cos(\Omega_kt + \varphi_k) - \frac{1}{8}\bigg[\sum_{k = 1}^Nm_{IM_k}\cos(\Omega_kt + \varphi_k)\bigg]^2.
+\end{equation}
+Expandindo o termo quadrático e escrevendo os produtos de cossenos como soma de cossenos quando possível, e aproveitando o fato de o cosseno ser uma função par, temos:
+\begin{align} \nonumber \label{exp_root}
+& = 1 - \sum_{k = 1}^N\bigg(\frac{m_{IM_k}^2}{16}\bigg) + \sum_{k = 1}^N\bigg[\frac{m_{IM_k}}{2}\cos(\Omega_kt + \varphi_{IM_k}) - \frac{m_{IM_k}^2}{16}\cos(2(\Omega_k t + \varphi_{IM}))\bigg] \\ \nonumber
+& - \sum_{k_1 = 1}^{N-1}\sum_{k_2 = k_1 + 1}^{N}\frac{2m_{IM_{k_{1}}}m_{IM_{k_{2}}}}{16}\Big(\cos((\Omega_{k_{2}}+\Omega_{k_{1}})t + \varphi_{IM_{k_2}} + \varphi_{IM_{k_1}}) \\ 
+& + \cos((\Omega_{k_{2}}-\Omega_{k_{1}})t + \varphi_{IM_{k_2}} - \varphi_{IM_{k_1}})\Big).
+\end{align}
+
+Assim podemos reescrever \eqref{exp_root} como uma soma de cossenos:
+\begin{equation}
+\sqrt{1 + \sum_{k = 1}^Nm_{IM_k}\cos(\Omega_kt + \varphi_{IM_k})} \approx 1 - \sum_{k = 1}^N\bigg(\frac{m_{IM_k}^2}{16}\bigg) + \frac{m'_{IM_k}}{2}\cos({\Omega'}_k + {\varphi'}_{IM_k})
+\end{equation}
+onde:
+\begin{equation} \label{tons2}
+{\Omega'}_k = \bigg[\overbrace{\Omega_2-\Omega_1,~\cdots~,\Omega_{N}-\Omega_{N-1}}^{\binom{N}{2}~termos},~\overbrace{\Omega_1,~\cdots~,\Omega_N}^{N~termos},~\overbrace{\Omega_2+\Omega_1,~\cdots~,\Omega_{N}+\Omega_{N-1}}^{\binom{N}{2}~termos},~\overbrace{2\Omega_1,~\cdots~,2\Omega_N}^{N~termos}\bigg]
+\end{equation}
+\begin{align} \label{mim_tons} \nonumber
+m_{IM}' = &\bigg[\overbrace{-\frac{m_{IM_1}m_{IM_2}}{4},~\cdots~,-\frac{m_{IM_{N-1}}m_{IM_N}}{4}}^{\binom{N}{2}~termos},~\overbrace{m_{IM_1},~\cdots~,m_{IM_N}}^{N~termos}, \\
+& \overbrace{-\frac{m_{IM_1}m_{IM_2}}{4},~\cdots~,-\frac{m_{IM_{N-1}}m_{IM_N}}{4}}^{\binom{N}{2}~termos},~\overbrace{-\frac{m_{IM_1}^2}{8},~\cdots~,-\frac{m_{IM_N}^2}{8}}^{N~termos}\bigg]
+\end{align}
+\begin{align} \label{phiim_tons} \nonumber
+\varphi_{IM}' = &\bigg[\overbrace{\varphi_{IM_2}-\varphi_{IM_1},~\cdots~,\varphi_{IM_{N}}-\varphi_{IM_{N-1}}}^{\binom{N}{2}~termos},~\overbrace{\varphi_{IM_1},~\cdots~,\varphi_{IM_N}}^{N~termos}, \\
+& \overbrace{\varphi_{IM_1}+\varphi_{IM_2},~\cdots~,\varphi_{IM_{N-1}}+\varphi_{IM_N}}^{\binom{N}{2}~termos},~\overbrace{2\varphi_{IM_1},~\cdots~,2\varphi_{IM_N}}^{N~termos}\bigg]
+\end{align}
+Note que a frequência dos tons de \eqref{tons2} são as mesmas das geradas pela aproximação do logaritmo como uma parábola \eqref{tons}. Analogamente à aproximação do logaritmo, aproximar a raiz quadrada da modulação de intensidade por uma parábola é equivalente a considerar que há na verdade $N' = 2N + 2\binom{N}{2}$ tons de modulação AM, cuja frequência angular, amplitude, e fase são calculadas por \eqref{tons2}, \eqref{mim_tons}, e \eqref{phiim_tons}, respectivamente.
+
+Desta forma, agora temos $N'$ tons de modulação de intensidade e $N'$ tons de modulação de frequência. Portanto podemos escrever a nova equação do envelope complexo do campo elétrico na saída do laser:
+\begin{equation} \label{tomN2:Etz0f}
+\tilde{E}(t,z=0) \approx \sum_{n_1\cdots n_{N'}} E({\Omega'}_{IMP}, z=0)e^{j\sum_{k=1}^{N'} n_k({\Omega'}_kt + {\varphi'}_{IM_k})}
+\end{equation}
+onde ${\Omega'}_{IMP} = \sum_{k = 1}^{N'} n_k{\Omega'}_k$, e: 
+\begin{align} \nonumber \label{tomN2:Eimpz0}
+E({\Omega'}_{IMP}, z = 0) = &\prod_{k = 1}^{N'}(J_{n_k}(m'_{FM_k}))e^{j\sum_{k=1}^{N'} jn_k\Delta\varphi'_k}\bigg[1 - \sum_{k = 1}^N\bigg(\frac{m_{IM_k}^2}{16}\bigg) \\
+& + \sum_{k = 1}^N\frac{m'_{IM_k}}{4}\Big(J_{n_k+1}(m'_{FM_k})e^{j\Delta\varphi'_k} + J_{n_k-1}(m'_{FM_k})e^{-j\Delta\varphi'_k}\Big)/J_{n_k}(m'_{FM_k})\bigg].
+\end{align}
+Os parâmetros marcados com prima ($'$) referem-se aos novos tons calculados após a aproximação da raiz quadrada, enquanto que os parâmetros sem prima referem-se aos \emph{N} tons originais. Em relação à equação do envelope complexo do campo elétrico na saída do laser para \emph{N} tons apresentada no capítulo anterior \eqref{tomN2:Eimpz0}, vemos que a única diferença é o termo $\sum_{k = 1}^N\bigg(\frac{m_{IM_k}^2}{16}\bigg)$. Este termo surge da contribuição de amplitude constante que aparece da expansão do termo quadrático de \eqref{raiz_quad}.
+
+\subsection{Propagação na Fibra Óptica}
+Analogamente ao que foi feito na Seção~\ref{chap03_propagaN}, podemos calcular o envelope do campo elétrico após propagação em uma fibra óptica como:
+\begin{equation}
+E({\Omega'}_{IMP}, z) = e^{z\hat{D}(j{\Omega'}_{IMP})}E({\Omega'}_{IMP},z = 0) = e^{j\sum_{k = 1}^{N'} n_k\theta_k} E({\Omega'}_{IMP}, z=0), 
+\end{equation}
+onde $\theta_k = -(1/2)\beta_2\Omega_k{\Omega'}_{IMP}z$. Portanto:
+\begin{equation} \label{tomN2:Etz}
+\tilde{E}(t,z) = \sum_{n_1\cdots n_{N'}} E({\Omega'}_{IMP}, z)e^{j\sum_{k=1}^{N'} n_k({\Omega'}_kt + \varphi'_{IM_k})}
+\end{equation}
+onde:
+\begin{align} \nonumber \label{tomN2:Eimpz}
+E({\Omega'}&_{IMP}, z) = \prod_{k = 1}^{N'}(J_{n_k}(m'_{FM_k}))e^{j\sum_{k=1}^{N'} jn_k\Delta\varphi'_k}\bigg[1 - \sum_{k = 1}^N\bigg(\frac{m_{IM_k}^2}{16}\bigg) \\
+& + \sum_{k = 1}^N\frac{m'_{IM_k}}{4}\Big(J_{n_k+1}(m'_{FM_k})e^{j\Delta\varphi'_k} + J_{n_k-1}(m'_{FM_k})e^{-j\Delta\varphi'_k}\Big)/J_{n_k}(m'_{FM_k})\bigg]e^{j\sum_{k = 1}^{N'} n_k\theta_k}
+\end{align}
+
+\subsection{Detecção Direta}
+O cálculo da corrente detecta é semelhante ao que foi feito na Seção~\ref{chap03_detectaN}: os coeficientes da série de Fourier são calculados pela convolução discreta entre $E({\Omega'}_{IMP}, z)$ e $E^*({\Omega'}_{IMP}, z)$; feito isso, aplica-se o teorema de Graf onde for possível para simplificar o número de somatórios de funções de Bessel. Estes procedimentos resultam em:
+\begin{equation} \label{tomN2:I_add}
+\tilde{I}_{det}(t,z) = \frac{1}{L(z)}\sum_{n_1 \ldots n_{N'} = -\infty}^{\infty} \bigg[I_{det}(\Omega'_{IMP},z) + I_{add}(\Omega'_{IMP},z)\bigg]\exp\bigg(j\sum_{k = 1}^{N'} n_k(\Omega'_kt + \varphi'_{IM_k}\bigg), 
+\end{equation}
+onde $L(z)$ é a atenuação da fibra óptica em unidades lineares. Com $I_{det}(\Omega'_{IMP},z)$ dado por: 
+\begin{align} \nonumber \label{tomN2:Idet}
+I_{det}&(\Omega'_{IMP}, z) = R(\Omega'_{IMP})P_0i^{\sum_{k = 1}^{N'}n_k}\exp\bigg(i\sum_{k = 1}^{N'} n_k\Delta\varphi'_k\bigg)\prod_{k = 1}^{N'}(J_{n_k}(u_k))\bigg(1 - \sum_{k = 1}^N\frac{m_{IM_k}^2}{16}\bigg) \\
+& \cdot\bigg[1 - \sum_{k = 1}^N\bigg(\frac{m_{IM_k}^2}{16}\bigg) - \sum_{k = 1}^{N'} i \frac{m_{IM'_k}}{2}cos\theta_k(J_{n_k-1}(u_k)e^{-i\Delta\varphi'_k} - J_{n_k+1}(u_k)e^{i\Delta\varphi'_k})/J_{n_k}(u_k)\bigg],
+\end{align}
+onde $u_k = 2m'_{FM_k}\sin(\theta_k)$, e $I_{add}(\Omega'_{IMP},z)$ é dado por:
+\begin{align} \nonumber \label{tomN2:Idet_add}
+I_{add}(\Omega'_{IMP},z) =  &P_0R(\Omega'_{IMP})\displaystyle\sum_{l_1 \ldots l_{N'}}\bigg\lbrace\prod_{k = 1}^{N'}J_{l_k}(m'_{FM_k})J_{l_k - n_k}(m'_{FM_k}) \\ \nonumber
+& \cdot\bigg[\sum_{k = 1}^{N'}\frac{m'_{IM_k}}{4}\frac{J_{l_k+1}(m'_{FM_k})e^{j\Delta\varphi'_k} + J_{l_k-1}(m'_{FM_k})e^{-j\Delta\varphi'_k}}{J_{l_k}(m'_{FM_k})}\bigg] \\ \nonumber
+& \cdot\bigg[\sum_{k = 1}^{N'}\frac{m'_{IM_k}}{4}\frac{J_{l_k-n_k+1}(m'_{FM_k})e^{-j\Delta\varphi'_k} + J_{l_k-n_k-1}(m'_{FM_k})e^{j\Delta\varphi'_k}}{J_{l_k-n_k}(m'_{FM_k})}\bigg] \\
+& \cdot\exp(j\textstyle\sum_{k = 1}^{N'} (2l_k\theta_k - n_k\theta_k))\bigg\rbrace\exp(\textstyle\sum_{k=1}^{N'}jn_k\Delta\varphi'_k)
+\end{align}
+
+Novamente, podemos descartar $I_{add}(\Omega'_{IMP},z)$ para melhorar a precisão do modelo, logo:
+\begin{equation} \label{tomN2:I}
+\tilde{I}_{det}(t,z) = \frac{1}{L(z)}\sum_{n_1 \ldots n_{N'} = -\infty}^{\infty} I_{det}(\Omega'_{IMP},z)\exp\bigg(j\sum_{k = 1}^{N'} n_k(\Omega'_kt + \varphi'_{IM_k}\bigg), 
+\end{equation}
+onde $L(z)$ é a atenuação da fibra óptica em unidades lineares. Com $I_{det}(\Omega'_{IMP},z)$ dado por: 
+\begin{align} \nonumber \label{tomN2:Idetf}
+I_{det}&(\Omega'_{IMP}, z) = R(\Omega'_{IMP})P_0i^{\sum_{k = 1}^{N'}n_k}\exp\bigg(i\sum_{k = 1}^{N'} n_k\Delta\varphi'_k\bigg)\prod_{k = 1}^{N'}(J_{n_k}(u_k))\bigg(1 - \sum_{k = 1}^N\frac{m_{IM_k}^2}{16}\bigg) \\
+& \cdot\bigg[1 - \sum_{k = 1}^N\bigg(\frac{m_{IM_k}^2}{16}\bigg) - \sum_{k = 1}^{N'} i \frac{m_{IM'_k}}{2}cos\theta_k(J_{n_k-1}(u_k)e^{-i\Delta\varphi'_k} - J_{n_k+1}(u_k)e^{i\Delta\varphi'_k})/J_{n_k}(u_k)\bigg],
+\end{align}
+onde $u_k = 2m'_{FM_k}\sin(\theta_k)$ e $\theta_k = (-1/2)\beta_2\Omega_k\Omega_{IMP}$.
+
+Assim como para teoria apresentada no capítulo anterior, a distorção total em uma determinada frequência é calculada somando-se todas os produtos de intermodulação da equação \eqref{tomN2:Idetf} que caem em uma mesma frequência $\Omega'_{IMP}$. Note que a componente de sinal na frequência angular $\Omega'_1$, por exemplo, é calculada fazendo-se $n_1 = 1$ e os demais coeficientes iguais a zero. Todas as outras situações em que tivermos $\Omega'_{IMP} = \Omega'_1$ serão considerados produtos de intermodulação, isto é, são componentes de frequência que resultam da combinação de duas ou mais componentes de frequência.
+
+Também como feito no capítulo anterior podemos obter a distorção de intermodulação para uma determinada frequência (\textit{InterModulation Distortion}, IMD):
+\begin{equation} \label{tomN2:IMD}
+IMD(\Omega'_{IMP},z) \equiv \langle |I_{det}(\Omega'_{IMP_{TOTAL}}, z)|^2 \rangle = \sum_{n_1 \ldots n_{N'} = -\infty}^{\infty} |I_{det}(\Omega'_{IMP},z)|^2.
+\end{equation}
+O valor esperado de distorção em uma dada frequência $IMD(\Omega'_{IMP},z)$ pode ser calculado através do somatório quadrático das contribuições (ou passos) de $I_{det}(\Omega'_{IMP},z)$, que também pode ser obtido de forma analítica:
+\begin{align} \nonumber \label{tomN2:Idet2}
+& |I_{det}(\Omega'_{IMP}, z)|^2 = I_{det}(\Omega'_{IMP}, z)\cdot I_{det}^*(\Omega'_{IMP}, z) \\ \nonumber
+& = R^2P_0^2\bigg(1 - \sum_{k = 1}^N\frac{m_{IM_k}^2}{16}\bigg)^2\prod_{k = 1}^{N'}(J_{n_k}^2(u_k))\bigg[\bigg(1 - \sum_{k = 1}^N\frac{m_{IM_k}^2}{16}\bigg)^2 \\ \nonumber
+&- \bigg(1 - \sum_{k = 1}^N\frac{m_{IM_k}^2}{16}\bigg)\sum_{k = 1}^{N'} \frac{n_k m'_{IM_k}\cos(\theta_k)\sin(\Delta\varphi'_k)}{u_k} + \sum_{k_1, k_2 = 1}^N\frac{m'_{IM_{k_1}}m'_{IM_{k_2}}}{4}\cos(\theta_{k_1})\cos(\theta_{k_2}) \\
+& \cdot\bigg(\frac{(J_{n_{k_1}-1}(u_{k_1})e^{-j\Delta\varphi'_{k_1}} - J_{n_{k_1}+1}(u_{k_1})e^{j\Delta\varphi'_{k_1}})\cdot(J_{n_{k_2}-1}(u_{k_2})e^{-j\Delta\varphi'_{k_2}} - J_{n_{k_2}+1}(u_{k_2})e^{j\Delta\varphi'_{k_2}})}{J_{n_{k_1}-1}(u_{k_1})J_{n_{k_2}-1}(u_{k_2})}\bigg)\bigg].
+\end{align}
+
+Apesar das equações \eqref{tomN2:I}, \eqref{tomN2:Idetf}, \eqref{tomN2:IMD}, e \eqref{tomN2:Idet2} proverem resultados mais precisos, pois são obtidas a partir de melhores representações do logaritmo natural e da raiz quadrada, elas não podem ser aplicadas diretamente a sinais OFDM de interesse prático, pois o número de tons totais da equação ($N'$) cresce rapidamente. Por exemplo, para um sinal OFDM de 100 subportadoras, isto é, $N = 100$, teremos um total de tons de $N' = 2N + 2\binom{N}{2} = 10100$. Este número elevado de subportadora torna o cálculo da distorção harmônica pelas equações \eqref{tomN2:I} e \eqref{tomN2:Idetf} impraticável, mesmo considerando-se todas as simplificações propostas no Capítulo~\ref{chapSimplifica}.

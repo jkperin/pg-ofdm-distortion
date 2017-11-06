@@ -1,0 +1,219 @@
+\chapter{Simplificações Propostas}
+\label{chapSimplifica}
+Neste Capítulo serão apresentadas simplificações para teoria de grandes sinais desenvolvida em \cite{eva} e reproduzida no Capítulo~\ref{chapGrandeSinais1}. Essas simplificações têm como objetivo tornar o cálculo das equações de \emph{N} tons factível para sinais OFDM com centenas de subportadoras. Note que a teoria de \emph{N} tons é composta por múltiplos somatórios infinitos, e mesmo truncando-se o cálculo da série entre $\pm 1$, seriam necessários $3^{100}$ iterações, para um sinal OFDM com 100 subportadoras.
+
+A Fig.~\ref{fig:diagsimpl} mostra um diagrama da organização do restante do capítulo. A teoria para propagação dispersiva de \emph{N} tons em sistemas IMDD empregando lasers modulados diretamente desenvolvida em \cite{eva} e reproduzida no Capítulo~\ref{chapGrandeSinais1} se torna muito custosa computacionalmente a medida que \emph{N} aumenta, e como discutido anteriormente se torna impraticável para centenas de tons, o que inviabiliza o seu uso para o estudo de sinais OFDM. A primeira simplificação proposta é uma simplificação no cálculo das funções de Bessel baseado na faixa de valores típicos dos parâmetros de interesse para o sinal OFDM, para a fibra óptica, e para o laser. Em seguida, na Seção~\ref{simpl:rewrite} é apresentada uma forma de reescrever as equações \eqref{tomN:If} de forma a reduzir o número de iterações necessárias para calcular a corrente detectada. Essas duas primeiras simplificações permitem que a teoria de \emph{N} tons seja aplicada a sinais OFDM com centenas de subportadoras. Além disso, essas primeiras simplificações são genéricas; elas podem ser feitas para qualquer tipo de sistema IMDD empregando lasers modulados diretamente e sinais OFDM que atenda a restrição de valores adotados. Por fim, são propostas aproximações específicas para situações em que o \emph{chirp} adiabático é dominante, ou quando o \emph{chirp} transiente é dominante. Isto será discutido em detalhes na Seção~\ref{simpl:adiabvstrans}.
+\FloatBarrier
+\begin{figure}[tbh]
+	\centering
+	\includegraphics[trim=1cm 0.5cm 1cm 0.5cm, scale=0.6]{DiagramaSimpl.pdf}
+	\caption{Simplificações feitas na teoria de \emph{N} tons.} \label{fig:diagsimpl}
+\end{figure}
+\FloatBarrier
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BESSEL %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Aproximação para as Funções de Bessel} \label{simpl:bessel}
+Ao limitar a faixa de valores dos parâmetros de interesse das equações \eqref{tomN:If} e \eqref{tomN:Idetf}, podemos propor simplificações as funções de Bessel presentes nessas equações. Ainda mais importante, essas simplificações permitem limitar os índices da série de Fourier ($n_1, n_2, \ldots, n_N$), sem prejudicar a precisão do modelo.
+
+Os parâmetros de interesse são limitados em uma faixa de valores tipicamente utilizados, ou até mesmo que correspondam aos limites da tecnologia. A Tabela~\ref{tab:param} mostra os valores considerados para os parâmetros relevantes divididos em três categorias: OFDM, fibra óptica, e laser. A categoria OFDM mostra os parâmetros de interesse correspondentes ao sinal OFDM. A frequência da maior subportadora, por exemplo, foi limita em 10 GHz, pois essa é a máxima largura de banda dos lasers normalmente utilizados em sistemas IMDD. O índice de modulação individual foi fixado em $2\%$. Alguns autores normalmente usam o índice de modulação global ($m$), que é na verdade o índice de modulação do sinal OFDM em relação a portadora óptica:
+\begin{equation}
+m \equiv \frac{\sqrt{\frac{1}{T}\int_0^T (i(\tau) - I_b)^2\mathrm{d}\tau}}{I_b - I_{th}},
+\end{equation}
+onde $i(t)$ é a corrente de modulação do laser, $I_b$ é a corrente de polarização DC (\textit{bias}), e $I_{th}$ é a corrente de limiar do laser. Também podemos definir o índice de modulação global em função da potência óptica $P(t)$, considerando-se o regime de operação linear do laser e que $I_{th} = 0$:
+\begin{equation} \label{IMglobal}
+m \equiv \frac{\sqrt{\frac{1}{T}\int_0^T (P(\tau) - P_0)^2\mathrm{d}\tau}}{P_0},
+\end{equation}
+onde $P_0$ corresponde a potência óptica para corrente de polarização $I_b$. Como $P(t) = P_0(1 + \sum_{k=1}^Nm_{IM_k}\cos(\Omega_k t + \varphi_k))$, podemos relacionar o índice de modulação global $m$ ao índice de modulação das subportadoras $m_{IM_k}$:
+\begin{equation}
+m = \sqrt{\sum_{k=1}^N\frac{m_{IM_k}^2}{2}}.
+\end{equation}
+Para situações em que o índice de modulação é igual para todas as subportadoras ($m_{IM_k} = m_{IM}$) a equação acima pode ser ainda mais simplificada:
+\begin{equation}
+m = m_{IM}\sqrt{\frac{N}{2}}.
+\end{equation}
+
+Portanto, para índice modulação individual de $2\%$ temos um índice de modulação global de $16\%$ para 128 subportadoras.
+
+Na fibra óptica, o parâmetro dispersão foi escolhido igual ao valor das fibras ópticas monomodo padrão. O comprimento máximo de $100$ km foi escolhido devido à aplicação de redes ópticas de curtas distâncias. Embora as simulações feitas neste trabalho considerem o parâmetro de dispersão igual ao das fibras monomodo padrão, não há nenhuma restrição em utilizar valores de dispersão menores, ou até negativos.
+
+Para o laser, os valores de $\alpha$ e $\kappa$ contemplam toda a faixa de valores comerciais de DMLs \cite{equalization}. A potência média do sinal óptico na saída do laser foi limitada de 1 mW a 5 mW, que correspondem a uma faixa de 0 a +7 dBm. A aplicação para potências inferiores a 1 mW utilizando DMLs é normalmente para distâncias muito curtas, onde as dispersões induzidas pelo \emph{chirp} não são tão significativas. Por outro lado, para potências superiores a 5 mW já começa a se observar fenômenos não lineares como SPM, e portanto, são faixas de potência que devem ser evitadas.
+
+\begin{table}[hbt]
+\centering
+\begin{tabular}{l|l}
+\hline
+\multicolumn{2}{c}{OFDM} \\
+\cline{1-2}
+Parâmetros    & Valores Típicos \\
+\hline
+Número de Subportadoras ($N$)  									   & $N > \sim 10$    \\
+Frequência da maior subportadora ($\Omega_N/2\pi$)      & $\sim 1 < \Omega_N/2\pi \leq 10$ GHz		     \\
+Índice de Modulação Individual ($m_{IM}$)   		   & $m_{IM} \leq 2,0\%$     \\
+\hline
+\multicolumn{2}{c}{Fibra Óptica} \\
+\cline{1-2}
+Parâmetros    & Valores Típicos \\
+\hline
+Dispersão ($D$)  																	 & $D \approx 17$ ps/nm$\cdot$km    \\
+Comprimento ($z$)        									  			 & $ z \leq 100$ km		     \\
+\hline
+\multicolumn{2}{c}{Laser} \\
+\cline{1-2}
+Parâmetros    & Valores Típicos \\
+\hline
+Fator de Aumento de Largura de Linha ($\alpha$)&  $-5 \leq \alpha \leq -2$   \\
+Coeficiente de \emph{Chirp} Adiabático ($\kappa$)  & 	$10 \leq \kappa \leq 15$ GHz/mW     \\
+Potência Média ($P_0$)														 &  $1 \leq P_0 \leq 5$ mW \\
+\hline
+\end{tabular}
+\caption{Faixa de valores dos parâmetros de interesse do sinal OFDM, fibra óptica, e do laser. As simplificações propostas tomam esses valores como base.}
+\label{tab:param}
+\end{table}
+
+Voltando às equações de corrente detectada para $N$ tons após a propagação dispersiva e detecção direta:
+\begin{equation} \label{tomN:Iff}
+\tilde{I}_{det}(t,z) = \frac{1}{L(z)}\sum_{n_1 \ldots n_N = -\infty}^{\infty}I_{det}(\Omega_{IMP},z)\exp\bigg(j\sum_{k = 1}^N n_k(\Omega_kt + \varphi_{IM_k}\bigg), 
+\end{equation}
+onde $L(z)$ é a atenuação da fibra óptica em unidades lineares. Com $I_{det}(\Omega_{IMP},z)$ dado por: 
+\begin{align} \nonumber \label{tomN:Idetff}
+I_{det}&(\Omega_{IMP}, z) = R(\Omega_{IMP})P_0j^{\sum_{k = 1}^Nn_k}\exp\bigg(j\sum_{k = 1}^N n_k\Delta\varphi_k\bigg)\prod_{k = 1}^N(J_{n_k}(u_k)) \\
+& \cdot\bigg[1 - \sum_{k = 1}^N j \frac{m_{IM_k}}{2}cos\theta_k(J_{n_k-1}(u_k)e^{-j\Delta\varphi_k} - J_{n_k+1}(u_k)e^{j\Delta\varphi_k})/J_{n_k}(u_k)\bigg],
+\end{align}
+onde $u_k = 2m_{FM_k}\sin(\theta_k)$ e $\theta_k = (-1/2)\beta_2\Omega_k\Omega_{IMP}z$.
+
+Vemos na equação \eqref{tomN:Idetff} que o argumento das funções de Bessel é sempre $u_k$. Calculando $m_{FM_k}$ de acordo com \eqref{PIR} e utilizando a faixa de valores mostrados na Tabela~\ref{tab:param}. Podemos mostrar que $u_k$ obedece a seguinte relação: $|u_k| \leq 0,6$. Ao calcular as funções de Bessel para $|u_k| \leq 0,6$, como mostrado na Fig.~\ref{fig:besselj}, vemos que somente as funções de Bessel de ordem 0 e de ordem 1 assumem valores não desprezíveis. Portanto, podemos propor as seguintes representações alternativas para as funções de Bessel de primeiro tipo.
+\begin{equation} \label{simpl-besselj}
+J_k(u) \approx
+\begin{cases} 
+1 - \frac{u^2}{4}, k = 0 \\
+\frac{ku}{2}, k = \pm 1 \\
+0, c.c.
+\end{cases}
+\end{equation}
+essas aproximações foram obtidas através da expansão em série de funções de Bessel de primeiro tipo \cite{bessel} truncadas de forma a fornecer precisão satisfatória para região de valores de interesse. A Fig.~\ref{fig:besselj} também mostra as aproximações sugeridas para $k=0$ e $k =1$, como vemos as aproximações se sobrepõe as curvas exatas. Além disso, como $J_k(x) = 0,  \forall |k| > 1$, os coeficientes do somatório de \eqref{tomN:Iff} ($n_1, n_2, \ldots, n_N$) podem ser limitados de -1 a 1. Portanto, podemos reescrever \eqref{tomN:Iff} como: 
+\begin{equation} \label{tomN:Is}
+\tilde{I}_{det}(t,z) \approx \frac{1}{L(z)}\sum_{n_1 \ldots n_N = -1}^{1}I_{det}(\Omega_{IMP},z)\exp\bigg(j\sum_{k = 1}^N n_k(\Omega_kt + \varphi_{IM_k}\bigg), 
+\end{equation}
+
+\begin{figure}[b!]
+	\centering
+	\includegraphics[trim=1cm 0.5cm 1cm 0.5cm, scale=1]{besselJ.eps}
+	\caption{Funções de Bessel de primeiro tipo e de ordem 0, 1, 2 e 3 para valores de $u$, bem como aproximações para funções de Bessel de ordem 0 e ordem 1.} \label{fig:besselj}
+\end{figure}
+
+Essas simplificações também podem ser aplicadas a equação da distorção de intermodulação \eqref{IMDdef}:
+\begin{equation} \label{IMDdefs}
+IMD(\Omega_{IMP},z) \equiv \langle |I_{det_{TOTAL}}(\Omega, z)|^2 \rangle = \sum_{(n_1 \ldots n_N) \in A(\Omega)} |I_{det}(\Omega,z)|^2.
+\end{equation}
+Agora os índices pertencentes à $A(\Omega)$ são limitados a assumir valores de -1, 0 ou 1.
+
+%%%%%%%%%%%%%%%%%%%%
+\section{Forma Alternativa para Reescrever Equação da Corrente Detectada para \emph{N} tons} \label{simpl:rewrite}
+A simplificação apresentada na seção anterior ainda não é suficiente para podermos aplicar a teoria de \emph{N} tons a sinais OFDM. O motivo para isso é o número de iterações necessárias para calcular a corrente detectada. Supondo, por exemplo, um sinal OFDM com 100 subportadoras ($N = 100$), temos 100 índices da série de Fourier ($n_1, n_2, \ldots, n_{100}$). Como cada índice varia de -1 a 1, temos 3 iterações de cada, que combinadas darão um total de $3^{100}$ iterações. Em outras palavras, para calcular a corrente de detectada através de \eqref{tomN:Is} a função \eqref{tomN:Idetff} precisará ser executada $3^{100}$ vezes, o que é impraticável.
+
+Para contornar este problema devemos reduzir o número de iterações necessárias para calcular \eqref{tomN:Idetff}. Para isso, podemos reescrever \eqref{tomN:Idetff} da seguinte forma:
+\begin{align} \label{tomN:Is2} \nonumber
+\tilde{I}_{det}(t,z) & = \sum_{k_1=1}^N\bigg(\overbrace{\sum_{n_{k_1} \in A_1} I_{det}(n_{k_1}\Omega_{k_1},z)e^{j(n_{k_1}\Omega_{k_1}t + n_{k_1}\varphi_{k_1})}}^{Componente~de~sinal} \\ \nonumber
+&+ \sum_{k_2=k_1+1}^{N}\bigg(\overbrace{\sum_{(n_{k_1}, n_{k_2}) \in A_2} I_{det}(n_{k_1}\Omega_{k_1}+n_{k_2}\Omega_{k_2},z)e^{j((n_{k_1}\Omega_{k_1}+n_{k_2}\Omega_{k_2})t + n_{k_1}\varphi_{k_1}+n_{k_2}\varphi_{k_2})}}^{IMP~de~2^a~ordem} \\ \nonumber
+& ~~~~~~~~~~~~~~~~~~~~~~~~\vdots~~~~~~~~~~~~~~~~~~~~~~~~\vdots~~~~~~~~~~~~~~~~~~~~~~~~\vdots \\
+&+ \sum_{k_N=k_{N-1}+1}^{N}\bigg(\overbrace{\sum_{(n_{k_1}, \ldots, n_{k_N}) \in A_N} I_{det}(\textstyle\sum_{l=1}^N n_{k_l}\Omega_{k_l},z)e^{j(\sum_{l=1}^N (n_{k_l}\Omega_{k_l}t + n_{k_l}\varphi_{k_l}))}}^{IMP~de~~N^a~ordem}\bigg)\cdots\bigg)\bigg),
+\end{align}
+onde $A_1, A_2$, e $A_N$ são os valores que os índices $n_k$ podem assumir de forma que a soma frequências do argumento de $I_{det}(\Omega,z)$ sempre assumam valores positivos, por exemplo: $A_1 = 1$. Se $A_1 = -1$ teremos valor negativo de frequência. Analogamente, $A_2 = \{(-1, 1), (1, 1)\}$, pois como $\Omega_{k_2} \geq \Omega_{k_1}$, qualquer valor que ($n_{k_1}, n_{k_2}$) assuma que pertença a $A_2$ resultará em valores de $\Omega_{IMP}$ positivos. Sem essa restrição o número de elementos em $A_2$ dobraria: $A_2 = \{(-1, -1), (-1, 1), (1, -1), (1, 1)\}$. Pode-se restringir os valores de $\Omega_{IMP}$ somente aos valores positivos pois a corrente detectada $\tilde{I}_{det}(t,z)$ é um sinal real, e portanto obedece a simetria Hermitiana, logo $I_{det}(-\Omega,z) = I_{det}^*(\Omega,z)$. Portanto basta calcular os valores de $I_{det}(\Omega,z)$ para $\Omega > 0$, que os valores de $I_{det}(\Omega,z)$ para $\Omega < 0$ podem ser calculados posteriormente.
+
+Outro ponto a ser destacado é que \eqref{tomN:Is2} faz uma divisão entre a componente de sinal e as componentes de intermodulação (IMPs). Como discutido anteriormente, as componentes de sinal são aquelas em que há apenas um único índice diferente de zero, por exemplo, $n_1 = \pm 1$ e os demais índices são iguais a zero. Porém, como estamos restringindo o cálculo a apenas valores positivos, podemos ainda fazer $n_1 = 1$. Os produtos de intermodulação de segunda ordem são aqueles formados pela intermodulação de duas frequências ($\Omega_{k_1}$ e $\Omega_{k_2}$ -- como mostrado em \eqref{tomN:Is2}). 
+
+À medida que a ordem dos produtos de intermodulação aumenta, a contribuição de distorção vai ficando menor. Isto pode ser percebido ao se analisar a equação \eqref{tomN:Idetff}. Note que para ordens maiores teremos mais índices $n_k$ diferentes de zeros (iguais a 1 ou a -1, de acordo com a simplificação da Seção anterior). Portanto, o produtório de funções de Bessel vai ficando cada vez menor, pois $|J_{\pm 1}(u_k)| < 1$ -- como pode ser visto na Fig.~\ref{fig:besselj}. Isto nos permite calcular os produtos de intermodulação até certa ordem sem que haja prejuízo significativo à precisão do modelo. De fato, como será mostrado no Capítulo seguinte, truncar o cálculo até a terceira ordem dos produtos de intermodulação é suficiente para obtermos boa precisão. 
+
+Também podemos aplicar essa nova forma de escrever as equações à equação de distorção de intermodulação para uma determinada frequência \eqref{IMDdef}:
+\begin{align} \label{tomN:IMD2} \nonumber
+IMD(t,z) & = \sum_{k_1=1}^N\bigg(\overbrace{\sum_{n_{k_1} \in A_1} |I_{det}(n_{k_1}\Omega_{k_1},z)|^2e^{jn_{k_1}\Omega_{k_1}t}}^{Componente~de~sinal} \\ \nonumber
+&+ \sum_{k_2=k_1+1}^{N}\bigg(\overbrace{\sum_{(n_{k_1}, n_{k_2}) \in A_2} |I_{det}(n_{k_1}\Omega_{k_1}+n_{k_2}\Omega_{k_2},z)|^2e^{j(n_{k_1}\Omega_{k_1}+n_{k_2}\Omega_{k_2})t}}^{IMP~de~2^a~ordem} \\ \nonumber
+& ~~~~~~~~~~~~~~~~~~~~~~~~\vdots~~~~~~~~~~~~~~~~~~~~~~~~\vdots~~~~~~~~~~~~~~~~~~~~~~~~\vdots \\
+&+ \sum_{k_N=k_{N-1}+1}^{N}\bigg(\overbrace{\sum_{(n_{k_1}, \ldots, n_{k_N}) \in A_N} |I_{det}(\textstyle\sum_{l=1}^N n_{k_l}\Omega_{k_l},z)|^2 e^{j\sum_{l=1}^N n_{k_l}\Omega_{k_l}t}}^{IMP~de~~N^a~ordem}\bigg)\cdots\bigg)\bigg).
+\end{align}
+
+Note que diferentemente do que foi feito na equação \eqref{IMDdef}, aqui a distorção de intermodulação foi escrita no domínio do tempo. Isto é feito para facilitar o cálculo, pois no domínio da frequência seria necessário conhecer o conjunto $A(\Omega)$ contendo todas as possíveis combinações de coeficientes e frequências que caiem na frequência angular de interesse $\Omega$. $IMD(\Omega,z)$ pode ser calculado facilmente a partir de $IMD(t,z)$ através da transformada rápida de Fourier.
+
+Limitar o cálculo somente a valores positivos de $\Omega_{IMP}$ e restringir a ordem dos produtos de intermodulação reduz significativamente o número iterações necessárias para calcular a corrente detectada. Voltando ao exemplo do sinal OFDM de 100 subportadoras, o número de iterações necessárias para calcular a corrente detectada utilizando a equação \eqref{tomN:Is2} truncada até a terceira ordem é de apenas 818400, o que torna o cálculo factível.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ADIABATICO VS TRANSIENTE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{\emph{Chirp} Adiabático \emph{vesus} \emph{Chirp} Transiente} \label{simpl:adiabvstrans}
+As simplificações das seções anteriores permitiram a aplicação da teoria de \emph{N} tons desenvolvida em \cite{eva} e reproduzida no Capítulo~\ref{chapGrandeSinais1} em sinais OFDM com centenas de subportadoras. No entanto, a teoria de \emph{N} tons pode ser ainda mais simplificada em casos em que o \emph{chirp} adiabático ou o \emph{chirp} transiente é dominante.
+
+Voltando a definição de PIR apresentada no Capítulo~\ref{chapGrandeSinais1} \eqref{tomN:PIR}:
+\begin{equation} \label{PIRs}
+PIR \equiv \frac{m_{FM_k}}{jm_{IM_k}}e^{j\Delta\varphi_k} = -\frac{\alpha}{2}\bigg(1 + \frac{\kappa P_0}{j\Omega_k}\bigg).
+\end{equation}
+Logo:
+\begin{equation} \label{mfm}
+m_{FM_k} = -m_{IM_k}\frac{\alpha}{2}\sqrt{1 + \bigg(\frac{\kappa P_0}{\Omega_k}\bigg)^2}.
+\end{equation}
+
+Como mostrado anteriormente $m_{FM_k}$ corresponde a modulação de frequência da $k$-ésima subportadora. Além disso, $(\kappa P_0/\Omega_k)^2$ corresponde à parcela do \emph{chirp} adiabático enquanto que o 1 é a parcela do \emph{chirp} transiente. Portanto podemos definir a razão entre os valores de \emph{chirp} adiabático e \emph{chirp} transiente para cada subportadora do sinal OFDM ($RAT_k$):
+\begin{equation}
+RAT_k \equiv 10\log_{10}\bigg(\frac{Adiab}{Trans}\bigg) = 20\log_{10}\bigg(\frac{\kappa P_0}{\Omega_k}\bigg) [dB].
+\end{equation}
+
+Pelos valores típicos mostrados na Tabela~\ref{tab:param} podemos extrair a faixa de valores que $\kappa P_0$ e $\Omega_k$ podem assumir. Assim podemos gerar uma curva de $RAT_k$ e avaliar as regiões onde o \emph{chirp} adiabático é dominante, e regiões onde o \emph{chirp} transiente é dominante. A Fig.~\ref{fig:adiabvstrans} mostra os valores de $RAT_k$ para a faixa de valores de $\kappa P_0$ e $\Omega_k/2\pi$ de acordo com a Tabela~\ref{tab:param}.
+
+Como vemos o \emph{chirp} adiabático é dominante para maior parte das situações. O \emph{chirp} transiente torna-se dominante quando $\kappa P_0$ é pequeno a frequência é maior. É importante ressaltar, que o \emph{chirp} transiente independe de $\kappa P_0$ e da frequência angular $\Omega_k$, portanto a alternância entre \emph{chirp} dominante depende exclusivamente do adiabático. 
+
+Além disso, vamos considerar que para valores de $RAT_k$ superiores a 10 dB o \emph{chirp} adiabático é dominante, enquanto que para valores de $RAT_k$ inferiores a $-10$ dB o \emph{chirp} transiente passa a ser dominante. Como os valores de frequências necessários para o \emph{chirp} transiente se tornar dominante são muito altos, é difícil encontrar em situações práticas em que o \emph{chirp} transiente é dominante.
+
+A Fig.~\ref{fig:adiabvstrans} serve como referência para sabermos em quais situações aplicar as equações desenvolvidas nas subseções seguintes.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[trim=1cm 0.5cm 1cm 0.5cm, scale=0.9]{adiabvstrans.eps}
+	\caption{$RAT_k$ para a faixa de valores de $\kappa P_0$ e $\Omega_k/2\pi$ de acordo com a Tabela~\ref{tab:param}.} \label{fig:adiabvstrans}
+\end{figure}
+
+\subsection{\emph{Chirp} Adiabático Dominante} \label{sec:adiabdom}
+Para \emph{chirp} adiabático dominante podemos reescrever \eqref{tomN:PIR} como:
+\begin{equation}
+PIR \equiv \frac{m_{FM_k}}{jm_{IM_k}}e^{j\Delta\varphi_k} = j\frac{\alpha}{2}\frac{\kappa P_0}{\Omega_k}.
+\end{equation}
+Portanto uma solução é $\Delta\varphi_k = 0$, e $m_{FM_k} = -m_{IM_k}\frac{\alpha\kappa P_0}{2\Omega_k}$. Substituindo esses valores na equação dos índices da série de Fourier da corrente detectada para \emph{N} tons \eqref{tomN:Idetff}:
+\begin{align} \nonumber
+I_{det}&(\Omega_{IMP}, z) = R(\Omega_{IMP})P_0j^{\sum_{k = 1}^Nn_k}\prod_{k = 1}^N(J_{n_k}(u_k)) \\
+& \cdot\bigg[1 - \sum_{k = 1}^N j \frac{m_{IM_k}}{2}cos\theta_k(J_{n_k-1}(u_k) - J_{n_k+1}(u_k))/J_{n_k}(u_k)\bigg].
+\end{align}
+Para simplificar a expressão acima podemos utilizar uma das fórmulas de recorrência entre Funções de Bessel dada por: $J_{n-1}(x) - J_{n+1}(x) = 2J'_n(x)$ \cite{bessel}, onde $J'_n(x) = \frac{d}{dx}J_n(x)$. Logo:
+\begin{equation} 
+I_{det}(\Omega_{IMP}, z) = R(\Omega_{IMP})P_0j^{\sum_{k = 1}^Nn_k}\prod_{k = 1}^N(J_{n_k}(u_k))\bigg[1 - \sum_{k = 1}^N jm_{IM_k}\cos(\theta_k)\frac{J'_{n_k}(u_k)}{J_{n_k}(u_k)}\bigg].
+\end{equation}
+A partir das aproximações feitas para a Função de Bessel de \eqref{simpl-besselj}, podemos calcular $J'_n(u_k)$ da seguinte forma:
+\begin{equation}
+J'_k(u) \approx
+\begin{cases} 
+-\frac{u}{2}, k = 0 \\
+\frac{k}{2}, k = \pm 1 \\
+0, c.c.
+\end{cases}
+\end{equation}
+
+Para o cálculo de $IMD(\Omega_{IMP},z)$ é conveniente calcular:
+\begin{align} \nonumber \label{IMDadiab}
+|I_{det}(\Omega_{IMP}&, z)|^2 = R(\Omega_{IMP})^2P_0^2\prod_{k = 1}^N(J_{n_k}^2(u_k)) \\
+&\cdot\Bigg[1 +\sum_{k_1 = 1}^N\sum_{k_2 = 1}^N m_{IM_{k_1}}m_{IM_{k_2}}\cos(\theta_{k_1})\cos(\theta_{k_2})\frac{J'_{n_{k_1}}(u_{k_1})J'_{n_{k_2}}(u_{k_2})}{J_{n_{k_1}}(u_{k_1})J_{n_{k_2}}(u_{k_2})}\Bigg].
+\end{align}
+
+\subsection{\emph{Chirp} Transiente Dominante} \label{sec:transdom}
+Para \emph{chirp} transiente dominante podemos reescrever \eqref{tomN:PIR} como:
+\begin{equation}
+PIR \equiv \frac{m_{FM_k}}{jm_{IM_k}}e^{j\Delta\varphi_k} = -\frac{\alpha}{2}.
+\end{equation}
+Portanto uma solução é $\Delta\varphi_k = \pi/2$, e $m_{FM_k} = -m_{IM_k}\frac{\alpha}{2}$. Substituindo esses valores na equação dos índices da série de Fourier da corrente detectada para \emph{N} tons \eqref{tomN:Idetff}:
+\begin{align} \nonumber
+I_{det}(\Omega_{IMP}, z) = &R(\Omega_{IMP})P_0j^{\sum_{k = 1}^Nn_k}j^{\sum_{k = 1}^Nn_k}\prod_{k = 1}^N(J_{n_k}(u_k)) \\ \nonumber
+& \cdot\bigg[1 - \sum_{k = 1}^N j \frac{m_{IM_k}}{2}cos\theta_k(J_{n_k-1}(u_k)j^{-1} - J_{n_k+1}(u_k)j^1)/J_{n_k}(u_k)\bigg] \\ 
+= &R(\Omega_{IMP})P_0\prod_{k = 1}^N(J_{n_k}(u_k))\bigg[1 - \sum_{k = 1}^N\frac{m_{IM_k}}{2}cos\theta_k\frac{J_{n_k-1}(u_k) + J_{n_k+1}(u_k)}{J_{n_k}(u_k)}\bigg]
+\end{align}
+Novamente podemos utilizar uma das fórmulas de recorrência entre Funções de Bessel: $J_{n-1}(x) + J_{n+1}(x) = \frac{2n}{x}J_n(x)$ \cite{bessel}. Logo:
+\begin{equation}
+I_{det}(\Omega_{IMP}, z) = R(\Omega_{IMP})P_0\prod_{k = 1}^N(J_{n_k}(u_k))\bigg[1 - \sum_{k = 1}^Nm_{IM_k}\cos(\theta_k) \frac{n_k}{u_k}\bigg]
+\end{equation}
+
+Para o cálculo de $IMD(\Omega_{IMP},z)$ é conveniente calcular:
+\begin{align} \nonumber \label{IMDtrans}
+|I_{det}(\Omega_{IMP}, z)|^2 = &R(\Omega_{IMP})^2P_0^2\prod_{k = 1}^N(J_{n_k}^2(u_k))\bigg[1 - 2\sum_{k = 1}^Nm_{IM_k}cos\theta_k \frac{n_k}{u_k} \\
+&+\sum_{k_1 = 1}^N\sum_{k_2 = 1}^Nm_{IM_{k_1}}m_{IM_{k_2}}\cos(\theta_{k_1})\cos(\theta_{k_2})\frac{n_{k_1}n_{k_2}}{u_{k_1}u_{k_2}}\bigg]
+\end{align}

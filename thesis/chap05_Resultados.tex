@@ -1,0 +1,275 @@
+\chapter{Cenários de Aplicação}
+\label{chapResultados}
+
+Neste capítulo a teoria apresentada nos capítulos anteriores será aplicada a sinais OFDM de interesse de pesquisa, em particular na área de radio sobre fibra, nos quais sistemas de rádio comerciais (e.g., \textit{ Long Term Evolution} -- LTE, \textit{ WiMax}, e \textit{ Ultra Wide Band} -- UWB) são transportados diretamente, em suas faixas originais de frequência, pela fibra óptica em distâncias correspondente a redes de acesso \cite{GbE-UWB-LRPON}. Neste trabalho analisaremos um sinal OFDM de banda larga, um sinal OFDM para transporte de Gigabit Ethernet, e por fim, um sinal OFDM nos moldes do padrão UWB. 
+
+\section{Metodologia}
+A precisão da teoria de \emph{N} tons, e principalmente das simplificações propostas serão avaliadas a partir do SIR (\textit{ Signal-to-Interference Ratio}), que é a razão entre a potência do sinal e a potência da interferência (ou distorção). O SIR pode ser definido como:
+\begin{equation}
+SIR(\Omega,z) \equiv 10\log_{10}\bigg(\frac{IMD_{SINAL}(\Omega,z)}{IMD_{IMP}(\Omega,z)}\bigg) [dB],
+\end{equation}
+onde $IMD_{SINAL}(\Omega,z)$ é a componente de sinal em uma dada frequência $\Omega/2\pi$, enquanto que $IMD_{IMP}(\Omega,z)$ é o somatório das componentes de produtos de intermodulação de ordem 2, 3, até \emph{N}. O valor do \emph{SIR} mostra o quão grande é a distorção em uma determinada frequência comparativamente a componente de sinal naquela frequência. Desta forma, pelo $SIR$ poderemos avaliar ao mesmo tempo a precisão do modelo para calcular as componentes de sinal e os produtos de intermodulação.
+
+Os resultados obtidos através das equações analíticas para $N$ tons mostrada até aqui serão validadas com resultados obtidos através de simulação numérica, na qual os efeitos de \emph{chirp}, dispersão cromática, e detecção direta são calculados completamente; a simulação numérica não considera nenhuma aproximação. O código abaixo ilustra como o modelo numérico é calculado.
+\newcommand\codeHighlight[1]{\textcolor[rgb]{0,0.5,0}{\textbf{#1}}}
+\begin{Verbatim}[commandchars=\\\{\}]
+E0 = sqrt(Pt)*exp(1j*Dphi);             \codeHighlight{% Campo elétrico na saída do laser}
+Ez = ifft(exp(Dhat*L).*fft(E0));        \codeHighlight{% Campo elétrico após propagação}
+It = R*abs(Ez).^2;                      \codeHighlight{% Detecção Direta}
+Idet = fftshift(fft(It))/length(It);    \codeHighlight{% It no domínio da frequência}
+\end{Verbatim}
+Onde $Pt$ é calculado como em \eqref{tomN:Pt} e $Dphi$ é calculado como em \eqref{tomN:dfase}. Além disso $Dhat$ é o operador dispersão no domínio da frequência $\hat{D}(j\omega) = -j\frac{\beta_2}{2}\omega^2$ e $L$ é o comprimento da fibra.
+\begin{figure}[b!]
+	\centering
+	\includegraphics[trim=1cm 1cm 1cm 1cm, scale=1]{calcNum.pdf}
+	\caption{Esquema do cálculo dos produtos de intermodulação para simulações numéricas.} \label{fig:calcnum}
+\end{figure}
+O código acima nos fornece apenas o sinal detectado. Entretanto, na simulação numérica não é possível separar componentes de sinal das componentes de intermodulação, como fizemos no modelo analítico. Portanto não é possível obter o $SIR$ diretamente. Pode-se contornar esse problema ao se calcular os produtos de intermodulação em cada frequência separadamente. Como ilustrado na Fig.~\ref{fig:calcnum}, para obtermos os produtos de intermodulação na frequência angular $\Omega_2$, por exemplo, podemos propagar o conjunto de $N-1$ tons (todos exceto $\Omega_2$), de forma que na recepção (no sinal de corrente detectada), toda componente que aparecer em $\Omega_2$ será de produtos de intermodulação, uma vez que não há sinal em $\Omega_2$. Este procedimento é repetido para todas as frequências individualmente, assim podemos estimar os produtos de intermodulação. Note que esta forma de calcular os produtos de intermodulação não resultará exatamente nos produtos de intermodulação esperados, pois pode haver situações em que a própria componente de sinal participará na geração de produtos de intermodulação que caiam exatamente na frequência do sinal. Em outras palavras, o produto de intermodulação $\Omega_5 - \Omega_2$ pode cair na frequência angular $\Omega_2$. Porém, na forma de cálculo utilizada para obter o SIR numericamente, o produto de intermodulação $\Omega_5 - \Omega_2$ não seria computado, pois o tom $\Omega_2$ é ``desligado'' para que se possa calcular os produtos de intermodulações que caiam nessa frequência. Para contornar esse problema, pode-se modificar a equação analítica para não calcular os produtos de intermodulação que caiam na frequência de um dos seus tons geradores ($\Omega_5 - \Omega_2 \rightarrow \Omega_2$, no exemplo dado). Desta forma, ambos os modelos de simulação numérica e analítica devem fornecer os mesmos resultados para corrente detectada, a fim de validarmos os resultados obtidos através das equações analíticas desenvolvidas neste trabalho.
+
+No entanto, para o cálculo do $SIR$ precisamos calcular $IMD_{SINAL}(\Omega,z)$ e $IMD_{IMP}(\Omega,z)$. Por definição, $IMD_{SINAL}(\Omega,z) = \langle |I_{sinal}(\Omega,z)|^2 \rangle$ e $IMD_{SINAL}(\Omega,z) = \langle |I_{IMP}(\Omega,z)|^2 \rangle$. Pelo procedimento descrito anteriormente, podemos calcular $I_{sinal}(\Omega,z)$ e $I_{IMP}(\Omega,z)$, porém ainda é necessário estimar o valor esperado do módulo quadrático de ambos sinais. Analiticamente, isso é obtido por \eqref{tomN:IMD2}. Numericamente, no entanto, para estimarmos o valor esperado é necessário calcular $|I_{sinal}(\Omega,z)|^2$ e $|I_{IMP}(\Omega,z)|^2$ para várias realizações das fases do sinal OFDM ($\varphi_1, \varphi_2, \ldots, \varphi_N$), que neste caso correspondem as variáveis aleatórias. Para as simulações realizadas neste trabalho, o cálculo é efetuado para 1000 configurações de entrada, e o resultado final é interpolado por um polinômio de forma a eliminar as flutuações devido ao número finito de amostras. Este número de 1000 realizações se mostrou suficiente para obtermos bons resultados. De fato, para número de realizações superior a 100 já não há mudança significativa no resultado final.
+
+Além da curva de simulação numérica sem aproximações, também será mostrado, quando oportuno, curvas de simulação numérica com logaritmo natural do \emph{chirp} transiente aproximado linearmente e aproximado por uma parábola (aproximação quadrática). Estas curvas são mostradas com o objetivo de avaliar qual a precisão conseguida utilizando-se essas aproximações, assim poderemos dizer em quais situações a aproximação linear é suficiente, e quando que a aproximação quadrática torna-se necessária. Embora úteis para esse tipo de análise, as curvas de simulação com aproximação (linear e quadrática) devem ser analisadas com cuidado. Essas curvas levam inerentemente em conta os termos adicionais descartados da equação analítica, pois para essas curvas a raiz do campo elétrico é aproximada linearmente como em \eqref{tomN:IM2AM}. Além disso, quando se calcula o modelo de forma numérica não é possível separar a contribuição de cada um dos termos, como é feito no modelo analítico. Como discutido no Capítulo~\ref{chapGrandeSinais1} e em \cite{comments}, esses termos adicionais prejudicam a precisão do modelo, principalmente para situações em que $\theta(z) \rightarrow 0$, ou seja, situações em que temos baixa frequência de operação, curtas distâncias, e fibras ópticas com baixa dispersão. Como será mostrado mais adiante, nessas situações de baixa frequência e curta distância de propagação o erro inserido pelos termos adicionais é tamanho que as curvas de simulação numérica apresentam erro maior do que o modelo analítico de grandes sinais.
+
+\section{OFDM Banda Larga (Multi-Oitava)}
+O primeiro sinal OFDM a ser avaliado é um sinal OFDM banda larga, na qual as suas subportadoras estão distribuídas numa ampla faixa de frequências, de forma que produtos de intermodulação de ordem par também cairão sobre outras subportadoras do sinal. Os parâmetros adotados para essa simulação são mostrados na Tabela~\ref{tab:ofdmgen}. 
+\begin{table}[hbt]
+\centering
+\begin{tabular}{l|l}
+\hline
+\multicolumn{2}{c}{Parâmetros Adotados na Simulação} \\
+\cline{1-2}
+\hline
+\multicolumn{2}{c}{OFDM} \\
+\cline{1-2}
+Parâmetro    & Valor Adotado \\
+\hline
+Número de Subportadoras ($N$)  									   & $128$    \\
+Frequência Central ($f_c$)												 & $3.5$ GHz \\
+Índice de Modulação Individual ($m_{IM}$)   		   & $2,0\%$     \\
+Largura de Banda ($BW$)														 & 6,4 GHz \\
+Formato de Modulação															 & QPSK \\
+\hline
+\multicolumn{2}{c}{Fibra Óptica} \\
+\cline{1-2}
+Parâmetro    & Valor Adotado \\
+\hline
+Dispersão ($D$)  																	 & $17$ ps/nm$\cdot$km    \\
+Comprimento ($z$)        									  			 & 20 e 100 km		   \\
+Atenuação ($L(z)$)																 & 0,2 dB/km \\
+\hline
+\multicolumn{2}{c}{Laser} \\
+\cline{1-2}
+Parâmetro    & Valor Adotado \\
+\hline
+Fator de Aumento de Largura de Linha ($\alpha$)&  -5   \\
+Coeficiente de \emph{Chirp} Adiabático ($\kappa$)  & 	10 e 15 GHz/mW     \\
+Potência Média ($P_0$)														 &  1, 4 e 5 mW \\
+\hline
+\multicolumn{2}{c}{Fotodetector} \\
+\cline{1-2}
+Parâmetro    & Valor Adotado \\
+\hline
+Responsividade ($R$)															 & 0,9 A/W \\
+\hline
+\end{tabular}
+\caption{Valores adotados na simulação para sinal OFDM banda larga.}
+\label{tab:ofdmgen}
+\end{table}
+
+Este sinal não atende nenhum formato padronizado de sinais OFDM em comunicações ópticas, porém por ter uma banda larga de frequência ($6,4$ GHz), ele nos permite avaliar o modelo ao longo de boa parte do espectro de frequência. O formato de modulação escolhida é o QPSK, assim podemos considerar que todos os índices de modulação das subportadoras são iguais $m_{IM_k} = m_{IM}$. O valor do índice de modulação é fixado no valor máximo admitido pelas aproximações do capítulo anterior. Portanto $m_{IM_k} = m_{IM} = 2\%$. Além disso, por se tratar da modulação QPSK temos que $\varphi_k \in \{\pi/4, 3\pi/4, 5\pi/4, 7\pi/4\}$. Onde $\varphi_k$ tem a mesma probabilidade de assumir qualquer uma dessas fases. Lembrando que esta é uma condição necessária para que \eqref{tomN:Is2} calcule de fato $\langle |I_{det}(\Omega_{IMP_{TOTAL}}, z)|^2 \rangle$. 
+
+Em relação à fibra óptica, vamos considerar a dispersão $D = 17$ ps/nm$\cdot$km. Este é o valor da dispersão para as fibras monomodo padrão. A distância da fibra assumirá dois valores na simulação: 20 e 100 km. Assim podemos avaliar o modelo em condições em que $\theta(z)$ é pequeno, e também nos limites estabelecidos pelas aproximações do capítulo anterior.
+
+Em relação aos parâmetros do laser, como estamos interessados em avaliar a precisão do modelo, vamos adotar $\alpha = -5$, pois da faixa comercial de valores de $\alpha$ esse é o que proporciona maior \emph{chirp}, e consequentemente maior distorção. Já os valores de $P_0$ e $\kappa$ foram escolhidos de forma a termos $\kappa P_0 = 10, 40$ e $75$ GHz. Isto nos permitir avalair as faixas de valores para as quais $\kappa P_0$ assumem valor baixo, intermediário e alto, como mostrado na Fig.~\ref{fig:adiabvstrans}.
+
+\subsection{Comparação com Pequenos Sinais}
+Antes de testar a precisão do modelo de grandes sinais aqui proposto, é interessante compará-lo com o modelo de pequenos sinais, normalmente utilizado para modelar este tipo de problema, apresentado em uma publicação recente voltada a sinais OFDM em sistema IMDD empregando DML \cite{equalization}. A Fig.~\ref{fig:compPSGS} mostra o resultado dessa comparação.
+
+Para índice de modulação $m_{IM} = 0,1\%$ ambos modelos de grandes e pequenos sinais concordam com as simulações numéricas. Como era esperado, a curva numérica com aproximação do logaritmo por uma parábola (Simulação Log Quadrático) é mais precisa em relação às outras, demonstrando que o erro do modelo de pequenos e grandes sinais se deve ao fato de ambos utilizarem aproximação linear do logaritmo. De fato, as curvas de modelo de pequenos sinais e grandes sinais se sobrepõem à curva de simulação com aproximação linear do logaritmo. No entanto, ao se aumentar o índice de modulação para $m_{IM} = 1\%$ a curva de pequenos sinais falha, chegando a apresentar erro de cerca de 30 dB. Por outro lado, a curva de grandes sinais (obtida com as aproximações e simplificações propostas) continua a fornecer bons resultados; ela acompanha a curva de simulação numérica para aproximação linear do logaritmo, sugerindo que o erro em relação à curva de simulação sem aproximações se deve à aproximação linear do logaritmo feita no modelo de grandes sinais. Note que o modelo de pequenos sinais falha principalmente para frequências mais baixas. Isto ocorre, pois o \emph{chirp} adiabático depende inversamente da frequência da subportadora, isto é, quanto maior a frequência menor o \emph{chirp} adiabático, e consequentemente menor o \emph{chirp} total. Desta forma, para subportadoras de frequências maiores o \emph{chirp} total é menor, o que faz com que o modelo de pequenos sinais funcione melhor para subportadoras de frequências maiores, como comprovado pela Fig.~\ref{fig:compPSGS}. Além disso, o modelo de pequenos sinais sobrestima a distorção (o SIR calculado pelo modelo de pequenos sinais é menor que o SIR verdadeiro). Os modelos de pequensos sinais para modelagem deste tipo de problema, normalmente fazem uso da aproximação da exponencial complexa por série de Taylor \cite{equalization}, resultando:
+\begin{equation}
+e^{jx} \approx 1 + jx - \frac{x^2}{2}.
+\end{equation}
+No entanto, $e^{jx}$ é periódica, periodicidade essa que não é reproduzida pela aproximação, assim à medida que $x$ cresce $1 + jx - \frac{x^2}{2}$ também cresce divergindo do valor esperado por $e^{jx}$. Desta forma, a aproximação de pequenos sinais sempre irá estimar distorções maiores, pois quanto maior for o \emph{chirp} mais $1 + jx - \frac{x^2}{2}$ diverge de $e^{jx}$.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[scale=0.8]{compPSGS.eps}
+	\caption{Comparação entre modelos de pequenos sinais e grandes sinais para sinal OFDM genérico descrito na Tabela~\ref{tab:ofdmgen} com $P_0 = 1$ mW, $z = 100$ km, e $\kappa = 15$ GHz.} \label{fig:compPSGS}
+\end{figure}
+
+\subsection{Avaliação da Precisão da Teoria de Grandes Sinais}
+A Fig.~\ref{fig:OFDM_Gen} mostra os resultados de simulação para OFDM banda larga para alguns valores de $\kappa P_0$ em duas distâncias de propagação: Fig.~\ref{fig:OFDM_Gen_z20} z = 20 km e Fig.~\ref{fig:OFDM_Gen_z100} z = 100 km. Na Fig.~\ref{fig:OFDM_Gen_z20}, quando $\kappa P_0 = 40$ GHz, a curva do modelo analítico concorda com a curva de simulação numérica sem aproximações para frequências inferiores a 2 GHz, porém à medida que a frequência cresce a curva do modelo analítico diverge da curva sem aproximações. Isto ocorre, pois à medida que a frequência aumenta o \emph{chirp} transiente se torna tão significativo quanto, ou até maior que o \emph{chirp} adiabático, como já ilustrado na Fig.~\ref{fig:adiabvstrans}. Nesses cenários de \emph{chirp} transiente relativamente alto, as imprecisões acrescentadas pela aproximação linear do logaritmo natural do \emph{chirp} transiente \eqref{tomN:PIR} exercem um papel mais significativo, reduzindo consideravelmente a precisão do modelo. Baseando-se neste argumento é de se esperar que o modelo analítico concorde melhor com os resultados de simulação sem aproximações ao se aumentar o \emph{chirp} adiabático. Podemos aumentar o \emph{chirp} adiabático de duas maneiras: primeiro, diminuindo a frequência; quando $\kappa P_0 = 40$ GHz, vemos que a precisão do modelo é melhor para frequências menores. Segundo aumentando o valor de $\kappa P_0$; quando $\kappa P_0 = 75$ GHz vemos que a precisão do modelo analítico em relação ao modelo sem aproximações ao longo de toda a faixa de frequência é significativamente maior do que para $\kappa P_0 = 40$ GHz. De fato, o erro do modelo analítico quando $\kappa P_0 = 75$ GHz é sempre inferior a 2 dB. 
+
+Na Fig.~\ref{fig:OFDM_Gen_z20} o modelo analítico foi calculado somente até a terceira ordem de produtos de intermodulação \eqref{tomN:Is2}, pois calcular ordens superiores não melhorou a precisão do modelo. O que é esperado, uma vez que o erro do modelo analítico na Fig.~\ref{fig:OFDM_Gen_z20} foi atribuído a aproximação de pequenos sinais \eqref{tomN:PIR} usada para simplificar o logaritmo natural do \emph{chirp} transiente.
+
+Em relação às curvas de simulação auxiliares (Simulação Log Linear e Simulação Log Quadrático), podemos notar algumas características interessantes na Fig.~\ref{fig:OFDM_Gen_z20}. Note que para frequências baixas, as curvas auxiliares divergem do modelo sem aproximações, enquanto que o modelo analítico praticamente não exibe erro. Este resultado parece contraditório, pois as curvas auxiliares são calculadas numericamente, além disso, a curva de simulação com log quadrático faz uma melhor aproximação do logaritmo natural do \emph{chirp} transiente. Entretanto, este resultado a primeira vista contraditório é esperado. Como discutido em \cite{comments} e no Capítulo~\ref{chapGrandeSinais1}, à medida que $\theta_k(z)$ tende a zero ($z \rightarrow 0, \Omega_k \rightarrow 0$ ou $D \rightarrow 0$) os termos adicionais que foram descartados da equação \eqref{tomN:I_add} se tornam mais significativos, o que leva a pior precisão do modelo. Esses termos não foram descartados das curvas de simulação auxiliares, pois não é possível separar a contribuição desses termos no cálculo numérico. Portanto, o erro devido aos termos adicionais é observado nas curvas auxiliares e não no modelo analítico. No entanto, à medida que a frequência das subportadoras aumenta, $\theta_k(z)$ também aumenta, e consequentemente a influência dos termos adicionais é reduzida. Como pode ser observado em ambos os casos de $\kappa P_0 = 40$ GHz e $\kappa P_0 = 75$ GHz. Para frequências superiores a 4 GHz as curvas auxiliares começam acompanhar a curva sem aproximações. Note que a curva com log quadrático apresenta erro menor do que a curva com log aproximado linearmente.
+
+Na Fig.~\ref{fig:OFDM_Gen_z100} a distância de propagação é $z = 100$ km, e portanto os valores de $\theta_k(z)$ são significativos ao longo de toda a faixa de frequência, o que reduz as imprecisões inseridas pelos termos adicionais nas curvas auxiliares. A Fig.~\ref{fig:OFDM_Gen_z100} mostra três diferentes valores de $\kappa P_0$: 10 GHz, 40 GHz e 75 GHz. As curvas de $\kappa P_0 = 10$ GHz foram omitidas da Fig.~\ref{fig:OFDM_Gen_z20}, pois para $z =20$ km os valores de SIR são superiores a 50 dB, ou seja, praticamente não havia distorção, o que não acontece para $z = 100$ km. Note que o erro do modelo analítico em relação a curva de simulação sem aproximações é mais significativo quando $\kappa P_0 = 10$ GHz (menor \emph{chirp} adiabático), mostrando novamente a imprecisão causada pela aproximação do logaritmo \eqref{tomN:PIR}. Mesmo assim, para os casos $\kappa P_0 = 10$ GHz e $\kappa P_0 = 40$ GHz, o modelo analítico apresenta bons resultados já para a terceira ordem de produtos de intermodulação. Note que a curva do modelo analítico se sobrepõe à curva sem aproximações. Porém o mesmo não acontece quando $\kappa P_0 = 75$ GHz; para produtos de intermodulação de terceira ordem o modelo analítico chega a exibir erro de cerca de 5 dB em relação a curva sem aproximações. O fato das curvas auxiliares estarem bem próximas a curva sem aproximação (note no gráfico que estão praticamente sobrepostas) sugere que o erro do modelo analítico se deve à limitação do cálculo aos produtos de intermodulação de terceira ordem. De fato, ao se calcular o SIR pelo modelo analítico com produtos de intermodulação até a quarta ordem, o erro diminui para cerca de 2 dB, e para produtos de intermodulação de quinta ordem o erro é praticamente desprezível. A desvatangem de se calcular o SIR para produtos de intermodulação de ordem superior a 3 é o tempo gasto. Enquanto o SIR para terceira ordem é calculado com alguns segundos, o SIR para quinta ordem leva cerca de uma hora.
+
+Pela Fig.~\ref{fig:OFDM_Gen_z100} também vemos que transmissão de sinais OFDM com uma banda de 6,5 GHz para distâncias da ordem de 100 km é irrealizável experimentalmente sem que haja técnicas de compensação de distorção. Note que para frequências superiores a 3 GHz quando $\kappa P_0 = 75$ GHz, o SIR chega a ser negativo, em outras palavras, há mais distorção do que sinal na corrente detectada.
+
+Para comprovar que o erro das curvas auxiliares observado principalmente na Fig.~\ref{fig:OFDM_Gen_z20} quando $\kappa P_0 = 40$ GHz são causados pelos termos adicionais omitidos no modelo analítico, e não pelas simplificações sugeridas no Capítulo~\ref{chapSimplifica}, vamos calcular essas curvas auxiliares numericamente, considerando-se agora que a raiz quadrada está escrita na forma exata, isto é, sem aproximações. Porém, o logaritmo do \emph{chirp} transiente continuará sendo aproximado por uma reta na curva de simulação log linear e por uma parábola na curva de simulação log quadrático. Os resultados são mostrados na Fig.~\ref{fig:OFDM_gen_raiz}.
+
+Como esperado, a precisão de ambas as curvas auxiliares ao se calcular a raiz quadrada de forma exata melhorou, porém note que a curva com log linear concorda bem com o modelo analítico, indicando que eliminar os termos adicionais da equação analítica é quase equivalente a se calcular a raiz quadrada na forma exata, como justificado pela equação \eqref{Idetb2b}. Portanto, o bom resultado do modelo analítico para representar a raiz quadrada não se deve à aproximação de pequenos sinais utilizada \eqref{tomN:IM2AM}, como sugerido pelos autores de \cite{eva}, e sim ao fato dos termos que inserem o erro serem desprezados do equacionamento. Outro ponto a ser ressaltado, é que a aproximação quadrática do logaritmo praticamente se sobrepõe à curva sem aproximações, enquanto que a curva com logaritmo aproximado linearmente apresenta erro de cerca de 5 dB. O que sugere que o erro do modelo analítico se deve mesmo à aproximação linear feita para o logaritmo do \emph{chirp} transiente, como justificado anteriormente.
+
+Os resultados da Fig.~\ref{fig:OFDM_gen_raiz} mostram que usar as curvas auxiliares com representação exata da raiz elimina o problema dos termos adicionais, além de fornecer resultados mais claros sobre a precisão que pode-se conseguir utilizando-se o modelo analítico. Portanto, para os próximos casos avaliados as curvas auxiliares serão calculadas para raiz exata, apesar de o modelo analítico utilizar aproximação linear para raiz. Podemos concluir também que as aproximações feitas para as funções de Bessel \eqref{simpl-besselj} não afetam a precisão do modelo.
+
+\FloatBarrier
+\begin{figure}
+	\centering
+	\subfigure[]{\includegraphics[trim=1cm 0cm 1cm 0.5cm, scale=0.7]{OFDM_Gen_20km.eps} \label{fig:OFDM_Gen_z20}}
+	\subfigure[]{\includegraphics[trim=1cm 0cm 1cm 0.5cm, scale=0.7]{OFDM_Gen_100km.eps} \label{fig:OFDM_Gen_z100}}
+	\caption{SIR para OFDM Banda Larga: \ref{fig:OFDM_Gen_z20} $z = 20$ km e \ref{fig:OFDM_Gen_z100} $z = 100$ km.} \label{fig:OFDM_Gen}
+\end{figure}
+\FloatBarrier
+
+\begin{figure}[t!]
+	\centering
+	\includegraphics[trim=1cm 0cm 1cm 0.5cm, scale=0.8]{OFDM_gen_raiz.eps}
+	\caption{SIR para OFDM Genérico com $z = 20$ km. Note que a curva do Modelo Analítico se sobrepõe à curva de Simulação Log Linear -- Raiz Exata.} \label{fig:OFDM_gen_raiz}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{OFDM Gigabit Ethernet}
+
+As redes ópticas de longo alcance (LR-PON) irão estender a cobertura das redes PONs dos tradicionais 20 km para 100 km de forma a combinar as redes de acesso e metropolitanas em uma rede integrada \cite{lrpon}. Além disso, espera-se que no futuro diversos serviços sejam oferecidos pelas redes de acesso como Gigabit-Ethernet (GbE) e sinais sem fio padronizados como UWB (\textit{ Ultra WideBand}), entre outros. Nesta seção será avaliada a precisão do modelo para estimar a distorção harmônica de sinais OFDM GbE, e na seção seguinte o mesmo será feito para sinais OFDM UWB.
+
+A Tabela~\ref{tab:ofdmgbe} mostra os parâmetros de simulação adotados. O sinal GbE usa 128 subportadoras, das quais 100 são de dados, 8 pilotos, e 20 com zeros. Portanto o número de subportadoras avaliado será 108. O sinal GbE tem largura de banda de cerca de 1 GHz, e como mostrado em \cite{gbeofdm} a frequência central de 1,5 GHz resulta em um bom compromisso em termos de performance de transmissão em sistemas em que o sinal OFDM coexiste com sinais UWB. Apesar do índice de modulação global que fornece menor taxa de erro ser $m = 10,3\%~(m_{IM_k} = 1,4\%)$ \cite{gbeofdm}, por estarmos interessados em avaliar a precisão do modelo analítico, vamos utilizar o máximo índice de modulação adotado ($m_{IM_k} = 2\%$). O formato de modulação adotado em sinais OFDM GbE é o QPSK. 
+
+Novamente iremos calcular o SIR para duas distâncias de propagação: 20 km e 100 km. Além disso, iremos avaliar duas situações de \emph{chirp} adiabático: $\kappa P_0 = 40$ GHz e $\kappa P_0 = 75$ GHz. As curvas para $\kappa P_0 = 10$ GHz são omitidas, pois para o GbE $\kappa P_0 = 10$ fornece SIRs da ordem de 70 dB, ou seja, praticamente não há distorção.
+
+É importante ressaltar que por ocupar uma banda de 1 GHz centrada em 1,5 GHz o sinal OFDM GbE está localizado na região em que o \emph{chirp} adiabático é dominante, como mostrado na Fig.~\ref{fig:adiabvstrans}. Portanto para calcular o SIR para sinais OFDM GbE podemos utilizar a aproximação de \emph{chirp} adiabático dominante, mostrada na Seção~\ref{sec:adiabdom}. Os resultados de SIR para sinal OFDM GbE são mostrados na Fig.~\ref{fig:OFDM_GbE}.
+
+\begin{table}[b!]
+\centering
+\begin{tabular}{l|l}
+\hline
+\multicolumn{2}{c}{Parâmetros Adotados na Simulação} \\
+\cline{1-2}
+\hline
+\multicolumn{2}{c}{OFDM} \\
+\cline{1-2}
+Parâmetro    & Valor Adotado \\
+\hline
+Número de Subportadoras ($N$)  									   & 108    \\
+Frequência Central ($f_c$)												 & 1,5 GHz \\
+Índice de Modulação Individual ($m_{IM}$)   		   & 2,0$\%$     \\
+Largura de Banda ($BW$)														 & 0,963 GHz \\
+Formato de Modulação															 & QPSK \\
+\hline
+\multicolumn{2}{c}{Fibra Óptica} \\
+\cline{1-2}
+Parâmetro    & Valor Adotado \\
+\hline
+Dispersão ($D$)  																	 & 17 ps/nm$\cdot$km    \\
+Comprimento ($z$)        									  			 & 20 e 100 km		   \\
+Atenuação ($L(z)$)																 & 0,2 dB/km \\
+\hline
+\multicolumn{2}{c}{Laser} \\
+\cline{1-2}
+Parâmetro    & Valor Adotado \\
+\hline
+Fator de Aumento de Largura de Linha ($\alpha$)&  $-5$   \\
+Coeficiente de \emph{Chirp} Adiabático ($\kappa$)  & 	10 e 15 GHz/mW     \\
+Potência Média ($P_0$)														 &  4 e 5 mW \\
+\hline
+\multicolumn{2}{c}{Fotodetector} \\
+\cline{1-2}
+Parâmetro    & Valor Adotado \\
+\hline
+Responsividade ($R$)															 & 0,9 A/W \\
+\hline
+\end{tabular}
+\caption{Valores adotados na simulação para sinal OFDM Gigabit Ethernet.}
+\label{tab:ofdmgbe}
+\end{table}
+
+Para $z = 20$ km, Fig.~\ref{fig:OFDM_GbE_z20}, vemos que tanto a curva do modelo analítico quanto a curva do modelo analítico considerando \emph{chirp} adiabático dominante acompanham bem a curva de simulação sem aproximações. Com $\kappa P_0 = 75$ GHz praticamente não há erro; no pior caso o erro é menor que 0,5 dB. Com $\kappa P_0 = 40$ GHz, o erro entre as curvas analíticas e a simulação sem aproximações sobe para cerca de 1 dB. Embora pequeno, este aumento no erro se deve a redução do \emph{chirp} adiabático com a redução de $\kappa P_0$, fazendo com que as imprecisões da aproximação linear do logaritmo natural do \emph{chirp} transiente \eqref{tomN:PIR} se tornem mais significativas.
+
+Para $z = 100$ km, Fig.~\ref{fig:OFDM_GbE_z100}, o efeito das imprecisões da aproximação linear do logaritmo natural do \emph{chirp} transiente se torna ainda mais expressivo. Com $\kappa P_0 = 75$ GHz o erro continua pequeno, menor do que 0,5 dB. Porém, com $\kappa P_0 = 40$ GHz, o erro do modelo analítico considerando \emph{chirp} adiabático dominante chega a quase 2 dB. O efeito do \emph{chirp} transiente pode ser percebido pela diferença entre as curvas do modelo analítico e modelo analítico considerando \emph{chirp} adiabático dominante. A diferença aumenta para $\kappa P_0 = 40$ GHz, pois neste caso o \emph{chirp} transiente se torna mais significativo, como já mostrado na Fig.~\ref{fig:adiabvstrans}. Na Fig.~\ref{fig:OFDM_GbE_z100} também são mostradas as curvas de modelo analítico considerando até a quinta ordem de produtos de intermodulação. Mostrando que o erro entre as curvas analíticas e de simulação sem aproximações se deve novamente à aproximação do logaritmo natural do \emph{chirp} transiente. 
+
+As curvas de simulação auxiliares não são mostradas na Fig.~\ref{fig:OFDM_GbE}, pois o modelo analítico já apresenta precisão satisfatória, mesmo no pior dos casos.
+
+Em relação aos níveis de SIR vemos que o sinal OFDM Gigabit Ethernet não sofre muito com as distorções induzidas pelo \emph{chirp} do laser. Os níveis de SIR para 20 km, por exemplo, são superiores a 35 dB. 
+
+\FloatBarrier
+\begin{figure}
+	\centering
+	\subfigure[]{\includegraphics[trim=1cm 0cm 1cm 0.5cm, scale=0.7]{OFDM_GbE_20km.eps} \label{fig:OFDM_GbE_z20}}
+	\subfigure[]{\includegraphics[trim=1cm 0cm 1cm 0.5cm, scale=0.7]{OFDM_GbE_100km.eps} \label{fig:OFDM_GbE_z100}}
+	\caption{SIR para OFDM Gigabit Ethernet: \ref{fig:OFDM_GbE_z20} $z = 20$ km e \ref{fig:OFDM_GbE_z100} $z = 100$ km. CAD significa \emph{chirp} Adiabático Dominante.} \label{fig:OFDM_GbE}
+\end{figure}
+\FloatBarrier
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{OFDM Ultra WideBand}
+Redes de ópticas de acesso do futuro também são esperadas de fazer transmissão de sinais sem fio padronizados, como o UWB, para serviços sem fio de grande capacidade \cite{gbeofdm}. Nesta seção será avaliada a precisão do modelo analítico para calcular a distorção harmônica em sinais OFDM UWB.
+
+A Tabela~\ref{tab:ofdmuwb} mostra os parâmetros de simulação adotados. O sinal UWB é um sinal baseado no padrão ECMA-368 \cite{uwb}. Cada sub-banda do sinal UWB usa 128 subportadoras, resultando em uma banda de 528 MHz. Para essas simulações nós vamos avaliar a primeira banda do sinal UWB, centrada em 3.43 GHz; e a quarta banda do sinal UWB, centrada em 5.02 GHz. Apesar do índice de modulação global que fornece menor taxa de erro ser $m = 13\%~(m_{IM_k} = 1,6\%)$ \cite{gbeofdm}, por estarmos interessados em avaliar a precisão do modelo analítico, vamos utilizar o máximo índice de modulação adotado ($m_{IM_k} = 2\%$). O formato de modulação adotado em sinais OFDM UWB é o QPSK. 
+
+\begin{table}[b!]
+\centering
+\begin{tabular}{l|l}
+\hline
+\multicolumn{2}{c}{Parâmetros Adotados na Simulação} \\
+\cline{1-2}
+\hline
+\multicolumn{2}{c}{OFDM} \\
+\cline{1-2}
+Parâmetro    & Valor Adotado \\
+\hline
+Número de Subportadoras ($N$)  									   & $128$    \\
+Frequência Central ($f_c$)												 & 3,43 e 5,02 GHz \\
+Índice de Modulação Individual ($m_{IM}$)   		   & 2,0$\%$     \\
+Largura de Banda ($BW$)														 & $\sim 528$ MHz \\
+Formato de Modulação															 & QPSK \\
+\hline
+\multicolumn{2}{c}{Fibra Óptica} \\
+\cline{1-2}
+Parâmetro    & Valor Adotado \\
+\hline
+Dispersão ($D$)  																	 & $17$ ps/nm$\cdot$km    \\
+Comprimento ($z$)        									  			 & 20 e 100 km		   \\
+Atenuação ($L(z)$)																 & 0,2 dB/km \\
+\hline
+\multicolumn{2}{c}{Laser} \\
+\cline{1-2}
+Parâmetro    & Valor Adotado \\
+\hline
+Fator de Aumento de Largura de Linha ($\alpha$)  				 &  $-5$   \\
+Coeficiente de \emph{Chirp} Adiabático ($\kappa$)  & 	10 e 15 GHz/mW     \\
+Potência Média ($P_0$)														 &  4 e 5 mW \\
+\hline
+\multicolumn{2}{c}{Fotodetector} \\
+\cline{1-2}
+Parâmetro    & Valor Adotado \\
+\hline
+Responsividade ($R$)															 & 0,9 A/W \\
+\hline
+\end{tabular}
+\caption{Valores adotados na simulação para sinal OFDM UWB.}
+\label{tab:ofdmuwb}
+\end{table}
+
+Para as curvas de SIR de sinais UWB vamos utilizar a mesma distância de propagação ($z = 100$ km), porém para duas bandas diferentes do sinal UWB: a primeira banda, centrada em 3,43 GHz; e a quarta banda, centrada em 5,02 GHz. Além disso, iremos avaliar duas situações de \emph{chirp} adiabático: $\kappa P_0 = 40$ GHz e $\kappa P_0 = 75$ GHz. As curvas para $\kappa P_0 = 10$ GHz são omitidas, pois os níveis de SIR são da ordem de 70 dB, ou seja, praticamente não há distorção.
+
+Os resultados de SIR para sinais OFDM UWB são mostradas na Fig.~\ref{fig:OFDM_UWB}.
+
+Para o sinal UWB centrado em 3,43 GHz, Fig.~\ref{fig:OFDM_UWB1}, com $\kappa P_0 = 40$ GHz o erro entre modelo analítico e curva de simulação numérica é inferior a 1 dB. Além disso, o modelo analítico sobrepõe à curva de simulação com logaritmo aproximado linearmente (Simulação Log Linear), o que novamente sugere que o calcular os produtos de intermodulação para terceira ordem é suficiente. Porém, o mesmo não acontece para $\kappa P_0 = 75$ GHz. O modelo analítico sobrepõe às curvas de simulação sem aproximações e simulação log quadrático por coincidência. A curva de simulação log linear mostra a verdadeira precisão que se pode conseguir com o modelo analítico. De fato, ao se aumentar o cálculo dos produtos de intermodulação do modelo analítico para quinta ordem, o modelo analítico sobrepõe a curva de simulação com log linear.
+
+A Fig.~\ref{fig:OFDM_UWB2} mostra os resultados de SIR para quarta banda do sinal OFDM UWB, centrado em 5,02 GHz. Note que por ocupar a banda em torno de 5,02 GHz, a quarta banda do sinal UWB pode ocupar regiões em que o \emph{chirp} transiente é tão significativo quanto, ou até mais dominante que o \emph{chirp} transiente, como já mostrado na Fig.~\ref{fig:adiabvstrans}. Portanto, neste caso também usaremos o modelo analítico considerando \emph{chirp} transiente dominante. Como pode ser visto na Fig.~\ref{fig:OFDM_UWB2}, a curva do modelo analítico considerando \emph{chirp} transiente dominante fornece bons resultados mesmo o \emph{chirp} transiente não sendo dominante. Como mostrado na Fig.~\ref{fig:adiabvstrans}, para $\kappa P_0 = 40$ GHz, $RAT_k \approx 0$ dB na faixa de frequência do sinal UWB (5,02 GHz), ou seja, o \emph{chirp} transiente é apenas da mesma ordem de grandeza do \emph{chirp} adiabático.
+
+Para $\kappa P_0 = 40$ GHz temos uma situação semelhante ao que ocorreu na Fig.~\ref{fig:OFDM_UWB1}. A curva do modelo analítico de terceira ordem sobrepõe à curva de simulação com log quadrático, porém não sobrepõe à curva de simulação com log linear. Isto sugere que é necessário calcular produtos de intermodulação de ordem superior. De fato, a curva do modelo analítico com produtos de intermodulação de quinta ordem aproxima-se mais da curva de simulação com log linear.
+
+Com $\kappa P_0 = 75$ GHz a curva do modelo analítico com produtos de intermodulação até terceira ordem apresenta erro da ordem de 2 dB. Porém, a curva de simulação com log linear sobrepõe à curva de simulação sem aproximações, o que indica que a precisão do modelo pode ser melhorada ao se aumentar a ordem dos produtos de intermodulação. De fato, como vemos a curva do modelo analítico de quinta ordem sobrepõe às curvas de simulação numérica. Além disso, mesmo com o \emph{chirp} adiabático considerado o modelo analítico considerando \emph{chirp} transiente dominante é capaz de prover bons resultados. Para quinta ordem dos produtos de intermodulação o modelo analítico com \emph{chirp} transiente praticamente sobrepõe à curva de simulação sem aproximações.
+
+\FloatBarrier
+\begin{figure}
+	\centering
+	\subfigure[]{\includegraphics[trim=1cm 0cm 1cm 0.5cm, scale=0.7]{OFDM_UWB1_100km.eps} \label{fig:OFDM_UWB1}} \\
+	\subfigure[]{\includegraphics[trim=1cm 0cm 1cm 0.5cm, scale=0.7]{OFDM_UWB2_100km.eps} \label{fig:OFDM_UWB2}}
+	\caption{SIR para OFDM UWB propagado em 100 km: \ref{fig:OFDM_UWB1} UWB centrado em 3,43 GHz e \ref{fig:OFDM_UWB2} centrado em 5,02 GHz.} \label{fig:OFDM_UWB}
+\end{figure}
+\FloatBarrier
+
+

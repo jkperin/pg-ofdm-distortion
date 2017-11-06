@@ -1,0 +1,5 @@
+%% This is the new format of equation (6). Please note that this equation should be included inside the table envinroment in the original tex file.
+\begin{align} \label{tomN:Is2} \nonumber
+\tilde{I}_{det}(t,z) & \approx \frac{1}{L(z)}\sum_{k_1=1}^N\Bigg(\overbrace{\sum_{n_{k_1} \in A_1} I_{det}(n_{k_1}\Omega_{k_1},z)e^{j(n_{k_1}\Omega_{k_1}t + n_{k_1}\varphi_{k_1})}}^{Signal~component} + \sum_{k_2=k_1+1}^{N}\Bigg(\overbrace{\sum_{(n_{k_1}, n_{k_2}) \in A_2} I_{det}(\textstyle\sum_{l=1}^2 n_{k_l}\Omega_{k_l},z)e^{j(\sum_{l=1}^2 (n_{k_l}\Omega_{k_l}t + n_{k_l}\varphi_{k_l}))}}^{2nd~order~IMP} \\
+& \cdots + \sum_{k_N=k_{N-1}+1}^{N}\Bigg(\overbrace{\sum_{(n_{k_1}, \ldots, n_{k_N}) \in A_N} I_{det}(\textstyle\sum_{l=1}^N n_{k_l}\Omega_{k_l},z)e^{j(\sum_{l=1}^N (n_{k_l}\Omega_{k_l}t + n_{k_l}\varphi_{k_l}))}}^{Nth~order~IMP}\Bigg)\cdots\Bigg)\Bigg)
+\end{align}

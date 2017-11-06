@@ -1,0 +1,106 @@
+\documentclass[twocolumn]{el-author}
+
+%\usepackage[...]{...}      This has been commented out as we are not using any additional packages here.  On the whole, they should be unnecessary.
+\newcommand{\hH}{\hat{H}}
+\newcommand{\D}{^\dagger}
+\newcommand{\ua}{\uparrow}
+\newcommand{\nc}{\newcommand}
+\nc{\da}{\downarrow} \nc{\hc}{\hat{c}} \nc{\hS}{\hat{S}}
+\nc{\bra}{\langle} \nc{\ket}{\rangle} \nc{\eq}{equation (\ref}
+\nc{\h}{\hat} \nc{\hT}{\h{T}}\nc{\be}{\begin{eqnarray}}
+\nc{\ee}{\end{eqnarray}}\nc{\rd}{\textrm{d}}\nc{\e}{eqnarray}\nc{\hR}{\hat{R}}\nc{\Tr}{\mathrm{Tr}}
+\nc{\tS}{\tilde{S}}\nc{\tr}{\mathrm{tr}}\nc{\8}{\infty}\nc{\lgs}{\bra\ua,\phi|}\nc{\rgs}{|\ua,\phi\ket}
+\nc{\hU}{\hat{U}}\nc{\lfs}{\bra\phi|}\nc{\rfs}{|\phi\ket}\nc{\hZ}{\hat{Z}}\nc{\hd}{\hat{d}}\nc{\mD}{\mathcal{D}}
+\nc{\bd}{\bar{d}}\nc{\bc}{\bar{c}}\nc{\mc}{\mathcal}\nc{\ea}{eqnarray}\nc{\mG}{\mathcal{G}}\nc{\bce}{\begin{center}}
+\nc{\ece}{\end{center}}
+\date{12th December 2011}
+
+\begin{document}
+
+\title{An Exact Fourier Series Expansion of the Intensity Modulation for 1-Tone Large-Signal Theory of Directly Modulated Lasers}
+
+\author{J.P.K. Perin, M. R. N. Ribeiro and A. T. V. Cartaxo}
+
+\abstract{
+We have derived an exact Fourier series expansion of the root square in the intensity modulation for 1-Tone Large-Signal Theory of directly modulated lasers. This expansion allows the received signal, after linear propagation through an optical fiber and directed detection, to be calculated more accurately using previously proposed models.
+}
+
+\maketitle
+
+\section{Introduction}
+As a consequence of semiconductor laser chirp, the intensity modulation is accompanied by a frequency modulation. Although after square law detection the phase information is lost, the propagation through a dispersive media, such as an optical fiber, causes a conversion of frequency modulation to intensity modulation, which is responsible for distort the received signal.
+
+In [1] is proposed a large-signal theory that enables the effect of dispersive propagation on the intensity modulation response of directly modulated lasers to be calculated. The exact model proposed in \cite{eva} for 1-Tone large-signal modulation, actually uses two approximations. The first one is that the laser chirp is linear in relation to the intensity modulation. While in the second approximation, the root square on the intensity modulation response \eqref{Ez0} is written as an approximated Fourier series expansion. In this paper we are going to present an exact Fourier expansion for this root square, this will eliminate the inaccuracies added by the latter approximation and therefore an even more accurate model is achieved.
+
+This paper is organized as follows: Section 1 discusses some of the results from the theory presented in [1]. In section 2, we demonstrated the proposed exact Fourier series expansion for the intensity modulation of the electric field. 
+
+\section{1-Tone Large-Singal Theory}
+As done in \cite{eva}, considering that the laser chirp is linear with the intensity modulation, the complex electric field envelope at the laser output for 1-Tone large signal modulation can be expressed as:
+
+\begin{align} \label{Ez0} \nonumber
+E(t,z = 0) = P_0^{1/2}\Big(1 + m_{IM}&cos(\Omega t + \varphi_{IM})\Big)^{1/2} \\
+&\cdot \exp\Big(jm_{FM}sin(\Omega t + \varphi_{FM})\Big)
+\end{align}
+
+Where $P_0$ is the average power, $\Omega/2\pi$ is the modulated frequency, $m_{IM}$ and $m_{FM}$ are, respectively the intensity modulation(IM) index and frequency modulation(FM) index, which are related by an phase-to-intensity ratio (PIR) \cite{eva} and $\varphi_{IM}$ and $\varphi_{FM}$ are its respective phase.
+
+Assuming the equation above, in \cite{eva} are proposed three models for calculate the detected current after linear propagation (considering only GVD) through an optical fiber. Two of them consider a linear approximation for the root square in the amplitude of the electric field \eqref{Ez0}.  Whereas, in third model, showed below, the root square is calculated using an approximated Fourier series expansion.
+
+\begin{align} \label{eva_exact} \nonumber
+I_{det}(n\Omega,z) = &R(n\Omega)P_0 \sum_{l, l' = -\infty}^{\infty} j^{n + l - l'}m_lm_{l'} \\
+& \cdot e^{j(n + l - l')\Delta\varphi}e^{jn\theta(l + l')}J_{n+l-l'}(u)
+\end{align}
+
+Where $I_{det}(n\Omega,z)$ is the detected current at the \emph{n}th harmonic, $R(n\Omega)$ is the photodiode responsitivity at the \emph{n}th harmonic, $\Delta\varphi = \varphi_{IM} - \varphi_{FM}$, $u = 2m_{FM}sin(n\theta)$ and $\theta = -(1/2)\beta_2\Omega^2z$, where $\beta_2$ and $z$ are the dispersion parameter and fiber length, respectively.
+
+The $m_l$ and $m_{l'}$ are the coefficients for the Fourier expansion of the root square in \eqref{Ez0}. In [1], the authors use an approximation for calculate these coefficients, in addition their approximation has some inconsistencies. Here, we are going to derive an exact Fourier series expansion, which allows the detected current of \eqref{eva_exact} to be calculated more accurately.
+
+%%%
+\mbox{}
+
+\section{2-Fourier series for the Intensity Modulation of the Electric Field}
+In order to derive this exact expression for the electric field amplitude envelope, let us firts use a Taylor series expansion for the root square, accordingly with \cite{2}:
+\begin{equation} \label{taylor_raiz_quadrada}
+\sqrt{1 + x} = \bigg.\sum_{n = 0}^{\infty}\frac{(-1)^n(2n)!}{(1 - 2n)(n!)^2(4^n)}x^n\bigg., |x| \leq 1
+\end{equation}
+
+Therefore the intensity modulation of the electric field at the laser outuput $A(t)$ can be expressed as:
+
+\begin{align} \nonumber \label{At}
+A(t) = &P_0^{1/2}\sqrt{1 + m_{IM}cos(\Omega t + \varphi_{IM})} \\
+= &P_0^{1/2}\bigg.\sum_{n = 0}^{\infty}\frac{(-1)^n(2n)!}{(1 - 2n)(n!)^2(4^n)}m_{IM}^ncos^n(\Omega t + \varphi_{IM})\bigg.
+\end{align}
+
+The equation above leads to an infinite summation of powers of cosines, each of which can be expanded in a finite summation of harmonics of the fundamental frequency $\Omega/2\pi$ accordingly with the expressions below.
+
+\begin{equation} \label{cosn_exp}
+cos^n\theta = 
+\begin{cases} 
+\displaystyle\frac{2}{2^n}\sum_{k = 0}^{\frac{n-1}{2}}\binom{n}{k}cos((n - 2k)\theta), \text{n odd}\ \\ 
+\displaystyle\frac{1}{2^n}\binom{n}{\frac{n}{2}} + \frac{2}{2^n}\sum_{k = 0}^{\frac{n}{2}-1}\binom{n}{k}cos((n - 2k)\theta), \text{n even} \\ 
+\end{cases}
+\end{equation}
+
+By using the equations above and grouping all the terms that fall on the same frequency, we can rewrite equation \eqref{At} as a summation of harmonics from its fundamental frequency $(\Omega/2\pi)$. For instance, accordingly with equation \eqref{cosn_exp} all the odd powers of cosines from equation \eqref{At} will generate components at the fundamental frequency $\Omega/2\pi$, therefore we can compute all these contributions on this frequency as the Fourier coefficient respective to $\Omega/2\pi$. Likewise, all the odd powers of cosines, except the first, will generate components at $3\Omega/2\pi$. Additionally, we can expand these cosines to their complex exponential form in order to obtain a Fourier series in its exponential form for \eqref{At}, therefore:
+
+\begin{align}
+& A(t) = \sqrt{P_0}\sum_{l = -\infty}^{\infty} m_le^{jl(\Omega t + \varphi_{IM})} \\
+& m_l = \bigg.\sum_{k = 0}^{\infty}\frac{(-1)^n}{(1 - 2n)}\binom{2n}{n}\binom{n}{k}\bigg(\frac{m_{IM}}{8}\bigg)^n, n = 2k + |l|
+\end{align}
+
+The equation above can be used to calculated the coefficients $m_l$ and $m_{l'}$ necessary in the equation \eqref{eva_exact}. As here, the coefficients for the Fourier expansion of the root square were calculated without any approximation the accuracy of the model is limited only by the approximation made in \eqref{Ez0}, where the laser chirp is considered linear.
+
+\section{Conclusion}
+We have derived an exact Fourier expansion of the intensity modulation response of a semiconductor laser directly modulated. This equation can be useful to calculate more accurately the detected signal after linear propagation through an optical fiber using the model proposed in \cite{eva}. By using the equation presented here the accuracy of the model is limited only by the linear approximation used to describe laser chirp.
+
+\begin{thebibliography}{}
+
+\bibitem{eva}
+E. Peral and A. Yariv, `Large-Signal Theory of the Effect of Dispersive Propagation on the Intensity Modulation Response of Semiconductor Lasers' \textit{J. Light. Technol.}, vol. 18, no. 1, pp. 84-89, Jan. 2000.
+
+\bibitem{2}
+M. Abramowitz and I. Stegun, `Handbook of Mathematical Functions: With Formulas, Graphs, and Mathematical Tables'. New York: Dover, 1976.
+
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,312 @@
+\documentclass[journal]{IEEEtran}
+\makeatletter
+\def\markboth#1#2{\def\leftmark{\@IEEEcompsoconly{\sffamily}\MakeUppercase{\protect#1}}%
+\def\rightmark{\@IEEEcompsoconly{\sffamily}\MakeUppercase{\protect#2}}}
+\makeatother
+\usepackage[utf8x]{inputenc}
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage{ucs}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[section]{placeins}
+\usepackage{multirow}
+\usepackage[bookmarks]{hyperref}
+\usepackage[numbered]{bookmark}
+\usepackage{epstopdf}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{stfloats}
+\usepackage{cite}
+\usepackage{filecontents}
+\DeclareGraphicsExtensions{.pdf,.png,.jpg}
+\graphicspath{{figs/}}
+
+\begin{filecontents}{ref.bib}
+@article{OFDM-GbE-UWB,
+title={{Experimental study of coexistence of multi-band OFDM-UWB and OFDM-baseband signals in long-reach PONs using directly modulated lasers}},
+author={J. Morgado and D. Fonseca and A. Cartaxo},
+journal={Opt. Express},
+year={2011},
+month={Nov.},
+volume={19},
+number={23},
+pages={23601--23612},
+}
+
+@BOOK{kaminow,
+ author = {I. Kaminow and T. Li},
+ title = {{Optical fiber telecommunications IV (A. Components)}},
+ year = {2002},
+ publisher = {Academic Press/Elsevier},
+ address = {San Diego, EUA}
+ }
+
+@article{OFDM:promising,
+title={{Wavelength-offset filtering in optical OFDM IMDD systems using directly modulated DFB lasers}},
+author={J. L. Wei and C. Sánchez and E. Hugues-Salas and P. S. Spencer and J. M. Tang},
+journal={J. of Lightwave Technology},
+year={2011},
+month={Sep.},
+volume={29},
+number={18},
+pages={2861--2870},
+}
+
+@article{evaOFDM,
+  title={{Analytical formulation of directly modulated OOFDM signals transmitted over an IM/DD dispersive link}},
+  author={S{\'a}nchez, C and Ortega, B and Wei, JL and Tang, J and Capmany, J},
+  journal={Opt. Express},
+  volume={21},
+  number={6},
+  pages={7651--7666},
+  year={2013},
+  publisher={OSA}
+}
+
+@article{OFDM-IMDD,
+  title={{Experimental demonstration of a record high 11.25 Gb/s real-time optical OFDM transceiver supporting 25km SMF end-to-end transmission in simple IMDD systems}},
+  author={Giddings, RP and Jin, XQ and Hugues-Salas, E and Giacoumidis, E and Wei, JL and Tang, JM},
+  journal={Opt. Express},
+  volume={18},
+  number={6},
+  pages={5541--5555},
+  year={2010},
+  publisher={OSA}
+}
+
+@article{eva,
+title={{Large-signal theory of the effect of dispersive propagation on the intensity modulation response of semiconductor lasers}},
+author={E. Peral and A. Yariv},
+journal={J. of Lightwave Technology},
+year={2000},
+month={Jan.},
+volume={18},
+number={1},
+pages={84--89},
+}
+
+@article{comments,
+title={{Comments on `Large-signal theory of the effect of dispersive propagation on the intensity modulation response of semiconductor lasers'}},
+author={J. P. K. Perin and M. R. N. Ribeiro and A. V. T. Cartaxo},
+journal={J. of Lightwave Technology},
+year={2013},
+month={April},
+volume={31},
+number={8},
+pages={1337--1339},
+}
+
+@ARTICLE{corvini, 
+author={P. J. Corvini and T. L. Koch}, 
+journal={J. of Lightwave Technology}, 
+title={{Computer simulation of high-bit-rate optical fiber transmission using single-frequency lasers}}, 
+year={1987}, 
+volume={5}, 
+number={11}, 
+pages={1591--1595}, 
+}
+
+@ARTICLE{smallsignal1, 
+author={B. Wedding}, 
+journal={Electronics Letters}, 
+title={{Analysis of fibre transfer function and determination of receiver frequency response for dispersion supported transmission}}, 
+year={1994}, 
+volume={30}, 
+number={1}, 
+pages={58--59}, 
+}
+
+@ARTICLE{smallsignal2, 
+author={A. R. Charaplyvy and R. W. Tkach and L. L. Buhl and R. C. Alferness}, 
+journal={Electronics Letters}, 
+title={{Phase modulation to amplitude modulation conversion of CW laser light in optical fibres}}, 
+year={1986}, 
+volume={22}, 
+number={8}, 
+pages={409--411}, 
+}
+
+@ARTICLE{equalization, 
+author = {C. C. Wei}, 
+journal = {Opt. Express}, 
+publisher = {OSA},
+title={{Analysis and iterative equalization of transient and adiabatic chirp effects in DML-based OFDM transmission systems}}, 
+number = {23}, 
+year={2012}, 
+volume={20}, 
+pages={25774--25789}, 
+}
+
+@ARTICLE{dsppon, 
+author={Yoshimoto, N. and Kani, J. and Sang-Yuep Kim and Liyama, N. and Terada, J.}, 
+journal={IEEE Communications Magazine}, 
+title={{DSP-based optical access approaches for enhancing NG-PON2 systems}}, 
+year={2013}, 
+volume={51}, 
+number={3}, 
+pages={58-64},
+}
+\end{filecontents}
+\hyphenation{op-tical net-works semi-conduc-tor}
+\begin{document} 
+\title{Polynomial-Time Complexity Large-Signal Model for DML-Based OOFDM Transmission Systems}
+\author{José~P.~K.~Perin,~\IEEEmembership{}
+        Moisés~R.~N.~Ribeiro,~\IEEEmembership{}
+        and~Adolfo~V.~T.~Cartaxo~\IEEEmembership{Senior Member, IEEE}% <-this % stops a space
+
+\thanks{Manuscript received July 31, 2013; revised September 20, 2013; accepted October 2, 2013. This work was supported in part by CNPq/FAPES under Grant 48508560/2009, in part by FAPES/FINEP under Grant 40381662/2008, and in part by the project PEst-OE/EEI/LA0008/2013, in Portugal.}
+\thanks{J. P. K. Perin and M. R. N. Ribeiro are with the Department of Electrical Engineering, Federal University ofEspÃrito Santo, Vitoria 29000, Brazil (e-mail: josepaulokp@gmail.com; moises@ele.ufes.br).}
+\thanks{A. V. T. Cartaxo is with the Departamento de Engenharia Eletrotécnica e de Computadores, Instituto Superior Técnico, Universidade Técnica de Lisboa, Lisboa 1049-001, Portugal (e-mail: adolfo.cartaxo@lx.it.pt).}
+\thanks{Color versions of one or more of the figures in this letter are available online at http://ieeexplore.ieee.org.}
+\thanks{ Digital Object Identifier 10.1109/LPT.2013.2285495}
+}
+%Group of Research on Optical Fibre Telecommunications, Instituto de Telecomunicações.
+
+\markboth{IEEE PHOTONICS TECHNOLOGY LETTERS}{}%
+\maketitle
+\begin{abstract}
+The aim of this letter is to address the barrier imposed by the exponential-time complexity of current large-signal theory for calculating the chirp-induced distortions in short-range optical transmission systems using directly modulated lasers. This is a critical issue for modern optical orthogonal frequency division multiplexing signals with hundreds of subcarriers, especially for digital signal processing techniques intended to mitigate transmission impairments. A polynomial-time complexity model is proposed, and its accuracy can be increased by including higher-order intermodulation products (IMPs). Signal-to-interference ratio differences between our analytical model and simulation results around 1 dB are achieved for taking into account IMPs up to fifth order. 
+\end{abstract}
+\begin{IEEEkeywords}
+orthogonal frequency division multiplexing, digital signal processing, chirp, semiconductor lasers.
+\end{IEEEkeywords}
+\IEEEpeerreviewmaketitle
+\section{Introduction}
+\IEEEPARstart{O}{ptical} orthogonal frequency division multiplexing (OOFDM) signals in intensity modulation and direct detection (IMDD) systems using directly modulated lasers (DMLs) are seen as one of the most promising approaches to short-range ($<\sim 100$ km) optical systems, such as passive optical network (PON) and long-reach PON (LR-PON) \cite{OFDM:promising, dsppon, equalization}. They provide high transmission capacity and cost-efficient links. Nonetheless, such systems present an important drawback: DMLs exhibit chirp, i.e., the frequency of the optical field is modulated whenever its intensity is modulated. The chromatic dispersion of the optical fiber partially converts the frequency modulation (FM) due to laser chirp into intensity modulation (IM), giving rise to harmonic distortions in the direct-detected signal. These chirp-induced distortions are one of the major impairments in DML-based systems. 
+
+%The small-signal approximations made in \cite{equalization} assumes OOFDM signals with very low modulation indexes, which restrict the practical use of the referred model. Thus, for more general scenarios a large-signal theory is necessary despite its complexity.
+The effects of dispersive propagation in DML-based systems have already been analytically described by small-signal models \cite{smallsignal1, smallsignal2}, and also by a large-signal model \cite{eva,comments}. More recently, new models have been developed to study dispersive propagation of OOFDM signals in DML-based links. The small-signal approximations made in \cite{equalization} assumes OOFDM signals with very low modulation indexes and second-order intermodulation products (IMPs). Thus, for more general scenarios a large-signal theory is necessary despite its complexity. 
+
+An extension of the large-signal theory in \cite{eva} is presented in \cite{evaOFDM}. A second-order approximation of the intensity of the electric field envelope is used, which further increases the complexity of the model. As a matter of fact, for OOFDM signals composed of hundreds of subcarriers, e.g., \cite{OFDM:promising, OFDM-GbE-UWB}, these large-signal models become prohibitively time-consuming due to their inherent exponential-time complexity with respect to the number of subcarriers. Considering that potential future applications of those models lie also in equalization and interference cancellation techniques (see for instance \cite{dsppon, equalization}), efforts toward models combining high accuracy and low complexity are paramount in reducing both hardware costs and power consumption in digital signal processor (DSP).
+
+In this letter, we propose a polynomial-time complexity large-signal model for the analysis of chirp-induced distortions in OOFDM signals in DML-based short-range systems. The exponential-time complexity in \cite{eva} is reduced to polynomial-time by \emph{(i)} observing the range of parameters commonly used in short-range optical systems, and \emph{(ii)} allowing the IMPs to be separately calculated according to their order. Our model asymptotically converges to the model shown in \cite{eva} by considering higher-order IMPs, yet under polynomial-time complexity for practical cases. Thus, similarly to \cite{eva}, our model is applicable to scenarios in which the chirp-induced distortions are the dominant impairment.
+%
+\section{Large-Signal Theory of the Effect of Dispersive Propagation} \label{sec:theory}
+\setcounter{equation}{2}
+\begin{table*}[bp]
+\hline
+\begin{equation} \label{tomN:If}
+\tilde{I}_{det}(t,z) \approx \lim_{M\to\infty} \frac{1}{L(z)}\cdot\sum_{n_1, \ldots, n_N = -M}^{M}I_{det}(\Omega_{IMP},z)\cdot\exp\Bigg(j\sum_{k = 1}^N n_k(\Omega_kt + \varphi_{IM_k})\Bigg)
+\end{equation}
+\begin{align}\label{tomN:Idetf}
+I_{det}(\Omega_{IMP}, z) \approx & RP_0j^{\sum_{k = 1}^Nn_k}e^{j\sum_{k = 1}^N n_k\Delta\varphi_k}\prod_{k = 1}^N(J_{n_k}(u_k))\cdot\Bigg[1 - \sum_{k = 1}^N j \frac{m_{IM_k}\cos(\theta_k)}{2J_{n_k}(u_k)}\cdot(J_{n_k-1}(u_k)e^{-j\Delta\varphi_k} - J_{n_k+1}(u_k)e^{j\Delta\varphi_k})\Bigg]
+\end{align}
+\setcounter{equation}{5}
+\end{table*}
+\setcounter{equation}{0}
+%%
+In \cite{eva}, a large-signal theory of the effect of dispersive propagation of DML-based optical systems is proposed. The theory is first presented for 1-tone large-signal modulation, and then generalized to the case of $N$-tone, for which the optical power is in the form
+\begin{equation} \label{Pt}
+P(t) = P_0\Bigg[1 + \sum_{k=1}^N m_{IM_k}\cos(\Omega_k t + \varphi_{IM_k})\Bigg],
+\end{equation}
+where $N$ is the number of tones/subcarriers, $P_0$ is the average output optical power, and $m_{IM_k}$, $\Omega_k/2\pi$, and $\varphi_{IM_k}$ denote, respectively, the IM index, frequency, and phase of the $k$th tone/subcarrier. This signal can also be seen as an OOFDM real-valued symbol, where $m_{IM_k}$ and $\varphi_{IM_k}$ depend on the symbol mapped onto the $k$th subcarrier. 
+
+Due to laser chirp, IM leads to FM of the electric field. The phase-to-intensity ratio (PIR) \cite{eva} for each subcarrier is the relationship between IM ($m_{IM_k}, \varphi_{IM_k}$) and FM ($m_{FM_k}, \varphi_{FM_k}$), and it is defined by
+\begin{equation} \label{PIRk}
+PIR_k \equiv \frac{m_{FM_k}}{jm_{IM_k}}e^{j\Delta\varphi_k} = \frac{\alpha}{2}\bigg(1 + \frac{\kappa P_0}{j\Omega_k}\bigg),
+\end{equation}
+where $j=\sqrt{-1}$; $\Delta\varphi_k = \varphi_{FM_k} - \varphi_{IM_k}$; $\alpha$ is the laser's linewidth enhancement factor; and $\kappa$ is the adiabatic chirp factor, which depends on several laser's constructive parameters \cite{corvini}. The first term on the right-hand side accounts for the transient chirp, whereas the second term accounts for the adiabatic chirp. 
+
+As shown in \cite{eva}, the detected current after linear propagation (considering only group velocity dispersion) through an optical fiber is given by \eqref{tomN:If}, shown at the bottom of this page, where $N$ is the number of subcarriers; $\Omega_{IMP} \equiv \sum_{k = 1}^N n_k\Omega_k$; $L(z)$ is the fiber attenuation in linear units; $M$ is the limit of the summations, which ideally should be infinite; and $I_{det}(\Omega_{IMP},z)$ is given by \eqref{tomN:Idetf}, shown at the bottom of this page, where $R$ is the photodetector responsivity; $J_n$ denotes the Bessel function of first kind and $n$th order; $u_k = 2m_{FM_k}\sin\theta_k$; and $\theta_k = (-1/2)\beta_2\Omega_k\Omega_{IMP}z$, where $\beta_2$ is the fiber dispersion parameter, and \emph{z} is the fiber length. 
+
+Equation \eqref{tomN:If} bears two underlying approximations: the phase modulation due to the transient chirp is considered linear with respect to the optical power \eqref{PIRk}, and the linearization of the square root in the equation of electric field envelope \cite[eq. 3]{eva}. As shown in \cite{comments}, the inaccuracies introduced by the linearization of the square root are partially mitigated by discarding some of the terms of the calculated current.
+
+From \eqref{tomN:If} we can calculate the signal components of the detected current as well as the IMPs that arise from the beating between two or more different tones/subcarriers. For example, to calculate the signal component at the first frequency of the OOFDM signal we can set $n_1 = 1$ and $n_2 = \ldots = n_N = 0$. The IMPs occur when two or more coefficients are different from zero. The number of nonzero coefficients defines the order of the IMP. For instance, a second-order IMP is calculated by having only two nonzero coefficients, say $n_1$ and $n_2$. They interact with each other to form an IMP that falls onto the angular frequencies given by $\Omega_{IMP} = n_1\Omega_1 + n_2\Omega_2$. The total intermodulation distortion at a given frequency is equal to the sum of all the IMPs in \eqref{tomN:If} that fall onto that frequency.
+
+As the number of subcarriers grows, the number of times \eqref{tomN:Idetf} must be evaluated grows exponentially: $\mathcal{O}((2M + 1)^N)$. For typical OOFDM with hundreds of subcarriers, even small values of $M$ requires \eqref{tomN:Idetf} to be evaluated a astronomically large number of times.
+%%
+\section{Proposed Simplifications} \label{sec:simpl}
+\subsection{Simplification for the Bessel function of the first kind} \label{sec:simpl1}
+By limiting the range of the important parameters from \eqref{tomN:Idetf}, we can approximate the Bessel functions by simpler expressions. This also helps us assess the minimum value of $M$ in the summations of \eqref{tomN:If} necessary to achieve good accuracy.
+
+Table~\ref{tab:param} presents the range of values for the key parameters considered for the proposed simplifications, after a comprehensive literature survey of OOFDM signals in DML-based systems for short-range applications (e.g., \cite{OFDM-GbE-UWB, equalization, evaOFDM}). The OOFDM power IM index ($m$) can be related to $m_{IM_k}$ and $N$ as $m = \sqrt{\sum_{k=1}^N m_{IM_k}^2/2}$. 
+%%
+\setcounter{equation}{2}
+\begin{table*}[bp]
+\hline
+\begin{align} \label{tomN:Is2} \nonumber
+\tilde{I}_{det}(t,z) & \approx \frac{1}{L(z)}\sum_{k_1=1}^N\Bigg(\overbrace{\sum_{n_{k_1} \in A_1} I_{det}(n_{k_1}\Omega_{k_1},z)e^{j(n_{k_1}\Omega_{k_1}t + n_{k_1}\varphi_{k_1})}}^{Signal~component}\\ \nonumber
+& + \sum_{k_2=k_1+1}^{N}\Bigg(\overbrace{\sum_{(n_{k_1}, n_{k_2}) \in A_2} I_{det}(n_{k_1}\Omega_{k_1}+n_{k_2}\Omega_{k_2},z)e^{j((n_{k_1}\Omega_{k_1}+n_{k_2}\Omega_{k_2})t + n_{k_1}\varphi_{k_1}+n_{k_2}\varphi_{k_2})}}^{2nd~order~IMP} \\ \nonumber
+& ~~~~~~~~~~~~~~~~~~~~~\vdots~~~~~~~~~~~~~~~~~~~~~\vdots~~~~~~~~~~~~~~~~~~~~~\vdots~~~~~~~~~~~~~~~~~~~~~\vdots\\
+& \cdots + \sum_{k_N=k_{N-1}+1}^{N}\Bigg(\overbrace{\sum_{(n_{k_1}, \ldots, n_{k_N}) \in A_N} I_{det}(\textstyle\sum_{l=1}^N n_{k_l}
+\Omega_{k_l},z)e^{j(\sum_{l=1}^N (n_{k_l}\Omega_{k_l}t + n_{k_l}\varphi_{k_l}))}}^{Nth~order~IMP}\Bigg)\cdots\Bigg)\Bigg)
+\end{align}
+\end{table*}
+
+By inspecting \eqref{tomN:Idetf} we can see that the argument of the Bessel function is always $u_k \equiv 2m_{FM_k}\sin{\theta_k}$. Calculating $m_{FM_k}$ as in \eqref{PIRk} and using the range of values shown in Table~\ref{tab:param}, it is easy to show that $|u_k| < 0.6$. For this range of $u_k$, the Bessel functions of first kind can be accurately represented by few terms of their Maclaurin series expansion:
+\setcounter{equation}{4}
+\begin{equation} \label{simpl-besselj}
+J_n(u) \approx
+\begin{cases} 
+1 - \frac{u^2}{4},~~~n = 0 \\
+\frac{nu}{2},~~~n = \pm 1 \\
+0,~~~\text{otherwise}
+\end{cases}.
+\end{equation}
+This considerably simplifies the calculations of the Bessel functions in DSP environments. More importantly, however, \eqref{simpl-besselj} unveiled the fact that the Bessel functions can be considered zero for $|n_k|\geq 2$. Thus, for any $|n_k| \geq 2$, the product of Bessel functions in \eqref{tomN:Idetf} goes to zero, and so does $I_{det}(\Omega_{IMP})$. Therefore, we can truncate the summations of the Fourier series from $-1$ up to $+1$, i.e., $M = 1$ in \eqref{tomN:If}. Thus, the minimum possible value for $M$ encompasses the practical application range of today's OOFDM. This addresses the important question of what is the minimum number of terms that must be accounted in the summations of \eqref{tomN:If} and still achieve good accuracy. That point had been overlooked by previous large-signal theories, making their realization cumbersome.
+%%
+\subsection{Order-based Equation for the Detected Current}
+Unfortunately, the simplification proposed in Section~\ref{sec:simpl1} is not enough to make the large-signal theory applicable to the case of OOFDM signals with large number of subcarriers. Even for $M = 1$ the complexity is still exponential $\mathcal{O}((2M + 1)^N) = \mathcal{O}(3^N)$. For $N = 100$, this would require more than $5\cdot10^{47}$ evaluations of \eqref{tomN:Idetf}. However, the number of times \eqref{tomN:Idetf} is evaluated can be dramatically reduced by exploiting the condition of $M = 1$, without by any means bounding the calculation of higher-order IMPs since higher-order Bessel functions are negligible for the range of values specified in Table~\ref{tab:param}.
+%%
+\begin{table}[t]
+\caption{Range of important parameters considered for the proposed simplifications.}
+\label{tab:param}
+\centering
+\begin{tabular}{l|l}
+\hline
+Parameters & Considered range \\
+\hline
+IM index for each subcarrier ($m_{IM_k}$)   		   & $m_{IM_k} \leq 2\%$     \\
+OOFDM power IM index ($m$) & $m \leq 20\%$ \\
+OOFDM signal bandwidth (BW) & $BW \leq 10$ GHz \\
+Accumulated dispersion ($DL$)  								& $DL \leq 1700$ ps/nm    \\
+Linewidth enhancement factor ($\alpha$)&  $2 \leq \alpha \leq 5$   \\
+Adiabatic chirp coefficient ($\kappa$)  & 	$10 \leq \kappa \leq 15$ GHz/mW     \\
+Average optical power ($P_0$)														 &  $1 \leq P_0 \leq 5$ mW \\
+\hline
+\end{tabular}
+\end{table}
+%%
+Our proposal is to redefine \eqref{tomN:If} as \eqref{tomN:Is2}, shown at the bottom of the previous page, where $I_{det}(\Omega,z)$ is given by \eqref{tomN:Idetf}, and $A_1, A_2,\ldots, A_N$ are the sets of values that the Fourier series coefficients $n_k$ can assume. Equation \eqref{tomN:Is2} also requires frequencies in ascending order i.e., $\Omega_{k_1} <\ldots < \Omega_{k_N}$. Due to the simplification made in the Bessel functions, we can restrain the coefficients to $n_k\in\{-1,0,1\}$ (i.e., $M = 1$). However, as in \eqref{tomN:Is2} we have separated the IMPs into orders, we already know which coefficients are equal to zero; hence, $n_k\in\{-1,1\}$. In addition, the detected current $\tilde{I}_{det}(t,z)$ is a real signal; thus, $I_{det}(-\Omega,z) = I_{det}^*(\Omega,z)$. Therefore, it suffices to calculate $I_{det}(\Omega,z)$ for $\Omega > 0$. With that in mind, we can construct the sets $A_1, A_2,\ldots, A_N$. For instance, $A_1 = \{1\}$, since $n_{k_1} = -1$ leads to a negative frequency value. Similarly, $A_2 = \{(-1, 1), (1, 1)\}$, since $\Omega_{k_1} < \Omega_{k_2}$, every value of $(n_{k_1}, n_{k_2}) \in A_2$ yields $n_{k_1}\Omega_{k_1}+n_{k_2}\Omega_{k_2} > 0$. 
+$A_3 = \{(-1, -1, +1), (-1, +1, +1), (+1, -1, +1), (+1, +1, -1),\allowbreak (+1, +1, +1)\}$, as $\Omega_{k_1} < \Omega_{k_2} < \Omega_{k_3}$. The higher-order sets can be created in a similar manner.
+
+The practical contribution of \eqref{tomN:Is2} is that we can compute the signal component, and IMP components of different orders separately, as indicated in overbraces in \eqref{tomN:Is2}. This is accomplished by limiting the number of nonzero coefficients in each summation. As an example, for second-order IMPs, the summation has only two nonzero coefficients: $n_{k_1}$ and $n_{k_2}$, which assume values from the set $A_2$. As the order of the IMPs increases, the number of nonzero coefficients also increases. Since the values of the Bessel functions are bounded at 0.3, i.e., from \eqref{simpl-besselj} $|J_{\pm 1}(|u_k| < 0.6)| < 0.3$, for high-order IMPs the product of Bessel functions leads \eqref{tomN:Idetf} to tend to zero. This allows us to calculate the IMPs up to a certain order $T$, and neglect the remaining orders without significantly reducing the model's accuracy. As a result, the number of evaluations of \eqref{tomN:Idetf} necessary to calculate the detected current is significantly reduced. In fact, for a certain order $T$ (only) of IMPs, the number of evaluations of \eqref{tomN:Idetf} $(\Lambda_T)$ in our model is given by
+\setcounter{equation}{6}
+\begin{equation}\label{its}
+\Lambda_T = \mathrm{card}(A_T)\frac{1}{T!}\prod_{k = 0}^{T-1} (N - k),~T = 1,2,\ldots,N,
+\end{equation}
+where $\mathrm{card}(\cdot)$ denotes the cardinality of a set. Hence, the total number of evaluations necessary to calculate the detected current considering IMPs up to a certain order $T$ is given by $\sum_{k = 1}^T \Lambda_k$ (including signal component).
+
+Therefore, the proposed simplifications reduce the complexity of large-signal theory to a polynomial complexity $\mathcal{O}(N^{T})$. Revisiting the example of $N = 100$ subcarriers, and calculating the contributions to IMPs up to third order (T = 3), the actual number of required evaluations of \eqref{tomN:Idetf} is reduced to $\sum_{k = 1}^3 \Lambda_k = 818500$ (including signal component). If the OOFDM signal has a guard band greater than the signal bandwidth (i.e., suboctave), 2nd-order IMPs do not fall inside the signal band, and although higher, even-order IMPs may fall inside the signal band they can often be neglected, which further reduces the number of necessary evaluations of \eqref{tomN:Idetf}.
+%%
+\section{Numerical Results and Discussion} \label{sec:results}
+We have applied the theory developed in the last section to two very distinct scenarios: \emph{(i)} a near-baseband multi-octave OOFDM signal, and \emph{(ii)} two sub-bands of ultra-wide band (UWB) OOFDM signal for radio over fiber (RoF) applications. Some of the input parameters were chosen to better test the model's accuracy over limiting situations. For all cases, the IM index for each subcarrier is $m_{IM_k} = 2\%$, the total accumulated dispersion is 1700 ps/nm (100 km in standard single mode fiber), and $\alpha = 5$, which are the maximum values adopted for the proposed simplifications (Table~\ref{tab:param}). Different values of the product $\kappa P_0$ are analyzed. This is intended to alternate the dominance between adiabatic and transient chirp \eqref{PIRk}. Three chirp conditions are evaluated: $\kappa P_0 = 10, 40,$ and 75 GHz. This covers the entire range of admitted values of $\kappa P_0$ (see Table~\ref{tab:param}). Both the multi-octave OOFDM signal and each of the UWB sub-bands have 128 subcarriers mapped according to the quadrature phase shift keying (QPSK) format, which for $m_{IM_k} = 2\%$ leads to $m = 16\%$. The multi-octave OOFDM is centered at $3.5$ GHz, with total bandwidth of 6.4 GHz. Each UWB sub-band has a bandwidth of 528 MHz. The first UWB sub-band (sb$\#1$) is centered at 3.43 GHz, and the other chosen sub-band is centered at 5.02 GHz (sb$\#4$). 
+
+Our proposed model is tested against numerical simulations for signal-to-interference ratio (SIR) evaluations. Our numerical simulations use the well-known dynamic and nonlinear frequency deviation due to laser chirp (e.g., \cite[eq. (3)]{equalization}) derived from the laser rate equations. The numerical simulations do not use any of the approximations of the larger signal theory in \cite{eva} nor the simplifications proposed herein. Since both the signal components and the IMP components have random relative phases, their powers add, rather than their amplitudes. Therefore, the signal power at a given frequency is calculated as the power of the signal component at that frequency. Similarly, the interference power at a given frequency is calculated by adding up in power each of the IMPs contributions from \eqref{tomN:Is2} that fall onto that frequency. 
+
+Figure~\ref{fig:SIR1} shows the SIR for the multi-octave OOFDM signal for different values of $\kappa P_0$. For $\kappa P_0 = 10$ and $40$ GHz, the proposed theory considering IMPs up to third order agrees well with the simulation curves. For $\kappa P_0 = 75$ GHz, however, the discrepancy between the two curves reaches up to 5 dB for high-frequency subcarriers. Increasing the order of the IMPs taken into account can reduce the discrepancy to less than 1 dB. This is the expected trade-off between model accuracy and complexity enabled by our model. In fact, for this case, calculating IMPs up to fifth order (not shown in Figure~\ref{fig:SIR1}) would make the discrepancies negligible.
+\begin{figure}[t]
+\centering
+\includegraphics[scale=0.32, trim=3cm 1cm 2cm 1cm]{OFDM_Gen_100km.eps}
+\caption{SIR for the near-baseband multi-octave OOFDM signal. Three chirp conditions were evaluated: $\kappa P_0 = 10$ (red), 40 (black), and $75$ (blue) GHz.} \label{fig:SIR1}
+\end{figure}
+
+Figure~\ref{fig:SIR2} shows the results for the two UWB sub-bands calculated separately. Each UWB sub-band is a suboctave signal; therefore, only odd-order IMPs were taken into account to speed up calculations. The curves of $\kappa P_0 = 10$ GHz were omitted, as for this case the total chirp-induced distortions are negligible (SIR $> 25$ dB). In the UWB sb$\#1$ case (top axis), for both $\kappa P_0 = 40$ and 75 GHz, the discrepancies between analytical results and simulations are below 1 dB. 
+
+\begin{figure}[t]
+\centering
+\includegraphics[scale=0.32, trim=2.8cm 1cm 2cm 1cm]{OFDM_UWB_100km.eps}
+\caption{SIR for the two suboctave UWB OOFDM RoF signals. Two chirp conditions were evaluated for each signal: $\kappa P_0 = 40$ (black), and $75$ (blue) GHz.} \label{fig:SIR2}
+\end{figure}
+
+Regarding the overall model accuracy, for some cases (e.g., Figure~\ref{fig:SIR1} with $\kappa P_0 = 10$ GHz, and Figure~\ref{fig:SIR2}-sb$\#1$ with $\kappa P_0 = 75$ GHz) adding higher-order IMPs does not translate into accuracy improvement, as the model accuracy is also bounded by the underlying approximations in \cite{eva}. However, in general, including few higher-order IMPs significantly reduces the disagreement between our model and numerical simulations (e.g., $\kappa P_0 = 75$ GHz curves in Figures~\ref{fig:SIR1} and \ref{fig:SIR2}-sb$\#4$). This also suggests that the error inserted by the proposed approximations for the Bessel functions, in \eqref{simpl-besselj}, has virtually no effect in the model's fidelity.
+
+%%
+\section{Conclusions} \label{sec:conclusion}
+
+We have presented a polynomial-time complexity large-signal model for the analysis of the chirp-induced distortion in OOFDM signals in DML-based short-range transmission systems, as opposed to current exponential-time complexity models. By discriminating the IMPs into different orders, our approach allows model accuracy to be traded down to computational complexity. This way, equalization, interference cancellation, and optimization techniques may benefit from such a flexible model, especially their online DSP-based hardware implementations. 
+\bibliographystyle{IEEEtran}
+\bibliography{ref}
+\end{document}

@@ -218,3 +218,35 @@ TSWLatexianTemp*
 
 # expex forward references with \gathertags
 *-tags.tex
+
+
+# Extra
+code/antigos/
+code/lixo
+code/C/lixo
+code/M/lixo
+code/Graficos/PGresultados/
+
+thesis/lixo/
+thesis/figuras/matlab/
+thesis/figuras/visio/
+thesis/rascunhos.tex
+
+
+publications/polynomial time/outros
+publications/polynomial time/refs
+publications/polynomial time/rev
+
+*.mat
+*.asv
+*.mexw64
+*.pdf
+*.docx
+*.doc
+*.fig
+*.zip
+*.opj
+thesis/DISSERTACAO_old.tex
+*.png
+*.jpg
+*.eps

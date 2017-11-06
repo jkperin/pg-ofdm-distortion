@@ -1,0 +1,160 @@
+#include <math.h>
+#include <complex>
+#include "mex.h"
+
+#define pi 3.141592653589793
+#define Nmax 1
+
+void calcEva17Rec(int depth);
+inline double sum(double * V, int length);
+
+std::complex <double> * Idet;
+double * W, * Fcoeff, * mFM, * phiIM;
+double Dhat, P0, alfa;
+int Nc, offset, * nk;
+
+//eva12.IdetREC = calcEva17Rec(Nf, mIM, mFM, dPSI, W, Fcoeff, beta2, L, P0, Nmax); 
+void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
+{
+  size_t M, N;
+  int Nf;
+  double * IdetRe, * IdetIm;
+  double beta2xL;
+  //                                 0      1    2     3    4       5      6   7
+  //eva12.Idet = CalcEq12RecCpp(length(f3), W, F/dff, mFM, alfa, beta2*L, P0, Nmax);
+  
+  /* Check for proper number of arguments */
+  if (nrhs != 8) {
+    mexErrMsgIdAndTxt("MATLAB:mexcpp:nargin", 
+            "São necessários 8 argumentos de entrada");
+  } else if (nlhs != 1) {
+    mexErrMsgIdAndTxt("MATLAB:mexcpp:nargout",
+            "Esta função retorna apenas um argumento");
+  }
+  
+  M = mxGetM(prhs[1]);
+  N = mxGetN(prhs[1]);
+  
+  Nc = (int)N; // Number of sub-carriers
+  Nf = (int)mxGetScalar(prhs[0]); // Length of the output vector
+  alfa = mxGetScalar(prhs[4]);
+  beta2xL = mxGetScalar(prhs[5]);
+  P0 = mxGetScalar(prhs[6]);
+  
+  if(M != 1 || M != mxGetM(prhs[2]) || M != mxGetM(prhs[3]))
+    mexErrMsgTxt("Erro!!! Número de linhas diferente de 1 ou vetores de entrada com tamanhos diferentes!");
+  else if(N < 2 || N != mxGetN(prhs[2]) || N != mxGetN(prhs[3]))
+    mexErrMsgTxt("Erro!!! Número de colunas diferente de Nc ou Vetores de entrada com tamanhos diferentes!");
+  
+  if(alfa < 0 || P0 < 0)
+      mexErrMsgTxt("Erro!!! Argumentos de entrada inválidos");
+  
+  W = (double *) mxGetPr(prhs[1]);
+  Fcoeff = (double *) mxGetPr(prhs[2]);
+  mFM = (double *) mxGetPr(prhs[3]);
+  phiIM = (double *) mxGetPr(prhs[7]);
+    
+  // Realiza alguns cálculos antes de chamar a função recursiva
+  offset = Nmax*((int)sum(Fcoeff, Nc));
+  
+  Dhat = -0.5*beta2xL;
+  
+  Idet = new std::complex <double> [Nf];
+  nk = new int[Nc];
+  
+  memset((void *)Idet, 0, Nf*sizeof(std::complex <double>));
+  memset((void *)nk, 0, sizeof(int));
+  
+  // Chama função recursiva
+  calcEva17Rec(0);
+  
+  // Passa resultado para o MatLab
+  plhs[0] = mxCreateDoubleMatrix(1, Nf, mxCOMPLEX);
+  IdetRe = mxGetPr(plhs[0]);
+  IdetIm = mxGetPi(plhs[0]);
+  
+  for(int i = 0; i < Nf; i++)
+  {
+      IdetRe[i] = P0*Idet[i].real();
+      IdetIm[i] = P0*Idet[i].imag();
+  }
+  
+  // Limpeza
+  delete Idet;
+  delete nk;
+ 
+  return;
+}
+
+void calcEva17Rec(int depth)
+{
+    if(depth == Nc-1)
+	{
+			int nn = offset;	
+			double aux, phi;
+            double S, P, u, theta, ProdJn;
+
+            nk[depth] = -Nmax;
+            depth++;
+            
+            for(int i = 0; i < depth; i++)
+				nn += ((int)Fcoeff[i])*nk[i];
+            	
+			for(int k = -1; k <= 1; k +=2)
+			{
+                if(nn == offset)
+                {
+                    nn += 2*(int)Fcoeff[depth-1];
+                    continue;
+                }
+                
+				nk[depth-1] = k;
+
+				// theta e exp(1j*nk.*dPSI)
+                aux = 0;
+                for(int i = depth-1; i >= 0; i--)
+                    aux += W[i]*nk[i];
+                   
+                aux *= Dhat;
+                
+                S = 0.0;
+                P = 1.0;
+                phi = 0.0;
+				for(int i = depth-1; i >= 0; i--)
+				{
+					theta = aux*W[i];
+					u = 2*mFM[i]*sin(theta);
+					theta = tan(theta);
+                    
+                    S += nk[i]/theta;
+                    P *= (-u*nk[i]/2.0);
+                    
+                    phi += nk[i]*phiIM[i];
+				}
+				
+                S /= alfa;
+                
+				Idet[nn] += P*(1 - S)*(std::complex <double> (cos(phi), sin(phi)));
+                //mexPrintf("%d\n", nn);
+                
+				nn += 2*(int)Fcoeff[depth-1];
+			}
+	}
+	else
+	{
+		for(int k = -1; k <= 1; k +=2)
+		{
+			nk[depth] = k;
+			calcEva17Rec(depth+1);
+		}
+	}
+	return;
+}
+
+inline double sum(double * V, int length)
+{
+	double S = 0;
+	for(int i = --length; i >= 0; i--)
+		S += V[i];
+	return S;
+}

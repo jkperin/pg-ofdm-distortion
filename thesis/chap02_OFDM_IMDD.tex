@@ -1,0 +1,113 @@
+\chapter{Sinais OFDM em Sistemas Ópticos com Lasers Modulados Diretamente e Detecção Direta} \label{chapOFDMIMDD}
+\section{OFDM} \label{sec:ofdm}
+A multiplexação por divisão de frequências ortogonais (OFDM) é uma forma de modulação multiportadora (\textit{Multicarrier Modulation}, MCM) onde a informação a ser transmitida é divida entre várias subportadoras ortogonais; cada uma das subportadoras carrega parte da informação. Isto permite que as subportadoras tenham taxa de transmissão relativamente baixa, enquanto a taxa e transmissão total é relativamente alta. Como resultado, os sinais OFDM são mais robustos à interferência intersimbólica (\textit{Intersymbol Interference}, ISI) causada pela propagação em um canal dispersivo, como a fibra óptica.  
+
+A modulação OFDM já é amplamente usada em sistemas de comunicação sem fio e com fio, porém o uso de OFDM em comunicações ópticas ainda é muito recente. Isto se deve principalmente as demandas de aumento de taxa em comunicações ópticas e ao desenvolvimento da tecnologia de processamento digital de sinais (\textit{Digital Signal Processing}, DSP), o que fez o processamento à taxas exigidas em comunicações ópticas factível \cite{oofdm_paper}. 
+
+Além da robustez contra dispersão do canal, o OFDM oferece outras vantagens como a fácil estimação de fase do canal, e transferência da complexidade dos transmissores e receptores do domínio analógico para o domínio digital. As operações de multiplexação e modulação no transmissor, e as operações de demultiplexação e demodulação no receptor são realizadas digitalmente pela transformada inversa rápida de Fourier (\textit{Inverse Fast Fourier Transform}, IFFT) e pela transformada rápida de Fourier (\textit{Fast Fourier Transform}, FFT), respectivamente.
+
+A modulação OFDM também apresenta algumas desvantagens, mais notadamente: a alta relação entre a potência de pico e potência média, ou simplesmente PAPR (\textit{Peak-to-Average Power Ratio}); e a forte sensibilidade com ruído de frequência e de fase \cite{oofdm_book}. 
+
+Alto PAPR significa que o sinal terá grande excursão em amplitude, e consequentemente os componentes que tratam o sinal (e.g., amplificadores, DML) terão que ter também uma grande faixa de excursão para não distorcer o sinal. No caso de comunicações ópticas, normalmente, coloca-se um circuito para ceifar o sinal OFDM, limitando a amplitude a níveis seguros de operação do laser. Apesar desse circuito já inserir distorções harmônicas no sinal OFDM antes mesmo da transmissão, isto não será considerado para o cálculo da distorção harmônica final, uma vez que levar esse efeito em consideração impossibilitaria o desenvolvimento de uma expressão analítica.
+
+Embora a implementação prática de um sistema utilizando modulação OFDM seja marcada por alguns complicadores, a teoria matemática que descreve a modulação OFDM é relativamente simples. Um símbolo OFDM pode ser representado matematicamente através da expressão:
+\begin{equation} \label{OFDM1}
+x(t) = \sum_{k = -N \atop k \neq 0}^N a_ke^{j\Omega_kt}, 
+\end{equation}
+onde $x(t)$ é o símbolo OFDM no domínio do tempo; $N$ é o número de subportadoras; $a_k$ é amplitude complexa da k-ésima subportadora ($a_k = c_ke^{j\varphi_k})$; $j = \sqrt{-1}$ é a unidade imaginária, esta será a notação adotada ao longo de todo trabalho; $\Omega_k/2\pi$ é a frequência da k-ésima subportadora. Por se tratar de multiplexação de frequências ortogonais, a condição $(\Omega_{k+1}-\Omega_k= 2\pi\frac{p}{T_s}, p = 1, 2, 3 \ldots)$ deve ser verificada, sendo $T_s$ a duração do símbolo OFDM. Note que o somatório de \eqref{OFDM1} vai de $-N$ a $N$ (exceto 0), apesar do sinal OFDM ter $N$ subportadoras. Isto é necessário, pois para aplicação em sistemas utilizando DML o sinal OFDM deve ser puramente real, ou seja, não deve ter parte imaginária. Para garantir essa condição, utiliza-se a simetria Hermitiana no modulador OFDM. De acordo com a simetria Hermitiana $a_{-k} = a_k^*$. Além disso, $\Omega_{-k} = -\Omega_k$.
+
+Desta forma, o sinal OFDM pode ser visto como um somatório de componentes sinusoidais, ou simplesmente tons, com uma determinada amplitude $c_k = |a_k|$ e fase $\varphi_k = \arg{(a_k)}$, como ilustrado na Fig.~\ref{fig:ofdm} e mostrado na equação abaixo:
+\begin{equation} \label{OFDM2}
+x(t) = \sum_{k = 1}^N m_k\cos(\Omega_kt+ \varphi_k),
+\end{equation}
+onde $m_k = 2c_k$. Note que os valores de $m_k$ e $\varphi_k$ irão depender do tipo de mapeamento do sinal OFDM. Se as subportadoras tiverem mapeamento QPSK (\textit{Quadrature Phase Shift Keying}), por exemplo, teremos $m_k = 1$ (normalizado) e $\varphi_k \in \{\pi/4, 3\pi/4, 5\pi/4, 7\pi/4\}$, com $\varphi_k$ tendo probabilidade igual de assumir qualquer um desses valores.
+
+Como não é do escopo deste trabalho tratar das dificuldades de geração de um sinal OFDM, para todos os efeitos, será considerado um sinal OFDM de \emph{N} subportadoras um somatório de \emph{N} componentes sinusoidais, ou \emph{N} tons, como descrito por \eqref{OFDM2}.
+\begin{figure}[ht]
+	\centering
+	\includegraphics[trim=1cm 1cm 1cm 1cm, scale=1]{OFDM_symb.pdf}
+ \caption{Representação ilustrativa de um símbolo OFDM no domínio da frequência, mostrando a condição de amplitude $c_k$ e de fase $\varphi_k$ de cada subportadora $\Omega_k$.} \label{fig:ofdm}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Laser Semicondutores e \emph{Chirp} (Gorjeio)}
+Lasers semicondutores de realimentação distribuída (\textit{Distributed Feedeback}, DFB) modulados diretamente são utilizados em profusão nos sistemas de telecomunicações atuais. Entre as principais razões para isso estão o baixo custo inerente desses dispositivos, simplicidade de utilização, alta potência óptica de saída, e capacidade de operação em uma grande gama de temperaturas. No entanto, esses dispositivos exibem \emph{chirp} ou gorjeio, o que faz com que a modulação de intensidade da potência óptica seja acompanhada de uma modulação de frequência na portadora óptica. 
+
+O comportamento do laser modulado diretamente é modelado através das equações de taxa. As equações de taxa modelam importantes propriedades do laser como potência de sobressinal, oscilações, amortecimento, e o \emph{chirp}. As equações de taxa para um laser semicondutor monomodo são dadas por \cite{kaminow}:
+\begin{align} \label{rate-equation1}
+& \frac{dN}{dt} = \frac{I}{e\cdot V} - \frac{N}{\tau_n} - G(N)\cdot (1 - \epsilon S)\cdot S \\ \label{rate-equation2}
+& \frac{dS}{dt} = \Gamma_a\cdot G(N)\cdot (1 - \epsilon S)\cdot S - \frac{S}{\tau_p} + \frac{\Gamma_a\beta_{sp}N}{\tau_n}
+\end{align}
+onde $N(t)$ é a densidade de portadoras; $S(t)$ é a densidade de fótons na cavidade do laser; $e$ é a carga elétrica do elétron ($e = 1,60217646\cdot 10^{-19}$ C); $V$ é o volume ativo; $G(N)$ é o ganho óptico; $\Gamma_a$ é o fator de confinamento óptico; $\beta_{sp}$ é o fator de emissão espontânea; $\tau_n$ e $\tau_p$ são os tempos de vida das portadoras e dos fótons, respectivamente. 
+
+Como mostrado em \cite{corvini}, as equações de taxa \eqref{rate-equation1} e \eqref{rate-equation2} podem ser resolvidas analiticamente para relacionar o desvio de frequência do laser $\Delta\nu(t)$ devido ao \emph{chirp} com a potência óptica $P(t)$, resultando:
+\begin{equation} \label{chirp}
+\Delta\nu(t) =  -\frac{\alpha}{4\pi}\bigg\lbrace\frac{d}{dt}\bigg[\ln(P(t))\bigg] + \kappa P(t)\bigg\rbrace,
+\end{equation}
+onde $\ln$ denota o logaritmo natural, $\alpha = (dn/dN)/(dg/dN)$ é o fator de aumento da largura de linha, $n$ é o índice de refração da luz, e $\kappa$ depende de vários parâmetros construtivos do laser ($\kappa = 2\Gamma\epsilon/V\eta h \nu$), sendo $h$ a constante de Planck ($h = 6,626068\cdot 10^{-34}$ m$^2$kg/s). 
+
+O primeiro termo de \eqref{chirp} é chamado de \emph{chirp} transiente. Para o caso de uma modulação digital \emph{on/off}, por exemplo, este termo está associado com a mudança de estados (transição de \emph{on} para \emph{off}, e vice-versa). O segundo termo é conhecido como \emph{chirp} adiabático. Novamente para o exemplo da modulação digital, o \emph{chirp} adiabático está associado com a permanência estacionária em um estado, pois ele é linearmente proporcional à diferença de potência óptica entre os estados \emph{on} e \emph{off}. Como regra geral, podemos dizer que o \emph{chirp} transiente é dominante quando a potência média óptica é baixa, ou quando $P(t)$ tem grande variação de amplitude, ou alta frequência \cite{kaminow}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Propagação Dispersiva de Sinais Modulados Diretamente}
+A propagação do envelope complexo do campo elétrico $\tilde{E}(t,z)$ em uma fibra óptica é descrita pela equação não linear de Schrödinger \cite{agrawalnl}:
+\begin{equation} \label{schrodingernl}
+j\frac{\partial\tilde{E}}{\partial z} + \frac{\alpha}{2}\tilde{E} + j\frac{\beta_2}{2}\frac{\partial^2\tilde{E}}{\partial T^2} + \gamma|\tilde{E}|^2\tilde{E} = 0, 
+\end{equation}
+onde $z$ é o comprimento da fibra; $T$ é a unidade de tempo da janela deslizante do pulso, o que permite que os cálculos sejam realizados em banda base \cite{agrawalnl}; $\alpha$ é a atenuação da fibra em unidades lineares; $\gamma$ é o índice de refração não linear; $\beta_2$ é o parâmetro de dispersão de segunda ordem, que corresponde a dispersão por velocidade de grupo (\textit{Group Velocity Dispersion}, GVD), e pode ser relacionado ao coeficiente de dispersão da fibra óptica $D$ por: $D = -\frac{2\pi c}{\lambda^2}\beta_2$, sendo $c$ é a velocidade da luz no vácuo, e $\lambda$ o comprimento de onda da portadora óptica. 
+
+Em \eqref{schrodingernl} três fenômenos são modelados: atenuação da fibra, dispersão cromática (GVD), e o efeito não linear conhecido como auto modulação de fase (\textit{Self-Phase Modulation}, SPM). No entanto, nos sistemas IMDD utilizando lasers modulados diretamente, em cenários de curta e média distância e níveis de potência usuais para tais enlaces, o principal fenômeno limitador da capacidade e distância de transmissão é a distorção causada pelo efeito combinado do \emph{chirp} do laser e a dispersão cromática \cite{laserparam}. Portanto, para simplificar o cálculo de propagação na fibra, podemos desconsiderar o SPM (termo $\gamma|\tilde{E}|^2\tilde{E}$). Além disso, como a atenuação da fibra causa apenas uma mudança no nível de potência percebida no final da fibra, o cálculo da atenuação pode ser feito separadamente. Desta forma, \eqref{schrodingernl} pode ser reescrita como:
+\begin{equation} \label{schrodingernls}
+\frac{\partial\tilde{E}}{\partial z} = -\frac{\beta_2}{2}\frac{\partial^2\tilde{E}}{\partial T^2}.
+\end{equation}
+
+A equação \eqref{schrodingernls} pode ser facilmente resolvida no domínio da frequência \cite{agrawalnl}:
+\begin{equation} \label{split-step}
+\tilde{E}(t,z) = \mathscr{F}^{-1}\Big\lbrace e^{z\hat{D}(j\omega)}\mathscr{F}\Big\lbrace\tilde{E}(t,z = 0)\Big\rbrace\Big\rbrace, 
+\end{equation}
+onde $\mathscr{F}$ denota a transformada de Fourier e $\mathscr{F}^{-1}$ é a transformada inversa; $\hat{D}(j\omega)$ é o operador dispersão no domínio da frequência: $\hat{D}(j\omega) = -j\frac{\beta_2}{2}\omega^2$. Se o campo $\tilde{E}(t,z = 0)$ puder ser expresso em uma série de Fourier a equação \eqref{split-step} tem solução analítica:
+\begin{equation} \label{split-step1}
+E(jn\omega,z) = e^{z\hat{D}(jn\omega)}E(jn\omega,z = 0),
+\end{equation}
+onde $E(jn\omega,z = 0)$ e $E(jn\omega,z)$ denotam o $n$-ésimo índice da série de Fourier de $\tilde{E}(t,z = 0)$ e $\tilde{E}(t,z)$, respectivamente. Portanto, para podermos obter uma equação analítica da corrente detectada após a propagação em uma fibra óptica de um sinal OFDM modulado diretamente, é necessário calcular o envelope complexo do campo elétrico na saída do laser $\tilde{E}(t,z=0)$ como uma série de Fourier. Este procedimento será discutido em detalhes no capítulo seguinte.
+
+A visualização do efeito do desvio de frequência na portadora óptica e as distorções induzidas pelo \emph{chirp} são de díficil visualização para sinais OFDM, entretanto podem ser facilmente identificados para sistemas de modulação \emph{on/off}. A Fig.~\ref{fig:chirp-pulse} (retirada de \cite{chirp-curves}) ilustra a variação da frequência do laser e a distorção do pulso após propagação em uma fibra de comprimento $L$ com coeficiente de dispersão positivo para diversas configurações de \emph{chirp}. Na Fig.~\ref{fig:chirp-pulse}(a) há apenas o \emph{chirp} adiabático, e como era esperado por \eqref{chirp} o desvio de frequência da portadora óptica do laser é proporcional a potência óptica na saída do laser. Esta relação faz com que haja um aumento na velocidade de grupo no início do pulso. Como resultado, o pulso de saída tem um tempo de subida menor do que o pulso de entrada. O contrário acontece na descida do pulso: a velocidade de grupo diminui, uma vez que a redução no desvio de frequência, pois houve uma redução na potência óptica; consequentemente o pulso de saída terá um tempo de descida menor do que o tempo de descida do pulso de entrada. Na Fig.~\ref{fig:chirp-pulse}(b), somente o \emph{chirp} transiente está presente, portanto as variações na frequência do laser só ocorrem na transição do pulso ($on\rightarrow off$ e  $off\rightarrow on$). Assim, a subida do pulso propaga mais rápido do que a parte plana, enquanto a descida propaga mais devagar. Portanto, as transições do pulso (subida e descida) estão mais espalhadas do que a parte plana. A Fig.~\ref{fig:chirp-pulse}(c) mostra o efeito combinado do \emph{chirp} adiabático e transiente. 
+
+\begin{figure}[b!]
+	\centering
+		\includegraphics[trim=1cm 0.5cm 1cm 0.5cm, scale=0.7]{chirp-pulse.png} %width=15cm, height=4cm
+		\caption{Ilustração da distorção do pulso causada pelo efeito combinado do \emph{chirp} do laser e da dispersão cromática para \emph{chirp}: (a) adiabático, (b) transiente, e (c) adiabático e transiente [12].} \label{fig:chirp-pulse}
+\end{figure}
+
+Embora essas curvas sejam para modulação digital $on/off$, elas já fornecem um visão qualitativa da influência de cada \emph{chirp} na propagação do sinal. Para modulação com componentes sinusoidais, que é o interesse do nosso estudo, há vários modelos analíticos para o cálculo dessas distorções, que se manifestam na forma de produtos de intermodulação causando interferência entre as subportadoras de um sinal OFDM. Entretanto, esses modelos analíticos normalmente utilizam aproximações de pequenos sinais \cite{smallsignal1}, \cite{smallsignal2}, e \cite{equalization}. Outros, porém, são aplicados apenas a regimes de baixa dispersão \cite{lowdispersion}. A modelagem por pequenos sinais, apesar de mais simples, tem faixa de aplicação muito limitada, mesmo quando temos apenas uma componente de frequência. A Fig.~\ref{fig:hfibra} ilustra este tipo de limitação. Nela são mostradas curvas de função de transferência da fibra (naturalmente calculada para apenas 1 tom) para duas situações de índice de modulação de intensidade ($m_{IM}$), calculadas através do modelo de pequenos e grandes sinais e comparadas com simulação numérica. Este índice corresponde à amplitude do sinal em relação à potência média do sinal óptico:
+\begin{equation}
+P(t) = P_0(1 + m_{IM}\cos(\Omega t + \varphi_{IM})),
+\end{equation}
+onde $P(t)$ é a potência óptica em função do tempo $t$, e $P_0$ é a potência média do sinal óptico, modulado por uma frequência $\Omega/2\pi$ e com fase $\varphi_{IM}$.
+
+\begin{figure}[b!]
+	\centering
+		\includegraphics[trim=1cm 0.5cm 1cm 0.5cm, scale=0.85]{Hfibra.eps}
+		\caption{Função de transferência de um sistema IMDD com DML para fibra de 100 km e índices de modulação de intensidade de $10\%$ e $30\%$. Curva sólida é simulação, curva tracejada é modelo analítica para pequenos sinais, e curva pontilhada é modelo analítico para grande sinais.} \label{fig:hfibra}
+\end{figure}
+
+Como pode ser visto, para $m_{IM} = 10\%$, que pode ser considerado modulação de pequenos sinais, as curvas do modelo analítico para pequenos e grandes sinais concordam com a simulação numérica. Porém, para $m_{IM} = 30\%$, somente a curva de grandes sinais segue a simulação numérica. A curva de pequenos sinais é igual a de $m_{IM} = 10\%$, uma vez que ela independe do índice de modulação. 
+
+Para aplicação em sinais OFDM, a teoria de pequenos sinais pode apresentar erros consideráveis \cite{equalization}, uma vez que sinais OFDM possuem alto PAPR.
+
+Portanto, para aplicação em sinais OFDM torna-se necessário uma teoria de grandes sinais. Em \cite{eva} é desenvolvido uma teoria de grande sinais para modulação de 1 e \emph{N} tons. Como mostrado na Seção~\ref{sec:ofdm}, um símbolo OFDM formado por \emph{N} subportadoras pode ser interpretado como um somatório de \emph{N} componentes sinusoidais, ou simplesmente tons. Dessa forma, a teoria apresentada em \cite{eva} pode ser aplicada a sinais OFDM. No entanto, devido à complexidade das equações, aplicá-las diretamente a sinais OFDM é custoso computacionalmente, e para $N > \sim 100$ infactível. Para contornar esse problema, no Capítulo~\ref{chapSimplifica} serão propostas simplificações para as equações de \cite{eva} de formar a tornar a simulação mais rápida, porém sem prejudicar consideravelmente a precisão do modelo.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Detecção Direta}
+Na detecção direta a corrente elétrica detectada $\tilde{I}_{det}(t,z)$ é proporcional a potência óptica incidente no fotodiodo. Portanto a corrente detectada por ser escrita como:
+\begin{equation} \label{direct-detection1}
+\tilde{I}_{det}(t,z) = RP(t,z),
+\end{equation}
+onde $R$ é a responsividade do fotodiodo, dada em unidades de A/W; e $P(t,z)$ é a potência óptica após a propagação em uma fibra óptica de comprimento $z$. Porém para o desenvolvimento dos cálculos de propagação na fibra, o sinal óptico é representado como o envelope complexo do campo elétrico, portanto é conveniente escrever \eqref{direct-detection1} em função do envelope complexo do campo elétrico $\tilde{E}(t,z)$. Assim:
+\begin{equation} \label{direct-detection2}
+\tilde{I}_{det}(t,z) = R\Big(\tilde{E}(t,z)\cdot\tilde{E}^*(t,z)\Big)
+\end{equation}
+onde $\tilde{E}^*(t,z)$ é o complexo conjugado de $\tilde{E}(t,z)$. Além disso, como $\tilde{E}(t,z)$ será expresso por uma série de Fourier, a multiplicação de \eqref{direct-detection2} pode ser calculada no domínio da frequência por uma convolução discreta dos índices da série de Fourier de $\tilde{E}(t,z)$ e $\tilde{E}^*(t,z)$. Portanto:
+\begin{equation} \label{direct-detection3}
+I_{det}(t,z) = R\Big(E(j\omega,z)\ast E^*(j\omega,z)\Big),
+\end{equation}
+onde $E(j\omega,z)$ e $E^*(j\omega,z)$ são os índices da série de Fourier de $\tilde{E}(t,z)$ e $\tilde{E}^*(t,z)$, respectivamente.

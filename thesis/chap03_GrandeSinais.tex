@@ -1,0 +1,394 @@
+\chapter{Teoria de Grandes Sinais para a Propagação Dispersiva de Sinais OFDM Modulados Diretamente com Aproximação Linear para Logaritmo do \emph{Chirp} Transiente}
+\label{chapGrandeSinais1}
+O cálculo da corrente detectada após a propagação dispersiva de um sinal óptico modulado por um sinal OFDM em sistemas IMDD empregando DML pode ser dividido em quatro etapas:
+\begin{enumerate}
+	\item cálculo do símbolo OFDM $x(t)$;
+	\item cálculo do envelope complexo do campo elétrico na saída do laser $\tilde{E}(t, z=0)$;
+	\item propagação na fibra óptica, cálculo de $\tilde{E}(t,z)$;
+	\item detecção direta, cálculo de $\tilde{I}_{det}(t,z)$.
+\end{enumerate}
+
+A Fig.~\ref{fig:imdd} ilustra um sistema básico IMDD empregando laser modulado diretamente, bem como as etapas de cálculo necessárias. O símbolo OFDM é calculado como feito na Seção~\ref{sec:ofdm}. Após o cálculo do símbolo OFDM, pode-se calcular o envelope complexo do campo elétrico na saída do laser. O campo elétrico na saída do laser já exibe \emph{chirp}, cujo desvio de frequência é calculado como mostrado na equação \eqref{chirp}. Conhecendo-se o envelope do campo no início da fibra, podemos aplicar a equação de propagação na fibra óptica no domínio da frequência \eqref{split-step1} para calcular o envelope do campo na saída da fibra. Como mencionado anteriormente, para que a \eqref{split-step1} possa ser aplicada, $\tilde{E}(t, z=0)$ deve estar escrito como uma série de Fourier. Por fim, conhecendo-se $\tilde{E}(t,z)$ podemos calcular a corrente detectada $\tilde{I}_{det}(t,z)$, que por sua vez será usada para calcular os produtos de intermodulação devido ao efeito combinado entre \emph{chirp} e dispersão cromática.
+
+Por simplicidade vamos inicialmente executar os passos de 1 a 4 para um sinal modulador de 1 tom. Em seguida vamos generalizar os cálculos para \emph{N} tons, que pode ser interpretado como um sinal OFDM. A teoria desenvolvida neste capítulo é a mesma de \cite{eva}, porém aqui, a formulação matemática apresentada será mais rigorosa. Como discutido em \cite{comments} (Apêndice~\ref{chap:comments}), as equações (8) e (12) de \cite{eva} não são as equações esperadas seguindo-se rigorosamente as aproximações sugeridas pelos autores; alguns termos foram omitidos das equações. A omissão desses termos teve como objetivos melhorar a precisão do modelo e tornar as equações mais simples, porém esses motivos não foram explicitados no artigo original.
+\begin{figure}[hbt]
+	\centering
+		\includegraphics[trim=1cm 0.5cm 1cm 0.5cm, scale=1]{IMDD.pdf}
+		\caption{Sistema IMDD básico empregrando laser modulado diretamente.} \label{fig:imdd}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Teoria de Grandes Sinais para 1 Tom}
+\subsection{Cálculo do Envelope Complexo do Campo Elétrico na Saída do Laser}
+Vamos inicialmente começar calculando o sinal de entrada no laser $x(t)$. Para 1 tom de frequência:
+\begin{equation} \label{tom1:xt}
+x(t) = I_b[1 + m_{IM}\cos(\Omega t + \varphi_{IM})],
+\end{equation}
+onde $I_b$ é a corrente de polarização do laser (\textit{bias}), $m_{IM}$ é o índice de modulação de intensidade (referindo-se a intensidade da portadora óptica), $\Omega/2\pi$ é a frequência do sinal modulador, e $\varphi_{IM}$ é sua respectiva fase. Considerando o regime linear de operação do laser semicondutor, a potência óptica observada para o sinal modulador $x(t)$ é dada por:
+\begin{equation} \label{tom1:Pt}
+P(t) = P_0[1 + m_{IM}\cos(\Omega t + \varphi_{IM})],
+\end{equation}
+onde $P_0$ é a potência média correspondente a corrente de polarização $I_b$. 
+
+Desta forma, o envelope complexo do campo elétrico na saída do laser $\tilde{E}(t,z=0)$ pode ser expresso por:
+\begin{equation} \label{tom1:Etz0}
+\tilde{E}(t,z=0) = P_0^{1/2}\Big[1 + m_{IM}\cos(\Omega t + \varphi_{IM})\Big]^{1/2}e^{j\Delta\phi(t)},
+\end{equation}
+onde $z$ denota a distância de propagação na fibra óptica, e $\Delta\phi(t)$ corresponde ao desvio de fase devido ao \emph{chirp} do laser semicondutor. Através do desvio de frequência do laser devido ao \emph{chirp} $\Delta\nu(t)$ \eqref{chirp}, podemos calcular o desvio de fase $\Delta\phi(t)$, tal como:
+\begin{equation} \label{tom1:dfase}
+\Delta\phi(t) = 2\pi\int_0^t\Delta\nu(\tau)\mathrm{d}\tau = -\frac{\alpha}{2}\bigg\lbrace\ln(P(t)) + \int_0^t\kappa P(\tau)\mathrm{d}\tau\bigg\rbrace.
+\end{equation}
+
+Expandindo o termo $\ln(P(t))$ em uma série de Taylor centrada em $P_0$, temos:
+\begin{equation} \label{tom1:dfase1}
+\Delta\phi(t) = -\dfrac{\alpha}{2}\bigg\lbrace\bigg[\ln(P_0) - \sum_{n = 1}^{\infty}\frac{1}{n} \bigg(1 - \frac{P(t)}{P_0}\bigg)^{n}\bigg]
++ \int_{0}^{t}\kappa P(\tau)\mathrm{d}\tau\bigg\rbrace.
+\end{equation}
+
+Substituindo \eqref{tom1:Pt} em \eqref{tom1:dfase1}:
+\begin{align} \nonumber
+& \Delta\phi(t) = -\dfrac{\alpha}{2}\bigg\lbrace -\sum_{n = 1}^{\infty}\frac{1}{n}[-m_{IM}\cos(\Omega t + \varphi_{IM})]^{n} + \kappa\int_{0}^{t} P_0\big[1 + m_{IM}\cos(\Omega\tau + \varphi_{IM}) \big]\mathrm{d}\tau\bigg\rbrace + C' \\ \nonumber
+& \Delta\phi(t) = -\dfrac{\alpha}{2}\bigg\lbrace -\sum_{n = 1}^{\infty}\frac{1}{n}[-m_{IM}\cos(\Omega t + \varphi_{IM})]^{n} + \kappa P_0\bigg[t + \frac{m_{IM}}{\Omega}\sin(\Omega t + \varphi_{IM})\bigg]\bigg\rbrace + C' \\
+& \Delta\phi(t) = \dfrac{\alpha}{2}\bigg\lbrace\sum_{n = 1}^{\infty}\frac{1}{n}[-m_{IM}\cos(\Omega t + \varphi_{IM})]^{n} - \kappa P_0 \frac{m_{IM}}{\Omega}\sin(\Omega t + \varphi_{IM})\bigg\rbrace + C' - \frac{\alpha \kappa P_0t}{2}, 
+\end{align}
+onde $C' = C - \frac{\alpha}{2}ln(P_0)$, sendo $C$ a constante de integração. Os termos $C'$ e $-\frac{\alpha\kappa P_0t}{2}$ são, respectivamente, desvio de fase e desvio de frequência constantes, portanto, eles podem ser descartados do equacionamento, pois esses desvios irão apenas modificar a fase e frequência da portadora óptica, que é perdida após a detecção direta. Logo:
+\begin{equation} \label{tom1:dfase2}
+\Delta\phi(t) = \dfrac{\alpha}{2}\bigg\lbrace\sum_{n = 1}^{\infty}\frac{1}{n}[-m_{IM}\cos(\Omega t + \varphi_{IM})]^{n} - \kappa P_0 \frac{m_{IM}}{\Omega}\sin(\Omega t + \varphi_{IM})\bigg\rbrace.
+\end{equation}
+
+Neste ponto chegamos a primeira aproximação feita na teoria original apresentada em \cite{eva}. Nessa primeira aproximação a série de Taylor do logaritmo natural de \eqref{tom1:dfase2} é truncada em $n = 1$. Isto é equivalente a fazer uma aproximação linear do logaritmo natural. Essa aproximação tem como objetivo simplificar a equação final, além de permitir que o campo elétrico $\tilde{E}(t,z=0)$ possa ser escrito como uma série de Fourier. No Apêndice~\ref{chapGrandeSinais2} é mostrado o mesmo desenvolvimento, porém para o logaritmo aproximado por uma parábola. Truncando \eqref{tom1:dfase2} em $n = 1$, temos: 
+\begin{align} \nonumber \label{tom1:dfase3}
+& \Delta\phi(t) \approx -\dfrac{\alpha}{2}\bigg\lbrace\bigg[m_{IM}\cos(\Omega t + \varphi_{IM})\bigg]  + \kappa P_0 \frac{m_{IM}}{\Omega}\sin(\Omega t + \varphi_{IM})\bigg\rbrace \\ \nonumber
+& \Delta\phi(t) \approx -m_{IM}\dfrac{\alpha}{2}\bigg\lbrace \cos(\Omega t + \varphi_{IM}) + \frac{\kappa P_0}{\Omega}\sin(\Omega t + \varphi_{IM})\bigg\rbrace \\
+& \Delta\phi(t) \approx -m_{IM}\frac{\alpha}{2}\bigg\lbrace\sqrt{1 + \Big(\frac{\kappa P_0}{\Omega}\Big)^2}\sin\bigg(\Omega t + \varphi_{IM} + \tan^{-1}\Big(\frac{\Omega}{\kappa P_0}\Big)\bigg)\bigg\rbrace.
+\end{align}
+
+Sejam $m_{FM} = -m_{IM}\frac{\alpha}{2}\sqrt{1 + \Big(\frac{\kappa P_0}{\Omega}\Big)^2}$ e $\varphi_{FM} = \varphi_{IM} + \tan^{-1}\Big(\frac{\Omega}{\kappa P_0}\Big)$. Podemos definir a razão entre os índices de modulação de fase/frequência ($m_{FM}$) e intensidade ($m_{IM}$), ou $PIR$ (\textit{Phase-to-Intensity Ratio}) \cite{eva}, tal como:
+\begin{equation}
+PIR \equiv \frac{m_{FM}}{jm_{IM}}e^{j\Delta\varphi} = -\frac{1}{j}\frac{\alpha}{2}\sqrt{1 + \Big(\frac{\kappa P_0}{\Omega}\Big)^2}e^{j\tan^{-1}\Big(\frac{\Omega}{\kappa P_0}\Big)},
+\end{equation}
+onde $\Delta\varphi = \varphi_{FM} - \varphi_{IM}$. Mais simplificadamente, podemos escrever o número complexo depois da igualdade na forma cartesiana:
+\begin{equation} \label{PIR}
+PIR \equiv \frac{m_{FM}}{jm_{IM}}e^{j\Delta\varphi} = -\frac{\alpha}{2}\bigg(1 + \frac{\kappa P_0}{j\Omega}\bigg).
+\end{equation}
+
+A razão \emph{PIR} corresponde basicamente à aproximação linear do logaritmo do \emph{chirp} transiente. Assim podemos definir o desvio de fase devido ao \emph{chirp} do laser como:
+\begin{equation} \label{tom1:dfasef}
+\Delta\phi(t) \approx m_{FM}\sin(\Omega t + \varphi_{FM}).
+\end{equation}
+
+Note que a aproximação linear do logaritmo faz com que o desvio de fase devido ao \emph{chirp}, equação \eqref{tom1:dfasef}, seja modelado simplesmente como uma modulação de frequência do campo elétrico. Substituindo \eqref{tom1:dfasef} em \eqref{tom1:Etz0}, temos:
+\begin{equation} \label{tom1:Etz02}
+\tilde{E}(t,z = 0) = P_0^{1/2}[1 + m_{IM}\cos(\Omega t + \varphi_{IM})]^{1/2}e^{jm_{FM}\sin(\Omega t + \varphi_{FM})}
+\end{equation}
+
+A segunda aproximação feita em \cite{eva} é a aproximação linear da raiz quadrada da equação do envelope complexo do campo elétrico. Essa simplificação equivale a escrever a modulação em intensidade da potência óptica por uma modulação em amplitude do campo elétrico: 
+\begin{equation} \label{IM2AM}
+\sqrt{1 + m_{IM}\cos(\Omega t + \varphi_{IM})} \approx 1 + \frac{m_{IM}}{2}\cos(\Omega t + \varphi_{IM}).
+\end{equation}
+
+Embora esta representação de modulação de intensidade por modulação de amplitude seja uma aproximação de pequenos sinais, ela é suficiente para obtermos bons resultados. Além disso, como será discutido mais adiante, descartar alguns termos na equação final reduzirá o erro acrescentado por essa aproximação de pequenos sinais, e consequentemente irá melhorar a precisão do modelo como um todo. 
+
+Desta forma, a equação do envelope complexo do campo elétrico na saída do laser considerando-se a aproximação linear do logaritmo do \emph{chirp} transiente e da raiz quadrada da modulação de intensidade é dada por:
+\begin{equation} \label{tom1:Etz0f}
+\tilde{E}(t,z = 0) \approx P_0^{1/2}\Big[1 + \frac{m_{IM}}{2}\cos(\Omega t + \varphi_{IM})\Big]e^{jm_{FM}\sin(\Omega t + \varphi_{FM})}.
+\end{equation}
+
+A exponencial complexa de \eqref{tom1:Etz0f} pode ser expandida como um somatório infinito de funções de Bessel através da expansão de Jacobi-Anger \cite{bessel}: 
+\begin{equation} \label{jacobi_anger}
+e^{A\sin(\Omega t + \varphi)} = \sum_{n = -\infty}^{\infty} J_n(A)e^{jn(\Omega t + \varphi)},
+\end{equation}
+onde $J_n$ denota a função de Bessel do primeiro tipo de ordem n.
+
+Aplicando a expansão de Jacobi-Anger em \eqref{tom1:Etz0f}, e escrevendo o cosseno na forma exponencial, i.e., $\cos(x) = \frac{e^{jx} + e^{-jx}}{2}$, obtemos:
+\begin{align} \label{tom1:Etz0f1}\nonumber
+\tilde{E}(t,z = 0) &\approx P_0^{1/2}\Big[1 + \frac{m_{IM}}{4}\Big(e^{j(\Omega t + \varphi_{IM})} + e^{-j(\Omega t + \varphi_{IM})}\Big)\Big]\sum_{n = -\infty}^{\infty} J_n(m_{FM})e^{jn(\Omega t + \varphi_{FM})} \\ \nonumber
+& = P_0^{1/2}\bigg.\sum_{n = -\infty}^{\infty}J_n(m_{FM})e^{jn\Delta\varphi}e^{jn(\Omega t + \varphi_{IM})} \\ \nonumber
+& + P_0^{1/2}\frac{m_{IM}}{4}\bigg.\sum_{n = -\infty}^{\infty}J_n(m_{FM})e^{jn\Delta\varphi}e^{j(n+1)(\Omega t + \varphi_{IM})} \\
+& + P_0^{1/2}\frac{m_{IM}}{4}\bigg.\sum_{n = -\infty}^{\infty}J_n(m_{FM})e^{jn\Delta\varphi}e^{j(n-1)(\Omega t + \varphi_{IM})}, 
+\end{align}
+onde $\Delta\varphi = \varphi_{FM} - \varphi_{IM}$. Fazendo-se uma mudança de variável no índice dos somatórios podemos reescrever \eqref{tom1:Etz0f1} com um único somatório: 
+\begin{equation} \label{tom1:Etz0ff}
+\tilde{E}(t,z = 0) \approx \bigg.\sum_{n = -\infty}^{\infty}E(n\Omega,z = 0)e^{jn(\Omega t + \varphi_{IM})}
+\end{equation}
+onde $E(n\Omega,z = 0)$ é dado por:
+\begin{equation} \label{tom1:cz0}
+E(n\Omega,z = 0) = P_0^{1/2}e^{jn\Delta\varphi}\bigg[J_n(m_{FM}) + \frac{m_{IM}}{4}\bigg(J_{n-1}(m_{FM})e^{-j\Delta\varphi} + J_{n+1}(m_{FM})e^{j\Delta\varphi}\bigg)\bigg]
+\end{equation}
+
+A equação \eqref{tom1:Etz0ff} corresponde a expansão em série de Fourier do campo elétrico na saída do laser considerando-se duas aproximações: a aproximação linear do logaritmo do \emph{chirp} transiente \eqref{PIR}, e a aproximação linear da raiz quadrada da amplitude do campo elétrico \eqref{IM2AM}.
+
+%% Propaga
+\subsection{Propagação na Fibra Óptica}
+Conhecendo-se a expressão do campo elétrico na saída do laser como uma série de Fourier, podemos aplicar a equação \eqref{split-step1} para determinar a equação do envelope do campo elétrico na saída da fibra. Logo:
+\begin{equation} \label{tom1:Etz1}
+E(n\Omega,z) = e^{z\hat{D}(jn\Omega)}E(n\Omega,z = 0) = E(n\Omega,z)e^{jn^2\theta(z)}, 
+\end{equation}
+onde $\theta(z) = -\frac{1}{2}\beta_2\Omega^2z$. Logo: 
+\begin{equation}
+E(n\Omega,z) = P_0^{1/2}e^{jn\Delta\varphi}\bigg[J_n(m_{FM}) + \frac{m_{IM}}{4}\bigg(J_{n-1}(m_{FM})e^{-j\Delta\varphi} + J_{n+1}(m_{FM})e^{j\Delta\varphi}\bigg)\bigg]e^{jn^2\theta(z)},
+\end{equation}
+
+%% Detecção direta
+\subsection{Detecção Direta} \label{DD1tom}
+Conhecendo-se a equação do envelope complexo do campo elétrico no final da fibra como uma série de Fourier, podemos calcular a corrente elétrica detectada $\tilde{I}_{det}(t)$ como mostrado em \eqref{direct-detection3}:
+\begin{equation}
+\tilde{I}_{det}(t) = R\Big(E(j\omega,z)\ast E^*(j\omega,z)\Big) = R\sum_{n = -\infty}^{\infty}\sum_{k = -\infty}^{\infty}E(k\Omega, z)E^*(-(n-k)\Omega,z)e^{jn(\Omega t + \varphi_{IM})}.
+\end{equation}
+
+Seja $I_{det}(n\Omega,z)$ os índices da série de Fourier de $\tilde{I}_{det}(t)$, temos:
+\begin{equation}
+\tilde{I}_{det}(t) = \sum_{n = -\infty}^{\infty} I_{det}(n\Omega,z) e^{jn(\Omega t + \varphi_{IM})},
+\end{equation}
+onde $I_{det}(\Omega,z)$ é dado por: 
+\begin{equation} 
+I_{det}(n\Omega, z) = R(n\Omega)\sum_{k = -\infty}^{\infty}E(k\Omega, z)E^*(-(n-k)\Omega,z) = R(\Omega)\sum_{k = -\infty}^{\infty}E(k\Omega, z)E^*((k-n)\Omega,z).
+\end{equation}
+Escrevendo em função do campo na saída do laser:
+\begin{align} \nonumber \label{tom1:It1}
+I_{det}(n\Omega, z)& = R(n\Omega)\sum_{k = -\infty}^{\infty}\Big[E(k\Omega,z=0)e^{jk²\theta(z)}\Big]\Big[E^*((k-n)\Omega,z=0)e^{-j(k-n)^2\theta(z)}\Big] \\
+& = R(\Omega)\sum_{k = -\infty}^{\infty}\Big[E(k\Omega, z=0)E^*((k-n)\Omega,z=0)e^{jk(2n\theta(z))}\Big]e^{-jn^2\theta(z)}.
+\end{align}
+
+Substituindo \eqref{tom1:cz0} em \eqref{tom1:It1}:
+\begin{align} \nonumber
+I_{det}&(n\Omega, z) = \\ \nonumber 
+& R(n\Omega)P_0\sum_{k = -\infty}^{\infty}\bigg\lbrace e^{jk\Delta\varphi}\bigg[J_k(m_{FM}) + \frac{m_{IM}}{4}\bigg(J_{k-1}(m_{FM})e^{-j\Delta\varphi} + J_{k+1}(m_{FM})e^{j\Delta\varphi}\bigg)\bigg]\bigg\rbrace \\ 
+& \cdot\bigg\lbrace e^{-j(k-n)\Delta\varphi}\bigg[J_{k-n}(m_{FM}) + \frac{m_{IM}}{4}\bigg(J_{k-n-1}(m_{FM})e^{j\Delta\varphi} + J_{k-n+1}(m_{FM})e^{-j\Delta\varphi}\bigg)\bigg]\bigg\rbrace e^{jk(2n\theta(z))}.
+\end{align}
+Fazendo a distributiva dos elementos dentro de chaves, e escrevendo todos os produtos da distributiva em somatórios separados, temos:
+\begin{alignat}{9} \label{tom1:agraf} \nonumber
+I_{det}(n\Omega, z) = R(n\Omega)P_0e^{jn\Delta\varphi}&\bigg\lbrace~\sum_{k = -\infty}^{\infty}J_k(m_{FM})J_{k-n}(m_{FM})e^{jk(2n\theta(z))} \quad && (A\cdot A)\\ \nonumber
+& + \sum_{k = -\infty}^{\infty}\frac{m_{IM}}{4}J_k(m_{FM})J_{k-n-1}(m_{FM})e^{jk(2n\theta(z))}e^{j\Delta\varphi} \quad && (A\cdot B) \\ \nonumber
+& + \sum_{k = -\infty}^{\infty}\frac{m_{IM}}{4}J_k(m_{FM})J_{k-n+1}(m_{FM})e^{jk(2n\theta(z))}e^{-j\Delta\varphi} \quad && (A\cdot C) \\ \nonumber
+%%
+& + \sum_{k = -\infty}^{\infty}\frac{m_{IM}}{4}J_{k-1}(m_{FM})J_{k-n}(m_{FM})e^{jk(2n\theta(z))}e^{-j\Delta\varphi} \quad && (B\cdot A) \\ \nonumber
+& + \sum_{k = -\infty}^{\infty}\frac{m^2_{IM}}{16}J_{k-1}(m_{FM})J_{k-n-1}(m_{FM})e^{jk(2n\theta(z))} \quad && (B\cdot B) \\ \nonumber
+& + \sum_{k = -\infty}^{\infty}\frac{m^2_{IM}}{16}J_{k-1}(m_{FM})J_{k-n+1}(m_{FM})e^{jk(2n\theta(z))}e^{-2j\Delta\varphi} \quad && (B\cdot C) \\ \nonumber
+%%
+& + \sum_{k = -\infty}^{\infty}\frac{m_{IM}}{4}J_{k+1}(m_{FM})J_{k-n}(m_{FM})e^{jk(2n\theta(z))}e^{j\Delta\varphi} \quad && (C\cdot A) \\ \nonumber
+& + \sum_{k = -\infty}^{\infty}\frac{m^2_{IM}}{16}J_{k+1}(m_{FM})J_{k-n-1}(m_{FM})e^{jk(2n\theta(z))}e^{2j\Delta\varphi} \quad && (C\cdot B) \\
+& + \sum_{k = -\infty}^{\infty}\frac{m^2_{IM}}{16}J_{k+1}(m_{FM})J_{k-n+1}(m_{FM})e^{jk(2n\theta(z))}\bigg\rbrace \quad && (C\cdot C)
+%%
+\end{alignat}
+onde $(A \cdot C)$, por exemplo, indica que este produto foi obtido multiplicando-se o primeiro elemento dentro do primeiro par de colchetes com o terceiro elemento dentro do segundo par de colchetes.
+
+Para simplificar os termos de $(A\cdot A)$ a $(C\cdot C)$, podemos utilizar o teorema de Graf para soma de funções de Bessel \cite{bessel}. Segundo este teorema:
+\begin{equation} \label{Graf}
+e^{j\upsilon\beta}J_\upsilon(u) = \bigg.\sum_{k = -\infty}^{\infty}J_m(z)J_{m+\upsilon}(Z)e^{jm\alpha},
+\end{equation}
+onde $u = \sqrt{Z^2 + z^2 - 2Zzcos(\alpha)}$ e $\beta = \sin^{-1}\Big(\frac{z\sin(\alpha)}{u}\Big)$. 
+
+Neste caso, $\alpha = 2n\theta$ e $Z = z = m_{FM}$. Portanto $u = 2m_{FM}\sin(n\theta(z))$ e $\beta = \sin^{-1}(cos(n\theta(z))) = -n\theta + \frac{\pi}{2}$.
+
+Desta forma, podemos aplicar o teorema de Graf para cada termo individualmente, tomando o cuidado de fazer as mudanças de variável necessárias para que os sub-índices das funções de Bessel estejam da forma exigida pelo teorema. Além disso, para simplificar a notação vamos nos referir à $\theta(z)$ simplesmente como $\theta$. Feito isso a equação \eqref{tom1:agraf} pode ser rescrita da forma:
+\begin{alignat}{9} \nonumber \label{tom1:dgraf}
+I_{det}(n\Omega, z) = R(n\Omega)P_0e^{jn\Delta\varphi}&\bigg[~J_{-n}(u)e^{-jn(-n\theta + \pi/2)} \quad && (A\cdot A) \\ \nonumber
+& + \frac{m_{IM}}{4}J_{-n-1}(u)e^{j(-n-1)(-n\theta + \pi/2)}e^{j\Delta\varphi} \quad && (A\cdot B) \\ \nonumber
+& + \frac{m_{IM}}{4}J_{-n+1}(u)e^{j(-n+1)(-n\theta + \pi/2)}e^{-j\Delta\varphi} \quad && (A\cdot C)\\ \nonumber
+%%
+& + \frac{m_{IM}}{4}J_{-n+1}(u)e^{j(-n+1)(-n\theta + \pi/2)}e^{j2n\theta}e^{-j\Delta\varphi} \quad && (B\cdot A) \\ \nonumber
+& + \frac{m^2_{IM}}{16}J_{-n}(u)e^{-jn(-n\theta + \pi/2)}e^{j2n\theta} \quad && (B\cdot B) \\ \nonumber
+& + \frac{m^2_{IM}}{16}J_{-n+2}(u)e^{j(-n+2)(-n\theta + \pi/2)}e^{j2n\theta}e^{-2j\Delta\varphi} \quad && (B\cdot C) \\ \nonumber
+%%
+& + \frac{m_{IM}}{4}J_{-n-1}(u)e^{j(-n-1)(-n\theta + \pi/2)}e^{-j2n\theta}e^{j\Delta\varphi} \quad && (C\cdot A) \\ \nonumber
+& + \frac{m^2_{IM}}{16}J_{-n-2}(u)e^{j(-n-2)(-n\theta + \pi/2)}e^{-j2n\theta}e^{2j\Delta\varphi} \quad && (C\cdot B) \\
+& + \frac{m^2_{IM}}{16}J_{-n}(u)e^{-jn(-n\theta + \pi/2)}e^{-j2n\theta} \bigg] \quad && (C\cdot C) 
+\end{alignat}
+
+Sabendo que $e^{-jn\pi/2} = (-j)^n$. Podemos reagrupar os termos $(A\cdot A) + [(A\cdot B) + (C\cdot A)] + [(A\cdot C) + (B\cdot A)] + [(B\cdot B) + (C\cdot C)] + [(B\cdot C) + (C\cdot B)]$:
+\begin{align} \nonumber \label{tom1:dgraf2}
+I_{det}(n\Omega, z) = & R(n\Omega)P_0e^{jn\Delta\varphi}(-j)^ne^{jn^2\theta} \bigg[J_{-n}(u) + \frac{m_{IM}}{4}J_{-n-1}(u)e^{j\Delta\varphi}j^{-1}\Big(e^{jn\theta} + e^{-jn\theta}\Big) \\ \nonumber
+& + \frac{m_{IM}}{4}J_{-n+1}(u)e^{-j\Delta\varphi}j^{1}\Big(e^{-jn\theta} + e^{jn\theta}\Big) + \Big(\frac{m_{IM}}{4}\Big)^2J_{-n}(u)\Big(e^{j2n\theta} + e^{-j2n\theta}\Big) \\
+&+ \Big(\frac{m_{IM}}{4}\Big)^2\Big(j^{2}J_{-n+2}(u)e^{-2j\Delta\varphi} + j^{-2}J_{-n-2}(u)e^{2j\Delta\varphi}\Big)\bigg].
+\end{align}
+
+Sabendo que $(-1)^nJ_{-n}(x) = J_n(x)$, e aplicando a equação de Euler $(e^{jx} + e^{-jx} = 2\cos(x))$ onde for possível, temos:
+\begin{align} \nonumber \label{tom1:dgraf3}
+I_{det}(n\Omega, z) = &R(n\Omega)P_0e^{jn\Delta\varphi}j^ne^{jn^2\theta} \bigg[J_{n}(u) - j\frac{m_{IM}}{2}\cos(n\theta)\Big(J_{n-1}(u)e^{-j\Delta\varphi} - J_{n+1}(u)e^{j\Delta\varphi}\Big) \\
+& + \Big(\frac{m_{IM}}{4}\Big)^2\Big(2J_{n}(u)e^{jn^2\theta}\cos(2n\theta) - J_{n-2}(u)e^{-2j\Delta\varphi} - J_{n+2}(u)e^{2j\Delta\varphi}\Big)\bigg].
+\end{align}
+
+Note que podemos simplificar os termos $e^{-jn^2\theta}$ e $e^{jn^2\theta}$, uma vez que $e^{-jn^2\theta}\cdot e^{jn^2\theta} = 1$, logo:
+\begin{align} \nonumber \label{tom1:Idet_add}
+I_{det}(n\Omega, z) = &R(n\Omega)P_0e^{jn\Delta\varphi}j^n\bigg[J_{n}(u) - j\frac{m_{IM}}{2}\cos(n\theta)\Big(J_{n-1}(u)e^{-j\Delta\varphi} - J_{n+1}(u)e^{j\Delta\varphi}\Big) \\
+& + \Big(\frac{m_{IM}}{4}\Big)^2\Big(2J_{n}(u)e^{jn^2\theta}\cos(2n\theta) - J_{n-2}(u)e^{-2j\Delta\varphi} - J_{n+2}(u)e^{2j\Delta\varphi}\Big)\bigg],
+\end{align}
+onde $u = 2m_{FM}\sin(n\theta)$, $\theta = (-1/2)\beta_2\Omega z$, e $\Delta\varphi = \varphi_{FM} - \varphi_{IM}$. 
+
+A equação \eqref{tom1:Idet_add} corresponde à equação (8) de \cite{eva}, porém a equação obtida aqui apresenta termos adicionais (os termos mostrados na segunda linha da equação) que não são mostrados no artigo. 
+Nós conjecturamos que os autores de \cite{eva} omitiram esses termos intencionalmente, mas não deixaram isso claro no texto e nem as razões para tais omissões. Apesar dos méritos do artigo, esta falta de formalismo matemático pode induzir ao erro leitores tentando derivar a teoria proposta, uma vez que as equações apresentadas não são triviais de deduzir. Além disso, os termos omitidos podem estar ligados a bom desempenho da aproximação de pequenos sinais \eqref{IM2AM} usada para a raiz quadrada, como será discutido mais adiante. Com o intuito de suportar nossa conjectura, note que no Apêndice A de \cite{eva}, os autores derivaram uma forma mais precisa para teoria de grandes sinais [\cite{eva}, eq. (16)]. A equação apresentada no artigo é reproduzida abaixo:
+\begin{align} \nonumber
+I_{det}(n\Omega, z) = R(n\Omega)&P_0e^{jn\Delta\varphi}j^n\bigg[m_0^2J_{n}(u) + 2jm_0m_1\cos(n\theta)\Big(J_{n+1}(u)e^{j\Delta\varphi} - J_{n-1}(u)e^{-j\Delta\varphi}\Big) \\
+& + m_1^2\Big(2J_{n}(u)e^{jn^2\theta}\cos(2n\theta) - J_{n-2}(u)e^{-2j\Delta\varphi} - J_{n+2}(u)e^{2j\Delta\varphi}\Big)\bigg].
+\end{align}
+
+A equação do artigo apresenta um erro de digitação que foi corrigido na equação apresentada aqui -- o coeficiente multiplicador $4m_1^2$ é na verdade $m_1^2$. Isto de lado, [\cite{eva}, eq. (16)] considera as mesmas aproximações feitas anteriormente, mas os coeficientes da linearização da raiz quadrada ($m_0$ and $m_1$) na amplitude do campo elétrico são calculados por uma série de Fourier [\cite{eva}, eq. (15)]. Portanto, se fizermos esses coeficientes iguais aos usados anteriormente (i.e., $m_0 = 1$ and $m_1 = m_{IM}/4$), deveríamos chegar à mesma equação [\cite{eva}, eq. (8)]; no entanto, isto não acontece e obtemos a equação \eqref{tom1:Idet_add}. 
+
+No entanto, um paradoxo emerge quando testando nossa equação \eqref{tom1:Idet_add} contra a equação apresenta em \cite{eva}, usando como parâmetro os resultados numéricos que não levam em consideração a linearização da raiz quadrada.  Verificou-se que a equação original de \cite{eva}, para maior parte dos casos, apresenta melhor precisão do que a equação correta \eqref{tom1:Idet_add}. Este paradoxo pode ser explicado se notarmos que os termos omitidos são, na verdade, contribuições espúrias que aparecem devido a combinação da linearização da raiz quadrada e da detecção direta. Para ilustrar esta afirmação, vamos considerar, por exemplo, que a amplitude do campo elétrico é aproximado como em \eqref{IM2AM} e depois é passado pela detecção direta, em um sistema back-to-back, i.e. $\theta(z \rightarrow 0) \rightarrow 0$.
+\begin{align} \label{Idetb2b} \nonumber
+\frac{\tilde{I}_{det}(t, z = 0)}{RP_0} = |\overbrace{1}^{A} + \overbrace{\frac{m_{IM}}{2}\cos(\Omega t + \varphi_{IM})}^{B}|^2 = \\
+\overbrace{1}^{A\cdot A} + \overbrace{m_{IM}\cos(\Omega t + \varphi_{IM})}^{A\cdot B + B\cdot A} + \overbrace{\Big(\frac{m_{IM}}{2}\Big)^2\cos^2(\Omega t + \varphi_{IM})}^{B\cdot B}
+\end{align}
+Os termos $A \cdot A$ and $A\cdot B + B\cdot A$ em \eqref{Idetb2b} descrevem completamente o resultado esperado do sinal modulado em intensidade após a detecção direta. Porém, a aproximação em \eqref{IM2AM} implica que \eqref{Idetb2b} foi calculada como um sinal AM. Como resultado, há também o termo $B \cdot B$, que corresponde ao batimento de duas componentes sinusoidais. Por uma simples propriedade trigonométrica, podemos mostrar que o termo $B \cdot B$ leva a contribuições espectriais espúrias na frequência zero, e na segunda harmônica (i.e., $2\Omega/2\pi$). 
+
+Portanto, os termos omitidos em [\cite{eva}, eq. (8)] são pontos chaves para explicar por quê a aproximação de pequenos sinais feita para a raiz quadrada \eqref{IM2AM}, usada em um modelo de grandes sinais, ainda assim apresenta bons resultados para índices de modulação elevados ($m_{IM}$), como sugerido nos resultados experimentais mostrados em \cite{eva}. 
+
+Em resumo, omitir os termos adicionais na equação \eqref{tom1:Idet_add}, seja talvez um engenhoso, porém não mencionado, artifício utilizado pelos autores de \cite{eva} para opor as imprecisões adicionadas pela aproximação da raiz quadrada feita em \eqref{IM2AM}, que são aumentadas após a detecção direta. Justificando o fato de a equação com termos omitidos apresentar, em geral, melhores resultados do que as equações que levam todos os termos. Estes argumentos e resultados foram publicados em um artigo de ``Comments on'' no \textit{Journal of Lightwave Technology} \cite{comments}, e reproduzido no Apêndice~\ref{chap:comments}.
+
+Como omitir os termos melhora a precisão do modelo e ainda reduz a complexidade da equação, também iremos fazê-lo. Logo, a equação \eqref{tom1:Idet_add} pode ser reescrita como:
+\begin{equation} \label{tom1:Idet}
+I_{det}(n\Omega, z) \approx R(n\Omega)\sum_{n = -\infty}^{\infty}e^{jn\Delta\varphi}j^n\bigg[J_{n}(u) - j\frac{m_{IM}}{2}\cos(n\theta)\Big(J_{n-1}(u)e^{-j\Delta\varphi} - J_{n+1}(u)e^{j\Delta\varphi}\Big)\bigg]
+\end{equation}
+
+Para sinais de 1 tom é possível obter uma equação de corrente detectada $I_{det}(n\Omega, z)$ sem que seja necessário fazer a aproximação de modulação de intensidade em modulação de amplitude \eqref{IM2AM}. Os procedimentos para esse cálculo são mostrados no Apêndice~\ref{chap08_apendiceA}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% N-TOM %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Teoria de Grandes Sinais para \emph{N}-Tons}
+Nesta seção vamos generalizar os cálculos feitos na seção anterior para \emph{N} tons, que pode ser interpretado como um símbolo OFDM. 
+
+\subsection{Cálculo do Envelope Complexo do Campo Elétrico na Saída do Laser}
+Para \emph{N} tons, a potência óptica na saída do laser pose ser expressa por:
+\begin{equation} \label{tomN:Pt}
+P(t) = P_0\bigg(1 + \sum_{k=1}^Nm_{IM_k}\cos(\Omega_k t + \varphi_{IM_k})\bigg),
+\end{equation}
+onde $P_0$ é a potência média do sinal óptico; e $m_{IM_k}$, $\Omega_k$, e $\varphi_{IM_k}$ são, respectivamente, o índice de modulação de intensidade, a frequência angular e a fase do $k$-ésimo tom, ou subportadora. Conhecendo-se $P(t)$ podemos novamente aplicar a equação de desvio de frequência para obtermos o desvio de fase causado pelo \emph{chirp} do laser semicondutor:
+\begin{equation} \label{tomN:dfase}
+\Delta\phi(t) = 2\pi\int_0^t\Delta\nu(\tau)\mathrm{d}\tau = -\frac{\alpha}{2}\bigg\lbrace\ln(P(t)) + \int_0^t\kappa P(\tau)\mathrm{d}\tau\bigg\rbrace, 
+\end{equation}
+onde $\alpha$ é o fator de alargamento da largura de linha, e $\kappa$ é o fator de \emph{chirp} adiabático, que depende de vários parâmetros construtivos do laser ($\kappa = 2\Gamma\epsilon/V\eta h \nu$), sendo $h$ a constante de Planck ($h = 6,626068\cdot 10^{-34} m^2kg/s$). 
+
+Portanto, da mesma forma que feito para 1 tom também podemos definir as duas aproximações necessárias para obtermos a expressão do envelope complexo do campo elétrico na saída do laser: a aproximação linear do logaritmo natural do \emph{chirp} transiente \eqref{tomN:PIR} e a aproximação linear da raiz quadrada do campo elétrico \eqref{tomN:IM2AM}.
+\begin{equation} \label{tomN:PIR}
+PIR \equiv \frac{m_{FM_k}}{jm_{IM_k}}e^{j\Delta\varphi_k} = -\frac{\alpha}{2}\bigg(1 + \frac{\kappa P_0}{j\Omega_k}\bigg).
+\end{equation}
+\begin{equation} \label{tomN:IM2AM}
+\sqrt{1 + \sum_{k = 1}^Nm_{IM_k}\cos(\Omega_k t + \varphi_{IM_k})} \approx 1 + \sum_{k=1}^N\frac{m_{IM_k}}{2}\cos(\Omega_k t + \varphi_{IM_k}).
+\end{equation}
+
+Seguindo-se os mesmos procedimentos feitos na seção anterior podemos provar que para \emph{N} tons o envelope do campo elétrico na saída do laser é dada por:
+\begin{equation} \label{tomN:Etz01}
+\tilde{E}(t,z=0) \approx P_0^{1/2}\bigg(1 + \sum_{k = 1}^N \frac{m_{IM_k}}{2}\cos(\Omega_k t + \varphi_{IM_k})\bigg)e^{j\sum_{k=1}^N m_{FM_{k}}\sin(\Omega_kt + \varphi_{FM_k})}.
+\end{equation}
+
+Aplicando a expansão de Jacobi-Anger \eqref{jacobi_anger} para cada expoente complexo de \eqref{tomN:Etz01}, temos:
+\begin{align} \nonumber
+\tilde{E}(t,z=0) &\approx P_0^{1/2}\bigg(1 + \sum_{k = 1}^N \frac{m_{IM_k}}{2}\cos(\Omega_k t + \varphi_{IM_k})\bigg) \prod_{k = 1}^N\bigg(\sum_{n_k = -\infty}^{\infty}J_{n_k}(m_{FM_k})e^{j(\Omega_kt + \varphi_{FM_k})}\bigg)\\
+& = P_0^{1/2}\bigg(1 + \sum_{k = 1}^N \frac{m_{IM_k}}{2}\cos(\Omega_k t + \varphi_{IM_k})\bigg)\sum_{n_1 \cdots n_N = -\infty}^{\infty}\prod_{k = 1}^N(J_{n_k}(m_{FM_k}))e^{j\sum_{k=1}^N n_k(\Omega_kt + \varphi_{FM_k})}
+\end{align}
+
+Colocando o cosseno na forma complexa e multiplicando:
+\begin{align} \nonumber
+\tilde{E}(t,z=0) \approx &P_0^{1/2}\bigg(1 + \sum_{k = 1}^N \frac{m_{IM_k}}{4}\Big(e^{j(\Omega_k t + \varphi_{IM_k})} + e^{-j(\Omega_k t + \varphi_{IM_k})}\Big)\bigg) \\ \nonumber
+&\cdot\sum_{n_1 \cdots n_N}\prod_{k = 1}^N(J_{n_k}(m_{FM_k}))e^{j\sum_{k=1}^N n_k(\Omega_kt + \varphi_{FM_k})} \\ \nonumber
+= & \sum_{n_1 \cdots n_N}\prod_{k = 1}^N(J_{n_k}(m_{FM_k}))e^{j\sum_{k=1}^N jn_k\Delta\varphi_k}\bigg[1 + \sum_{k = 1}^N\frac{m_{IM_k}}{4}\Big(J_{n_k+1}(m_{FM_k})e^{j\Delta\varphi_k} \\ \nonumber
+& + J_{n_k-1}(m_{FM_k})e^{-j\Delta\varphi_k}\Big)/J_{n_k}(m_{FM_k})\bigg]e^{j\sum_{k=1}^N n_k(\Omega_kt + \varphi_{IM_k})}.
+\end{align}
+Por convenção, quando os limites dos somatórios não forem indicados trata-se de um somatório de menos infinito a mais infinito $(-\infty, \infty)$. Seja $\Omega_{IMP} = \sum_{k = 1}^N n_k\Omega_k$.
+\begin{equation} \label{tomN:Etz0f}
+\tilde{E}(t,z=0) \approx \sum_{n_1\cdots n_N} E(\Omega_{IMP}, z=0)e^{j\sum_{k=1}^N n_k(\Omega_kt + \varphi_{IM_k})}
+\end{equation}
+onde: 
+\begin{align} \nonumber \label{tomN:Eimpz0}
+E(\Omega_{IMP}, z = 0) = &\prod_{k = 1}^N(J_{n_k}(m_{FM_k}))e^{j\sum_{k=1}^N jn_k\Delta\varphi_k}\bigg[1 + \sum_{k = 1}^N\frac{m_{IM_k}}{4}\Big(J_{n_k+1}(m_{FM_k})e^{j\Delta\varphi_k}\\
+& + J_{n_k-1}(m_{FM_k})e^{-j\Delta\varphi_k}\Big)/J_{n_k}(m_{FM_k})\bigg] 
+\end{align}
+
+Analogamente a equação \eqref{tom1:cz0}, a equação \eqref{tomN:Eimpz0} representa os índices da série de Fourier do envelope complexo do campo elétrico na saída do laser $\tilde{E}(t,z=0)$. 
+
+\subsection{Propagação na Fibra Óptica} \label{chap03_propagaN}
+A equação \eqref{tomN:Etz0f} corresponde a um produto de séries de Fourier onde cada série possui sua própria frequência fundamental. Para calcular o campo em $z$, após propagar na fibra, devemos inicialmente determinar o operador dispersão para este caso. Aplicando a equação de propagação \eqref{split-step1} em \eqref{tomN:Eimpz0}, resulta em:
+\begin{equation}
+E(\Omega_{IMP}, z) = e^{z\hat{D}(j\Omega_{IMP})}E(\Omega_{IMP},z = 0) = e^{j\sum_{k = 1}^N n_k\theta_k} E(\Omega_{IMP}, z=0), 
+\end{equation}
+onde $\theta_k = -(1/2)\beta_2\Omega_k\Omega_{IMP}z$. Portanto:
+\begin{equation} \label{tomN:Etz}
+\tilde{E}(t,z) = \sum_{n_1\cdots n_N} E(\Omega_{IMP}, z)e^{j\sum_{k=1}^N n_k(\Omega_kt + \varphi_{IM_k})}
+\end{equation}
+onde:
+\begin{align} \nonumber \label{tomN:Eimpz}
+E(\Omega_{IMP}, z) =~&e^{j\sum_{k=1}^N jn_k\Delta\varphi_k}\prod_{k = 1}^N(J_{n_k}(m_{FM_k}))\bigg[1 + \sum_{k = 1}^N\frac{m_{IM_k}}{4}\Big(J_{n_k+1}(m_{FM_k})e^{j\Delta\varphi_k} \\
+& + J_{n_k-1}(m_{FM_k})e^{-j\Delta\varphi_k}\Big)/J_{n_k}(m_{FM_k})\bigg]e^{j\sum_{k = 1}^N n_k\theta_k}
+\end{align}
+
+\subsection{Detecção Direta} \label{chap03_detectaN}
+Analogamente ao que foi feito na Seção~\ref{DD1tom}, conhecendo-se a equação do envelope complexo do campo elétrico no final da fibra, pode-se calcular a corrente detectada como:
+\begin{equation}
+\tilde{I}(t) = R\Big(\tilde{E}(t,z)\cdot \tilde{E}(t,z)^*\Big) = R|\tilde{E}(t,z)|^2, 
+\end{equation}
+onde $\tilde{I}(t)$ é a corrente elétrica detectada, e R é a responsividade do fotodiodo. Como $\tilde{E}(t,z)$ e $\tilde{E}(t,z)^*$ são séries de Fourier, o produto deles também será uma série de Fourier, portanto podemos escrever:
+\begin{align} \nonumber \label{tomN:It1}
+&\tilde{I}(t,z) = \sum_{n_1\cdots n_N} E(\Omega_{IMP}, z)e^{j\sum_{k=1}^N n_k(\Omega_kt + \varphi_{IM_k})}\cdot\sum_{n_1\cdots n_N} E^*(\Omega_{IMP}, z)e^{-j\sum_{k=1}^N n_k(\Omega_kt + \varphi_{IM_k})} \\ \nonumber
+& = P_0\sum_{n_1\cdots n_N}\sum_{m_1\cdots m_N}\prod_{k = 1}^N(J_{m_k}(m_{FM_k}))\prod_{k = 1}^N(J_{m_k - n_k}(m_{FM_k})) \\ \nonumber
+& \cdot\bigg[\overbrace{1}^{A} + \overbrace{\sum_{k = 1}^N\frac{m_{IM_k}}{4}\Big(J_{m_k+1}(m_{FM_k})e^{j\Delta\varphi_k} + J_{m_k-1}(m_{FM_k})e^{-j\Delta\varphi_k}\Big)/J_{m_k}(m_{FM_k})}^{B}\bigg] \\ \nonumber
+& \cdot\bigg[\overbrace{1}^{A^*} + \overbrace{\sum_{k = 1}^N\frac{m_{IM_k}}{4}\Big(J_{m_k-n_k+1}(m_{FM_k})e^{-j\Delta\varphi_k} + J_{m_k-n_k-1}(m_{FM_k})e^{j\Delta\varphi_k}\Big)/J_{m_k-n_k}(m_{FM_k})}^{B^*}\bigg] \\ 
+& \cdot e^{j\big(\sum_{k = 1}^N 2m_k\theta_k -\sum_{k = 1}^N n_k\theta_k\big)}e^{j\sum_{k=1}^Njn_k\Delta\varphi_k}e^{j\sum_{k=1}^N n_k(\Omega_kt + \varphi_{IM_k})}
+\end{align}
+
+Fazendo-se a distributiva dos termos entre colchetes, e aplicando o Teorema de Graf \eqref{Graf} onde for possível, temos:
+\begin{equation} \label{tomN:I_add}
+\tilde{I}_{det}(t,z) = \frac{1}{L(z)}\sum_{n_1 \ldots n_N = -\infty}^{\infty} \bigg[I_{det}(\Omega_{IMP},z) + I_{add}(\Omega_{IMP},z)\bigg]\exp\bigg(j\sum_{k = 1}^N n_k(\Omega_kt + \varphi_{IM_k})\bigg), 
+\end{equation}
+onde $L(z)$ é a atenuação da fibra óptica em unidades lineares. Com $I_{det}(\Omega_{IMP},z)$ dado por: 
+\begin{align} \nonumber \label{tomN:Idet}
+I_{det}&(\Omega_{IMP}, z) = R(\Omega_{IMP})P_0j^{\sum_{k = 1}^Nn_k}e^{j\sum_{k = 1}^N n_k\Delta\varphi_k}\prod_{k = 1}^N(J_{n_k}(u_k)) \\
+& \cdot\bigg[1 - \sum_{k = 1}^N j \frac{m_{IM_k}}{2}cos\theta_k(J_{n_k-1}(u_k)e^{-j\Delta\varphi_k} - J_{n_k+1}(u_k)e^{j\Delta\varphi_k})/J_{n_k}(u_k)\bigg],
+\end{align}
+onde $u_k = 2m_{FM_k}\sin(\theta_k)$, $\theta_k = (-1/2)\beta_2\Omega_k\Omega_{IMP}z$, e $I_{add}(\Omega_{IMP},z)$ é dado por:
+\begin{align} \nonumber \label{tomN:Idet_add}
+I_{add}(\Omega_{IMP},z) =  &P_0R(\Omega_{IMP})\displaystyle\sum_{l_1 \ldots l_N}\bigg\lbrace\prod_{k = 1}^NJ_{l_k}(m_{FM_k})J_{l_k - n_k}(m_{FM_k}) \\ \nonumber
+& \cdot\bigg[\sum_{k = 1}^N\frac{m_{IM_k}}{4}\frac{J_{l_k+1}(m_{FM_k})e^{j\Delta\varphi_k} + J_{l_k-1}(m_{FM_k})e^{-j\Delta\varphi_k}}{J_{l_k}(m_{FM_k})}\bigg] \\ \nonumber
+& \cdot\bigg[\sum_{k = 1}^N\frac{m_{IM_k}}{4}\frac{J_{l_k-n_k+1}(m_{FM_k})e^{-j\Delta\varphi_k} + J_{l_k-n_k-1}(m_{FM_k})e^{j\Delta\varphi_k}}{J_{l_k-n_k}(m_{FM_k})}\bigg] \\
+& \cdot\exp(j\textstyle\sum_{k = 1}^N (2l_k\theta_k - n_k\theta_k))\bigg\rbrace\exp(\textstyle\sum_{k=1}^Njn_k\Delta\varphi_k)
+\end{align}
+
+A equação \eqref{tomN:Idet} resulta dos produtos $A \cdot A^* + A \cdot B^* + A^* \cdot B$ de \eqref{tomN:It1}, após a aplicação do teorema de Graf; enquanto que a equação \eqref{tomN:Idet_add} corresponde ao  produto $B \cdot B^*$ de \eqref{tomN:It1}. Em \cite{eva}, a equação \eqref{tomN:Idet_add} não é apresentada e os termos são simplesmente descartados. Os termos marcados como $B \cdot B^*$ aparecem de forma semelhante ao termo $B\cdot B$ em \eqref{Idetb2b} quando $\theta(z) \neq 0$. Para \emph{N} tons as imprecisões inseridas pelo termo $B \cdot B^*$ se tornam ainda mais relevantes, uma vez que há o batimento de frequências ao longo de todos os \emph{N} tons, o que leva ao aparecimento de componentes espúrias de frequência, amplitude ou ambas ao longo de todo o espectro do sinal. Portanto, assim como feito em \cite{eva}, iremos descartar o termo $I_{add}(\Omega_{IMP},z)$ de \eqref{tomN:I_add}, logo:
+\begin{equation} \label{tomN:If}
+\tilde{I}_{det}(t,z) = \frac{1}{L(z)}\sum_{n_1 \ldots n_N = -\infty}^{\infty}I_{det}(\Omega_{IMP},z)\exp\bigg(j\sum_{k = 1}^N n_k(\Omega_kt + \varphi_{IM_k})\bigg), 
+\end{equation}
+onde $L(z)$ é a atenuação da fibra óptica em unidades lineares. Com $I_{det}(\Omega_{IMP},z)$ dado por: 
+\begin{align} \nonumber \label{tomN:Idetf}
+I_{det}&(\Omega_{IMP}, z) = R(\Omega_{IMP})P_0j^{\sum_{k = 1}^Nn_k}e^{j\sum_{k = 1}^N n_k\Delta\varphi_k}\prod_{k = 1}^N(J_{n_k}(u_k)) \\
+& \cdot\bigg[1 - \sum_{k = 1}^N j \frac{m_{IM_k}}{2}cos\theta_k(J_{n_k-1}(u_k)e^{-j\Delta\varphi_k} - J_{n_k+1}(u_k)e^{j\Delta\varphi_k})/J_{n_k}(u_k)\bigg],
+\end{align}
+onde $u_k = 2m_{FM_k}\sin(\theta_k)$ e $\theta_k = (-1/2)\beta_2\Omega_k\Omega_{IMP}$.
+
+A corrente detectada total em uma determinada frequência angular $\Omega_{IMP}$ é calculada somando-se todas os valores de $I_{det}(\Omega_{IMP}, z)$ que caem naquela frequência. Além disso, podemos dividir a corrente detectada em uma dada frequência em duas componentes: a componente de sinal e a componente de produtos de intermodulação. A componente de sinal em uma dada frequência $\Omega_{IMP}$ é gerada somente por essa frequência, e mais nenhuma outra. Em outras palavras, a componente de sinal na frequência angular $\Omega_1$, por exemplo, é calculada fazendo-se $n_1 = 1$ e os demais coeficientes iguais a zero. Portanto $\Omega_{IMP} = \Omega_1$. Todas as outras situações em que tivermos $\Omega_{IMP} = \Omega_1$ serão considerados produtos de intermodulação, isto é, são componentes de frequência que resultam da combinação de duas ou mais componentes de frequência. 
+
+Também podemos classificar os produtos de intermodulação de acordo com sua ordem. Por exemplo, os produtos de intermodulação de segunda ordem são gerados pela combinação entre duas frequências quaisquer, com os demais coeficientes iguais a zero. Da mesma forma, os produtos de intermodulação de terceira ordem são formados pela combinação entre três frequências quaisquer, com os outros coeficientes iguais a zero, e assim sucessivamente. Posteriormente, essa classificação será utilizada na simplificação das equações. É importante ressaltar que essa ordem dos produtos de intermodulação não deve ser confundida com a ordem do truncamento de séries feito para o logaritmo e a raiz quadrada.
+
+\section{Cálculo da Distorção Total Média}
+Note que a equação \eqref{tomN:If} depende das fases das subportadoras do sinal OFDM ($\varphi_{IM_1}, \varphi_{IM_2}, \ldots, \varphi_{IM_N}$). Para cada configuração de fase do sinal OFDM teremos um resultado diferente de corrente detectada; portanto, diferentes resultados de distorção. Porém, é de maior interesse prático analisar qual será a distorção média provocada em uma determinada frequência por vários símbolos OFDM -- várias configurações de fase. Para isso podemos utilizar a teoria de caminhada aleatória (\textit{Random Walk}) \cite{random-walk}. Uma caminha aleatória pode ser escrita como:
+\begin{equation}
+y = \sum_{k=1}^M a_ke^{j\varphi_k}, 
+\end{equation}
+onde $a_k$ corresponde ao tamanho dos passos e $\varphi_k$ corresponde a direção tomada em cada passo; na caminha aleatória $\varphi_k$ é uma variável aleatória uniformemente distribuída, isto é, a probabilidade de um passo ser dado em qualquer direção é a mesma. $y$, por sua vez, corresponde ao deslocamento total. De acordo com a teoria de caminhada aleatória, podemos escrever \cite{random-walk}:
+\begin{equation}
+\langle |y|^2 \rangle = \sum_{k=1}^M |a_k|^2,
+\end{equation}
+onde $\langle\cdot\rangle$ denota o valor esperado. Portanto, o valor esperado do módulo da distância total é igual à soma do módulo quadrático dos passos.
+
+A equação \eqref{tomN:If} também caracteriza uma caminha aleatória: a corrente detectada total em uma determinada frequência angular $\Omega$ é a distância total $y$, cada contribuição de $I_{det}(\Omega_{IMP},z)$ que cai naquela frequência são os passos $a_k$, e a fase $\varphi$ é formada pela combinação linear de $\varphi_{IM_1}, \varphi_{IM_2}, \ldots, \varphi_{IM_N}$, que podem ser consideradas descorrelacionadas. Portanto:
+\begin{equation}
+I_{det_{TOTAL}}(\Omega, z) = \sum_{(n_1 \ldots n_N) \in A(\Omega)} I_{det}(\Omega,z)e^{j\sum_{k = 1}^N n_k\Delta\varphi_k},
+\end{equation}
+onde $A(\Omega)$ é o conjunto de coeficientes ($n_1, \ldots, n_N$), tal que $\Omega = \sum_{k = 1}^N n_k\Omega_k$. Ou seja, são todas as combinações possíveis dos índices da série de Fourier ($n_1, \ldots, n_N$) que resultam na frequência angular de interesse $\Omega$. O número de elementos de $A(\Omega)$ é o número de contribuições (ou passos) em uma dada frequência angular $\Omega$.
+
+Considerando-se que as contribuições $I_{det}(\Omega_{IMP}, z)$ são independentes e igualmente distribuídas, pela teoria de caminhada aleatória temos:
+\begin{equation} \label{IMDdef}
+IMD(\Omega,z) \equiv \langle |I_{det_{TOTAL}}(\Omega, z)|^2 \rangle = \sum_{(n_1 \ldots n_N) \in A(\Omega)} |I_{det}(\Omega,z)|^2,
+\end{equation}
+onde $IMD(\Omega,z)$ é a distorção de intermodulação para uma determinada frequência angular $\Omega$ (\textit{InterModulation Distortion}, IMD). Portanto, o valor esperado de distorção em uma dada frequência $IMD(\Omega,z)$ pode ser calculado através do somatório quadrático das contribuições (ou passos) de $I_{det}(\Omega_{IMP},z)$. Em outras palavras, as contribuições de distorção se somam em potência e não em amplitude. 
+
+A equação \eqref{IMDdef} fornece a distorção total média em unidades de potência para uma determinada frequência $\Omega$. Note que para $IMD(\Omega,z)$ corresponder somente à distorção, as componentes de sinal de $I_{det}(\Omega_{IMP},z)$ devem ser ignoradas. Além disso, por se tratar de um valor esperado, $IMD(\Omega,z)$ deve ser calculado numericamente como a média de um conjunto grande de amostras, ou seja, para diversas configurações de fase do sinal OFDM. 
+
+$|I_{det}(\Omega,z)|^2$ também pode ser obtido de forma analítica:
+\begin{align} \nonumber \label{tomN:Idet2}
+& |I_{det}(\Omega_{IMP}, z)|^2 = I_{det}(\Omega_{IMP}, z)\cdot I_{det}^*(\Omega_{IMP}, z) \\ \nonumber
+& = R^2P_0^2\prod_{k = 1}^N(J_{n_k}^2(u_k))\bigg[1 - 2\sum_{k = 1}^N \frac{n_k m_{IM_k}\cos(\theta_k)\sin(\Delta\varphi_k)}{u_k} + \sum_{k_1, k_2 = 1}^N\frac{m_{IM_{k_1}}m_{IM_{k_2}}}{4}\cos(\theta_{k_1})\cos(\theta_{k_2}) \\
+& \cdot\bigg(\frac{(J_{n_{k_1}-1}(u_{k_1})e^{-j\Delta\varphi_{k_1}} - J_{n_{k_1}+1}(u_{k_1})e^{j\Delta\varphi_{k_1}})\cdot(J_{n_{k_2}-1}(u_{k_2})e^{-j\Delta\varphi_{k_2}} - J_{n_{k_2}+1}(u_{k_2})e^{j\Delta\varphi_{k_2}})}{J_{n_{k_1}}(u_{k_1})J_{n_{k_2}}(u_{k_2})}\bigg)\bigg].
+\end{align}
+
+A equação acima é obtida diretamente ao se multiplicar $I_{det}(\Omega_{IMP}, z)$ pelo seu complexo conjugado. O primeiro somatório dentro dos colchetes é simplificado através da relação de recorrência entre funções de Bessel: $J_{n-1}(x) + J_{n+1}(x) = \frac{2n}{x}J_n(x)$ \cite{bessel}. 
+
+Como as equações \eqref{IMDdef} e \eqref{tomN:Idet2} não dependem das fases individuais de cada subportadora do sinal OFDM ($\varphi_{IM_1}, \varphi_{IM_2}, \ldots, \varphi_{IM_N}$), elas fornecem uma perspectiva mais geral da distorção provocada no sistema. Isto é desejável na prática, pois muitas vezes estamos interessados em determinar a distorção média em um sinal OFDM, e não a distorção para uma determinada configuração de fase do sinal OFDM. No Capítulo~\ref{chapResultados} essas equações serão utilizadas para calcular a relação entre sinal e distorção.

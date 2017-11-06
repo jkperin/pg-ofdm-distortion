@@ -1,0 +1,122 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% DISSERTAÇÃO - Principal
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[12pt,a4paper,ruledheader,normaltoc,floatnumber=continuous]{abntex2}
+\usepackage{graphicx}
+\usepackage[latin1]{inputenc}
+\usepackage[brazil]{babel}
+\usepackage{subfigure}
+\usepackage[center]{caption}
+%\usepackage{abnt-alf}
+%\usepackage[num]{abntcite}
+\usepackage{latexsym}
+\usepackage{psfrag}
+%\usepackage[center]{caption2}
+\usepackage{color}
+\usepackage{float}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{dotlessj}
+\usepackage{ucs}
+\usepackage{amsmath}
+\usepackage{mathrsfs}
+\usepackage{amssymb}
+\usepackage{multirow}
+%\usepackage[bookmarks]{hyperref}
+%\usepackage[numbered]{bookmark}
+\usepackage{epstopdf}
+\usepackage{fancyvrb}
+\usepackage{color}
+\usepackage{placeins}
+\usepackage{pdfpages}
+\usepackage{zref-user}
+\usepackage{zref-abspage}
+
+\makeatletter
+\newcommand{\pagebookmark}[3][]{%
+    \zlabel{#2}%
+    \bookmark[page=\zref@extractdefault{#2}{abspage}{1},#1]{#3}%
+}
+\makeatother
+
+\providecommand{\sin}{} \renewcommand{\sin}{\hspace{2pt}\mathrm{sen}}
+\providecommand{\tan}{} \renewcommand{\tan}{\hspace{2pt}\mathrm{tg}}
+
+%Notas de rodape com marcadores personalizados
+\long\def\symbolfootnote[#1]#2{\begingroup%
+\def\thefootnote{\fnsymbol{footnote}}\footnote[#1]{#2}\endgroup}
+%\symbolfootnote[1]{footnote}
+
+%%%% dados da capa, folha de rosto e folha de aprovação
+\input{dados}
+
+\begin{document}
+
+%\DeclareGraphicsRule{.eps.gz}{eps}{.eps.bb}{ gunzip -c #1}
+\DeclareGraphicsExtensions{.eps,.pdf,.png}
+\graphicspath{{figuras/}}
+
+%%%% elementos pré-textuais
+\clearpage
+\pagebookmark[level=0]{capa}{Capa}%
+\include{prev01_Capa}
+
+\clearpage
+\pagebookmark[level=0]{folha_rosto}{Folha de Rosto}%
+\include{prev02_folha_rosto}
+
+\clearpage
+\pagebookmark[level=0]{aprovacao}{Folha de Aprovação}%
+\include{prev03_folha_aprovacao}
+
+\clearpage
+\pagebookmark[level=0]{dedicatoria}{Dedicatória}%
+\include{prev04_dedicatoria} %opcional
+
+\clearpage
+\pagebookmark[level=0]{thanks}{Agradecimentos}%
+\include{prev05_agradecimentos} %opcional
+
+\clearpage
+\include{prev06_resumo}
+
+%% Prev 08
+%\pagebookmark[level=0]{figuras}{Lista de Figuras}%
+\listoffigures %opcional
+
+%% Prev 09
+%\pagebookmark[level=0]{tabelas}{Lista de Tabelas}%
+\listoftables %opcional
+
+%% Prev 10
+%\pagebookmark[level=0]{siglas}{Lista de Siglas}%
+\include{prev10_lista_siglas}
+
+%% Prev 11
+%\pagebookmark[level=0]{sumario}{Sumário}%
+\tableofcontents
+
+%%%% elementos textuais
+\include{chap01_Introducao}
+\include{chap02_OFDM_IMDD}
+\include{chap03_GrandeSinais}
+\include{chap04_Simplifica}
+\include{chap05_Resultados}
+\include{chap06_Conclusao}
+
+%%%% elementos pós-textuais
+%\pdfbookmark{Referências}{referencias}
+\cleardoublepage
+\phantomsection
+\bibliographystyle{ieeetr}
+\bibliography{Referencias}
+
+\appendix
+\chapter{Comments on Large-Signal Theory of the Effect of Dispersive Propagation on the Intensity Modulation Response of Semiconductor Lasers} \label{chap:comments}
+\includepdf[pages={1,2,3}]{comments.pdf}
+\include{chap07_apendiceA} %opcional
+\include{chap08_GrandeSinaisQuad}
+
+
+
+\end{document}
