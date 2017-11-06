@@ -4,6 +4,8 @@
 
 Undergraduate thesis and accompanying code were written in Portuguese. Papers were written in English.
 
+Some functions were implemented in C++ in order to minimize runtime. Before using these functions, they must be compiled with the mex function from Matlab.
+
 ## Publications:
 
 1. J. K. Perin, M. R. N. Ribeiro, and A. V. T. Cartaxo, "Polynomial-Time Complexity Large-Signal Model for DML-Based OOFDM Transmission Systems," J. Lightw.Technol., vol. 25, no. 24, pp. 2393–2396, 2013. [PDF](http://stanford.edu/~jkperin/pol-time%20large-signal%20model.pdf)
